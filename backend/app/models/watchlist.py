@@ -30,5 +30,6 @@ class Watchlist(db.Model, TimestampMixin):
     def to_dict(self):
         return {
             'id': self.id,
-            'stockName': self.name,
+            'ownerId': self.owner_id,
+            'watchlistName': self.name
         }

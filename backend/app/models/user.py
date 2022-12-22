@@ -40,6 +40,10 @@ class User(db.Model, UserMixin, TimestampMixin):
     def to_dict(self):
         return {
             'id': self.id,
+            'firstName': self.first_name,
+            'lastName': self.last_name,
             'username': self.username,
-            'email': self.email
+            'email': self.email,
+            'totalInvestment': self.total_investment,
+            'createdAt': self.created_at
         }
