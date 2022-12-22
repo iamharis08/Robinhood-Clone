@@ -16,8 +16,12 @@ def get_all_watchlist():
     """
     userId = current_user.id
     watchlists = Watchlist.query.filter_by(owner_id=userId).all()
-    print(watchlists.to_dict(), "USERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR")
-    return
+    all_watchlists = []
+    for w in watchlists:
+         all_watchlists = [w.to_dict() for w in watchlists]
+
+    return {'watchlists': all_watchlists}, 200
+
 
 ## GET a specific Watchlist by id
 
@@ -28,7 +32,7 @@ def get_one_watchlist(watchlist_id):
     Query for a user by id and returns that user in a dictionary
     """
     watchlist = Watchlist.query.get(watchlist_id)
-    return watchlist.to_dict()
+    return {'watchlist': watchlist.to_dict()}, 200
 
 
 ##Create Watchlist
@@ -39,7 +43,7 @@ def create_watchlist():
     """
     Query for a user by id and returns that user in a dictionary
     """
-    user = current_user.to_dict()
+    user = current_user
     form = WatchlistForm()
     form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
@@ -51,7 +55,7 @@ def create_watchlist():
         db.session.add(watchlist)
         db.session.commit()
 
-        return watchlist.to_dict()
+        return {'watchlist': watchlist.to_dict()}, 200
     return {"errors": ["Validation Error: Could not create Watchlist"]}
 
 
@@ -74,7 +78,7 @@ def update_watchlist(watchlist_id):
         db.session.add(watchlist)
         db.session.commit()
 
-        return watchlist.to_dict()
+        return {'watchlist': watchlist.to_dict()}, 200
     return {"errors": ["Validation Error: Could not create Watchlist"]}
 
 
