@@ -1,0 +1,23 @@
+.login-page-container{
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+}
+
+.left-image,
+.left-image img{
+    flex: 1 1 50%;
+    width: 100%;
+    height: 100%;
+    /* background-image: url("https://cdn.robinhood.com/assets/generated_assets/webapp/632fcb3e7ed928b2a960f3e003d10b44.jpg"); */
+    object-fit: cover;
+    overflow: hidden;
+}
+
+.right-login-container{
+    display: flex;
+    align-items: center;
+    flex: 1 1 50%;
+    height: 100%;
+    width: 100%;
+}

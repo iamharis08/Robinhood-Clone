@@ -22,7 +22,6 @@ class User(db.Model, UserMixin, TimestampMixin):
     email = db.Column(db.String(55), nullable=False, unique=True)
     total_investment = db.Column(db.Integer, nullable=False, unique=False)
     hashed_password = db.Column(db.String(255), nullable=False)
-    created_at = db.Column(db.Date)
 
     watchlists = db.relationship("Watchlist", cascade="all, delete", back_populates="owner")
 

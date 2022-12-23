@@ -1,0 +1,10 @@
+.splash-page{
+    width: 100vw;
+}
+
+
+.splash-video{
+    height: 77.5vh;
+    max-width: 100%;
+    background-color: #012616;
+}
