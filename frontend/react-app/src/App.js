@@ -12,6 +12,7 @@ import SplashPage from "./components/SplashPage/SplashPage";
 import "./css/App.css"
 import LoginPage from "./components/auth/LoginPage";
 import LogoutButton from "./components/auth/LogoutButton";
+import HomePage from "./components/HomePage/HomePage";
 
 function App() {
   const [loaded, setLoaded] = useState(false);
@@ -38,6 +39,9 @@ function App() {
         <Route path="/logout" exact={true}>
           <LogoutButton />
         </Route>
+        <ProtectedRoute path="/home" exact={true}>
+          <HomePage />
+        </ProtectedRoute>
         <Route path="/sign-up" exact={true}>
           <SignUpForm />
         </Route>
