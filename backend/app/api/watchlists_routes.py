@@ -16,11 +16,23 @@ def get_all_watchlist():
     """
     userId = current_user.id
     watchlists = Watchlist.query.filter_by(owner_id=userId).all()
-    all_watchlists = []
-    for w in watchlists:
-         all_watchlists = [w.to_dict() for w in watchlists]
 
-    return {'watchlists': all_watchlists}, 200
+    ## nested for loops are used because user most likely wont have very large number of watchlists
+    res=[]
+    for w in watchlists:
+        stocks_list = []
+        for stock in w.stocks:
+            formatted_stock = {
+                'id': stock.id,
+                'stock_symbol': stock.stock_symbol
+            }
+            stocks_list.append(formatted_stock)
+        formatted_watchlist = w.to_dict()
+        formatted_watchlist.update({'stocks': stocks_list})
+        res.append(formatted_watchlist)
+
+
+    return {'watchlists': res}, 200
 
 
 ## GET a specific Watchlist by id

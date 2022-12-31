@@ -33,3 +33,4 @@ class Watchlist(db.Model, TimestampMixin):
             'ownerId': self.owner_id,
             'watchlistName': self.name
         }
+
