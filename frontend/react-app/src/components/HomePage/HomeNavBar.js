@@ -3,24 +3,27 @@ import { NavLink } from "react-router-dom";
 import LogoutButton from "../auth/LogoutButton";
 import HomeNavBars from "../../css/HomeNavBar.css"
 import logoIcon from "../../css/images/risinghoodblackicon.png"
+import searchIcon from "../../css/images/searchIcon.svg"
 
 const HomeNavBar = () => {
   return (
   <div className="home-nav-container">
-        <div className="left-logo-container">
-          <div className="logo-container">
+
+          <div className="home-logo-container">
              <NavLink to= '/home'><img src={logoIcon} alt='logo' /> </NavLink>
           </div>
 
-          <div className="search-bar-container">
-            <div className="search-bar">
-                <div className='left-search-box'>
+          <div className="home-search-bar-container">
+            <div className="home-search-bar">
+                <div className='home-left-search-box'>
+                  <img src={searchIcon} alt='search' />
                 </div>
-                <div className="main-search-input">
+                <div className="home-main-search-input">
                     <form>
                     <label></label>
 
                     <input
+                    name="search-bar"
                     placeholder="Search"
                     />
                     </form>
@@ -28,17 +31,15 @@ const HomeNavBar = () => {
                 </div>
             </div>
           </div>
-          <div className="nav-links">
-            <NavLink className="link" to='/'> Invest</NavLink>
-            <NavLink className="link"to='/'> Crypto</NavLink>
-            <NavLink className="link"to='/'> Retirement</NavLink>
-            <NavLink className="link"to='/'> Cash Card</NavLink>
-            <NavLink className="link"to='/'> Learn</NavLink>
-            <NavLink className="link" to='/'> Snacks</NavLink>
-            <NavLink className="link"to='/'> Support</NavLink>
+          <div className="home-nav-links">
+            <NavLink className="home-link" to='/'> Rewards</NavLink>
+            <NavLink className="home-link"to='/'> Investing</NavLink>
+            <NavLink className="home-link"to='/'> Spending</NavLink>
+            <NavLink className="home-link"to='/'> Retirement</NavLink>
+            <NavLink className="home-link"to='/'> Notifications</NavLink>
+            <NavLink className="home-link" to='/'> Account</NavLink>
           </div>
         </div>
-      </div>
 
   );
 };
