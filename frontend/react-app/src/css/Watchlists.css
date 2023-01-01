@@ -13,7 +13,7 @@
     margin: 0px 28px 0px 24px ;
 }
 
-.watchlist_header{
+.watchlist-header{
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -23,15 +23,15 @@
     cursor: pointer;
 
 }
-.watchlist_header:hover{
+.watchlist-header:hover{
     background-color: #F5F8FA;
     /* border-bottom: solid #E3E9ED 1px; */
 }
-.watchlist_name{
+.watchlist-name{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 0px 28px 0px 24px ;
+    margin-left: 28px;
     font-size: 13px;
 }
 
@@ -45,23 +45,36 @@
     margin-right: 10px;
 }
 
-.watchlist_name img{
+.watchlist-name img{
     width: 18px;
     height: 18px;
 }
-.watchlist_edit_button{
+
+.watchlist-buttons{
     display: flex;
-    align-items: center;
-    width: 25%;
-    height: 100%;
+    justify-content: flex-end;
+    width: 80px;
+    height: 24px;
 }
 
-.watchlist_edit_button img{
+/* .watchlist_buttons:hover{
+    justify-content: space-between;
+} */
+
+.watchlist-edit-button{
+    display: flex;
+    align-items: center;
+    width: 20px;
+    height: 100%;
+    margin-right: 20px;
+}
+
+.watchlist-edit-button img{
     width: 1rem;
     height: 1rem;
 }
 
-.watchlist_edit_button button{
+.watchlist-edit-button button{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -71,7 +84,25 @@
     border: none;
 }
 
-.watchlist_edit_button button:hover{
+.watchlist-edit-button button:hover{
     background-color: #F2F2F2;
     cursor: pointer;
+}
+
+.watchlist-arrow{
+    height: 16px;
+    width: 16px;
+    margin-right: 24px;
+}
+
+.watchlist-arrow img{
+    /* display: flex;
+    justify-content: center; */
+    width: 16px;
+    height: 16px;
+
+}
+
+.stocks{
+    font-weight: 700;
 }
