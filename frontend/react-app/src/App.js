@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import LoginForm from "./components/auth/LoginForm";
 import SignUpForm from "./components/auth/SignUpForm";
@@ -13,6 +13,7 @@ import "./css/App.css"
 import LoginPage from "./components/auth/LoginPage";
 import LogoutButton from "./components/auth/LogoutButton";
 import HomePage from "./components/HomePage/HomePage";
+import StockPage from "./components/StockPage/StockPage";
 
 function App() {
   const [loaded, setLoaded] = useState(false);
@@ -54,6 +55,9 @@ function App() {
         <Route path="/" exact={true}>
           <SplashPage />
           <h1>My Home Page</h1>
+        </Route>
+        <Route path={`/stocks/:stockSymbol`} exact={true}>
+          <StockPage />
         </Route>
       </Switch>
     </BrowserRouter>

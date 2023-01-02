@@ -1,19 +1,20 @@
 
 const GET_WATCHLISTS = 'watchlists/GET_WATCHLISTS';
-
+const ADD_WATCHLIST = 'watchlists/ADD_WATCHLIST';
 
 const getAllWatchlists = (watchlists) => ({
     type: GET_WATCHLISTS,
     watchlists
 })
 
+const addOneWatchlist = (watchlist) => ({
+  type: ADD_WATCHLIST,
+  watchlist
+})
 
 export const fetchAllWatchlists = () => async (dispatch) => {
-    const response = await fetch('/api/watchlists/', {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await fetch('/api/watchlists/');
+    console.log("HITTTTTTTTTTTTTTTTTT")
     if (response.ok) {
       const data = await response.json();
       if (data.errors) {
@@ -21,6 +22,24 @@ export const fetchAllWatchlists = () => async (dispatch) => {
       }
 
       dispatch(getAllWatchlists(data));
+    }
+  }
+
+  export const fetchAddWatchlist = (name) => async (dispatch) => {
+    const response = await fetch('/api/watchlists/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({name: name}),
+    });
+    if (response.ok) {
+      const data = await response.json();
+      if (data.errors) {
+        return;
+      }
+      console.log(data, "ADDDDDDDDDDDDDDDDDDDDINGGGGGGG")
+      dispatch(fetchAllWatchlists());
     }
   }
 
@@ -40,9 +59,14 @@ const normalize = (dataArray) => {   //{'1': message1, '2': message2}
   export default function reducer(state = initialState, action) {
     switch (action.type) {
       case GET_WATCHLISTS:{
-        let normalized_lists = normalize(action.watchlists.watchlists)
-        console.log(normalized_lists, "NORMALIZESDDDDDDDDDDDDDDD")
-        return { ...state, watchlists:{...normalized_lists} }
+        let normalizedLists = normalize(action.watchlists.watchlists)
+        console.log(normalizedLists, "NORMALIZESDDDDDDDDDDDDDDD")
+        return { ...state, watchlists:{...normalizedLists} }
+      }
+      case ADD_WATCHLIST:{
+        // let normalized_list = normalize(action.watchlist.watchlist)
+
+        return { ...state, watchlists:{...state.watchlists, [action.watchlist.watchlist?.id]: action.watchlist.watchlist} }
       }
       default:
         return state;

@@ -8,8 +8,11 @@ from .models import db, User, Stock, Watchlist
 from .api.user_routes import user_routes
 from .api.auth_routes import auth_routes
 from .api.watchlists_routes import watchlists_routes
+from .api.stocks_routes import stocks_routes
 from .seeds import seed_commands
 from .config import Config
+from flask import Flask, render_template
+from flask_socketio import SocketIO
 
 app = Flask(__name__, static_folder='../../frontend/react-app/build', static_url_path='/')
 
@@ -30,12 +33,13 @@ app.config.from_object(Config)
 app.register_blueprint(user_routes, url_prefix='/api/users')
 app.register_blueprint(auth_routes, url_prefix='/api/auth')
 app.register_blueprint(watchlists_routes, url_prefix='/api/watchlists')
+app.register_blueprint(stocks_routes, url_prefix='/api/stocks')
 db.init_app(app)
 Migrate(app, db)
+# socketio = SocketIO(app)
 
 # Application Security
 CORS(app)
-
 
 # Since we are deploying with Docker and Flask,
 # we won't be using a buildpack when we deploy to Heroku.
@@ -74,6 +78,9 @@ def api_help():
                     for rule in app.url_map.iter_rules() if rule.endpoint != 'static' }
     return route_list
 
+# # moved higher up -- testing
+# if __name__ == '__main__':
+#     socketio.run(app)
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
