@@ -32,12 +32,12 @@ const HomeNavBar = () => {
             </div>
           </div>
           <div className="home-nav-links">
-            <NavLink className="home-link" to='/'> Rewards</NavLink>
-            <NavLink className="home-link"to='/'> Investing</NavLink>
-            <NavLink className="home-link"to='/'> Spending</NavLink>
-            <NavLink className="home-link"to='/'> Retirement</NavLink>
-            <NavLink className="home-link"to='/'> Notifications</NavLink>
-            <NavLink className="home-link" to='/'> Account</NavLink>
+            <NavLink className="home-link" to='/stocks/AAPL'> Rewards</NavLink>
+            <NavLink className="home-link"to='/stocks/TSLA'> Investing</NavLink>
+            <NavLink className="home-link"to='/stocks/GM'> Spending</NavLink>
+            <NavLink className="home-link"to='/stocks/GOOGL'> Retirement</NavLink>
+            <NavLink className="home-link"to='/stocks/AMC'> Notifications</NavLink>
+            <NavLink className="home-link" to='/stocks/GME'> Account</NavLink>
           </div>
         </div>
 

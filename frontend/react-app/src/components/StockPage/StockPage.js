@@ -4,7 +4,11 @@ import { useParams } from "react-router-dom";
 import HomeNavBar from "../HomePage/HomeNavBar";
 import "../../css/StockPage.css";
 import addImg from "../../css/images/add.svg"
-import { fetchStockInfo } from "../../store/stocks";
+import { fetchStockInfo, clearStockInfo  } from "../../store/stocks";
+import { Modal } from "../context/Modal";
+import WatchlistStockModal from "./WatchlistStockModal.js";
+
+
 
 const StockPage = () => {
   const dispatch = useDispatch();
@@ -12,9 +16,12 @@ const StockPage = () => {
   const { stockSymbol } = useParams();
   const [clickedBuyIn, setClickedBuyIn] = useState('Shares')
   const [clickedDropdown, setClickedDropDown] = useState(false)
+  const [showAddModal, setShowAddModal] = useState(false)
+
   useEffect(() => {
+    dispatch(clearStockInfo())
     dispatch(fetchStockInfo(stockSymbol));
-  }, [dispatch]);
+  }, [dispatch, stockSymbol]);
 
   return (
     <div className="stock-page-container">
@@ -133,7 +140,7 @@ const StockPage = () => {
                 </div>
               </div>
             </div>
-            <div className="add-stock-watchlist" onClick>
+            <div className="add-stock-watchlist" onClick={() => setShowAddModal(true)}>
                 <div className="add-stock-button">
                     Add to Lists
                 </div>
@@ -141,6 +148,15 @@ const StockPage = () => {
           </div>
         </div>
       </div>
+
+      {showAddModal && (
+          <Modal onClose={() => setShowAddModal(false)}>
+            <WatchlistStockModal
+              setShowAddModal={setShowAddModal}
+              stockSymbol={stockSymbol}
+            />
+          </Modal>
+        )}
     </div>
   );
 };

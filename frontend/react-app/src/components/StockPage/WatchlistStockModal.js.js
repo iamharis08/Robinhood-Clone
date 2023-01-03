@@ -1,53 +1,66 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Route, Switch, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import closeImg from "../../css/images/close.svg";
-import { fetchUpdateWatchlist } from "../../store/lists";
+import { fetchAllWatchlists } from "../../store/lists";
+import "../../css/WatchlistStockModal.css";
 
-function WatchlistStockModal({ setShowAddModal, listId }) {
+function WatchlistStockModal({ setShowAddModal, stockSymbol }) {
   const dispatch = useDispatch();
+  const watchlists = useSelector((state) => state.lists.watchlists);
   const [newListName, setNewListName] = useState("");
 
-  const handleSubmit = (e) => {
-    if(!stringCheck(newListName)) return
+  useEffect(() => {
+    dispatch(fetchAllWatchlists());
+  }, []);
 
-    e.preventDefault();
-    dispatch(fetchUpdateWatchlist(inputReducer(newListName), listId))
-    .then(() => setShowEditModal(false))
-  };
+  // const handleSubmit = (e) => {
+  //   if (!stringCheck(newListName)) return;
 
-  const stringCheck = str => str.split(' ').filter(c => c !== '').join('').length >= 3
-  const inputReducer = str => str.replace(/\s+/g, ' ').trim()
+  //   e.preventDefault();
+  //   dispatch(fetchUpdateWatchlist(inputReducer(newListName))).then(() =>
+  //     setShowAddModal(false)
+  //   );
+  // };
+
+  const stringCheck = (str) =>
+    str
+      .split(" ")
+      .filter((c) => c !== "")
+      .join("").length >= 3;
+  const inputReducer = (str) => str.replace(/\s+/g, " ").trim();
+
+  const watchlistsComponents = Object.values(watchlists)?.map(
+    (watchlist, index) => {
+      return (
+        <div key={watchlist.id}>
+          <div className="watchlist-checkbox-container">
+            <div className="add-watchlist-icon">
+              <img
+                src={"https://cdn.robinhood.com/emoji/v0/128/1f4a1.png"}
+                alt="bulb"
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+  );
 
   return (
-    <div className="edit-form-container">
-      <div className="edit-form-header">
-        <div className="edit-title">Edit</div>
-        <div className="close-edit-modal">
-          <img src={closeImg} alt="close" />
+    <div className="add-stock-container">
+      <div className="add-stock-header">
+        <div className="add-stock-title">Add {stockSymbol} to Your Lists</div>
+        <div className="close-stock-modal">
+          <img id="close" src={closeImg} alt="close" />
         </div>
       </div>
-      <div className="edit-form">
-        <div className="watchlist-icon">
-          <img
-            src={"https://cdn.robinhood.com/emoji/v0/128/1f4a1.png"}
-            alt="bulb"
-          />
-        </div>
-        <form onSubmit={handleSubmit}>
-          <input
-            placeholder="List Name"
-            minlength="3"
-            maxlength="20"
-            type="text"
-            value={newListName}
-            onChange={(e) => setNewListName(e.target.value)}
-            required
-          />
-          <button className="edit-list-submit" type="submit">
-            Save
-          </button>
-        </form>
+
+      <div className="add-watchlists-container">
+        {watchlistsComponents}
+        <button className="edit-list-submit" type="submit">
+          Save
+        </button>
       </div>
     </div>
   );

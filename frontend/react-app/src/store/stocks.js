@@ -1,5 +1,6 @@
 
 const GET_STOCK = 'stocks/GET_STOCK';
+const CLEAR_STOCK = 'stocks/CLEAR_STOCK';
 
 
 const getStockInfo = (stockInfo) => ({
@@ -7,6 +8,9 @@ const getStockInfo = (stockInfo) => ({
     stockInfo
 })
 
+export const clearStockInfo = () => ({
+    type: CLEAR_STOCK
+})
 
 export const fetchStockInfo = (stockSymbol) => async (dispatch) => {
     const response = await fetch(`/api/stocks/${stockSymbol}`);
@@ -38,6 +42,10 @@ export const fetchStockInfo = (stockSymbol) => async (dispatch) => {
       case GET_STOCK:{
 
         return { ...state, stockInfo:{...action.stockInfo} }
+      }
+      case CLEAR_STOCK:{
+
+        return { ...state, stockInfo:{} }
       }
       default:
         return state;

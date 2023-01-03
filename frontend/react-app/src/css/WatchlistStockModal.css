@@ -1,0 +1,28 @@
+.add-stock-container{
+    box-sizing: border-box;
+    max-width: 100%;
+    width: 408px;
+    border-radius: 10px;
+    height: 525px;
+}
+
+
+
+
+.add-watchlist-icon{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 48px;
+    height: 64px;
+    background-color: #F5F8FA;
+}
+.add-watchlist-icon img{
+    width: 24px;
+    height: 24px;
+}
+
+#close{
+    width: 18px;
+    height: 18px;
+}
