@@ -3,9 +3,15 @@
     /* height: 100vh; */
 }
 
+.stock-page-nav{
+    position: sticky;
+    top: 0px;
+}
+
 .stock-page-body{
     display: flex;
     justify-content: space-between;
+    gap: 70px;
     width: 1024px;
     height: 100%;
     margin: 0 auto;
@@ -18,8 +24,14 @@
 }
 
 .second-column{
+    display: flex;
+    justify-content: center;
+    position: sticky;
+    top: 100px;
     width: 100%;
-    border: solid black 1px;
+    height: 85vh;
+    flex: 0 0 27.7777777778%;
+    /* border: solid black 1px; */
 }
 
 .chart-container{
@@ -27,3 +39,49 @@
     height: 401px;
     border: solid black 1px;
 }
+
+.stock-transaction-container{
+    width: 273px;
+    height: 538px;
+
+}
+
+.stock-transaction{
+    width: 273px;
+    height: 445px;
+    border: solid #E3E9ED 1px;
+    border-radius: 5px;
+    box-shadow: 0px 5px 25px rgba(185, 185, 185, 0.295);
+}
+
+.add-stock-watchlist{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 214px;
+    height: 44px;
+    border: solid #00C805 1px;
+    margin: 24px auto;
+    border-radius: 20px;
+    color: #00C805;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.add-stock-button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 95px;
+    height: 100%;
+
+}
+
+.add-stock-watchlist:hover{
+    background-color: #E4F8E5;
+}
+/* .add-stock-button img{
+    width: 16px;
+    height: 16px;
+    fill: red;
+} */

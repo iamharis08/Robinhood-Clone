@@ -12,6 +12,7 @@ const addOneWatchlist = (watchlist) => ({
   watchlist
 })
 
+
 export const fetchAllWatchlists = () => async (dispatch) => {
     const response = await fetch('/api/watchlists/');
     console.log("HITTTTTTTTTTTTTTTTTT")
@@ -38,7 +39,38 @@ export const fetchAllWatchlists = () => async (dispatch) => {
       if (data.errors) {
         return;
       }
-      console.log(data, "ADDDDDDDDDDDDDDDDDDDDINGGGGGGG")
+      dispatch(fetchAllWatchlists());
+    }
+  }
+  export const fetchUpdateWatchlist = (name, listId) => async (dispatch) => {
+    const response = await fetch(`/api/watchlists/${listId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({name: name}),
+    });
+    if (response.ok) {
+      const data = await response.json();
+      if (data.errors) {
+        return;
+      }
+      dispatch(fetchAllWatchlists());
+    }
+  }
+
+  export const fetchDeleteWatchlist = (listId) => async (dispatch) => {
+    const response = await fetch(`/api/watchlists/${listId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    if (response.ok) {
+      const data = await response.json();
+      if (data.errors) {
+        return;
+      }
       dispatch(fetchAllWatchlists());
     }
   }
