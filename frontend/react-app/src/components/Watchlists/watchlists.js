@@ -147,11 +147,13 @@ const Watchlists = () => {
           {isClicked.includes(index) &&
             watchlist.stocks.map((stock, index) => {
               return (
+                <NavLink className="stock-links" to={`/stocks/${stock.stock_symbol}`}>
                 <div key={index} className="watchlist-header">
                   <div className="watchlist-name stocks">
-                    {stock.stock_symbol}{" "}
+                  {stock.stock_symbol}
                   </div>
                 </div>
+                  </NavLink>
               );
             })}
         </div>
