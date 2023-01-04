@@ -1,7 +1,8 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
 from app.models import db, User, Watchlist, Stock
-from app.forms import WatchlistForm
+from app.forms import WatchlistForm, StocksSearchForm
+from sqlalchemy import or_
 import yfinance as yf
 
 stocks_routes = Blueprint('stocks', __name__)
@@ -43,16 +44,18 @@ def get_stock(stock_symbol):
     return formatted_res, 200
 
 
-# ## GET a specific Watchlist by id
+## GET a specific Watchlist by id
 
-# @watchlists_routes.route('/<int:watchlist_id>')
-# @login_required
-# def get_one_watchlist(watchlist_id):
-#     """
-#     Query for a user by id and returns that user in a dictionary
-#     """
-#     watchlist = Watchlist.query.get(watchlist_id)
-#     return {'watchlist': watchlist.to_dict()}, 200
+@stocks_routes.route('/', methods=["POST"])
+@login_required
+def find_stocks():
+    """
+    Query for a user by id and returns that user in a dictionary
+    """
+    form = StocksSearchForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
+    stocks = Stock.query.filter(or_(Stock.name.ilike(f'%{form.data["name"]}%'), Stock.symbol.ilike(f'%{form.data["name"]}%')))
+    return {'stocks': [stock.to_dict() for stock in stocks]}, 200
 
 
 # ##Create Watchlist
