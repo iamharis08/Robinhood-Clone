@@ -74,6 +74,7 @@ def create_watchlist():
 @watchlists_routes.route('/stocks/<stock_symbol>', methods=["POST"])
 @login_required
 def add_watchlist_stock(stock_symbol):
+    print(stock_symbol, "STOCKKKKKKKKKKKKKSYMBOLLLLLLLL")
     """
     Query for a user by id and returns that user in a dictionary
     """
@@ -83,7 +84,6 @@ def add_watchlist_stock(stock_symbol):
     watchlists_array = json.loads(form.data['array'])
     for watchlist_id in watchlists_array:
         stock = Stock.query.filter(Stock.stock_symbol == stock_symbol).one()
-        print(stock, "STOCKKKKKKK")
         watchlist = Watchlist.query.get(watchlist_id)
         watchlist.stocks.append(stock)
 

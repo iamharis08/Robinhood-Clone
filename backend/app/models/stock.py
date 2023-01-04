@@ -15,6 +15,7 @@ class Stock(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     stock_symbol = db.Column(db.String(5), nullable=False,)
+    company_name = db.Column(db.String(255), nullable=False)
 
     watchlists = relationship("Watchlist", secondary=watchlists_stocks, back_populates="stocks", cascade="all, delete")
 
@@ -22,4 +23,5 @@ class Stock(db.Model):
         return {
             'id': self.id,
             'stockSymbol': self.stock_symbol,
+            'companyName': self.company_name
         }

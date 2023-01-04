@@ -76,29 +76,31 @@ export const fetchAllWatchlists = () => async (dispatch) => {
     }
   }
 
-  export const fetchAddWatchlistStocks = (watchlistArray, stockId) => async (dispatch) => {
-    const response = await fetch(`/api/watchlists/stocks/${stockId}`, {
+  export const fetchAddWatchlistStocks = (watchlistArray, stockSymbol) => async (dispatch) => {
+
+    const response = await fetch(`/api/watchlists/stocks/${stockSymbol}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(watchlistArray),
+      body: JSON.stringify({ array: JSON.stringify(watchlistArray) }),
     });
     if (response.ok) {
       const data = await response.json();
+      console.log(data, "WORKKKKKKKSS RESPONSEEEE")
       if (data.errors) {
         return;
       }
       dispatch(fetchAllWatchlists());
     }
   }
-  export const fetchDeleteWatchlistStocks = (watchlistArray, stockId) => async (dispatch) => {
-    const response = await fetch(`/api/watchlists/stocks/${stockId}`, {
+  export const fetchDeleteWatchlistStocks = (watchlistArray, stockSymbol) => async (dispatch) => {
+    const response = await fetch(`/api/watchlists/stocks/${stockSymbol}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(watchlistArray),
+      body: JSON.stringify({ array: JSON.stringify(watchlistArray) }),
     });
     if (response.ok) {
       const data = await response.json();

@@ -53,14 +53,12 @@ function WatchlistStockModal({ setShowAddModal, stockSymbol, hasStock }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    let watchlist_array = watchlists.map((watchlist) => {
-      return(
-        watchlist.id
-      )
-    })
-   let delete_stocks = watchlist_array.filter(id => !isClicked.includes(id))
+    let watchlist_array = Object.values(watchlists).map((watchlist) => watchlist.id)
+   let removeStocksFromWatchlists = watchlist_array.filter(id => !isClicked.includes(id))
 
-   dispatch(fetchAddWatchlistStocks(isClicked, ))
+   dispatch(fetchAddWatchlistStocks(isClicked, stockSymbol))
+   dispatch(fetchDeleteWatchlistStocks(removeStocksFromWatchlists, stockSymbol))
+   .then(() => setShowAddModal(false))
   };
 
   const stringCheck = (str) =>
@@ -115,7 +113,7 @@ function WatchlistStockModal({ setShowAddModal, stockSymbol, hasStock }) {
       </div>
 
       <div className="add-watchlists-container">{watchlistsComponents}</div>
-      <button className="edit-list-submit" onSubmit={handleSubmit}>
+      <button className="edit-list-submit" onClick={handleSubmit}>
         Save
       </button>
     </div>
