@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
 from app.models import db, User, Watchlist, Stock
 from app.forms import WatchlistForm, StocksSearchForm
-from sqlalchemy import or_
+from sqlalchemy import or_, desc, asc
 import yfinance as yf
 
 stocks_routes = Blueprint('stocks', __name__)
@@ -54,7 +54,8 @@ def find_stocks():
     """
     form = StocksSearchForm()
     form['csrf_token'].data = request.cookies['csrf_token']
-    stocks = Stock.query.filter(or_(Stock.name.ilike(f'%{form.data["name"]}%'), Stock.symbol.ilike(f'%{form.data["name"]}%')))
+    stocks = Stock.query.filter(or_(Stock.company_name.ilike(f'%{form.data["name"]}%'), Stock.stock_symbol.ilike(f'{form.data["name"]}%'))).order_by(Stock.company_name)
+
     return {'stocks': [stock.to_dict() for stock in stocks]}, 200
 
 
