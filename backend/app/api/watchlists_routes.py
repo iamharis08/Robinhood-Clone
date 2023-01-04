@@ -82,13 +82,14 @@ def add_watchlist_stock(stock_symbol):
     form = WatchlistStocksForm()
     form['csrf_token'].data = request.cookies['csrf_token']
     watchlists_array = json.loads(form.data['array'])
+    stock = Stock.query.filter(Stock.stock_symbol == stock_symbol).one()
     for watchlist_id in watchlists_array:
-        stock = Stock.query.filter(Stock.stock_symbol == stock_symbol).one()
         watchlist = Watchlist.query.get(watchlist_id)
-        watchlist.stocks.append(stock)
+        if stock not in watchlist.stocks:
+            watchlist.stocks.append(stock)
 
     db.session.commit()
-    return {}, 200
+    return {'message': "Successfully added stock to watchlists"}, 200
 
 
 @watchlists_routes.route('/stocks/<stock_symbol>', methods=["DELETE"])
@@ -101,16 +102,18 @@ def delete_watchlist_stock(stock_symbol):
     form = WatchlistStocksForm()
     form['csrf_token'].data = request.cookies['csrf_token']
     watchlists_array = json.loads(form.data['array'])
+    stock = Stock.query.filter(Stock.stock_symbol == stock_symbol).one()
+    print(stock, "STOCKKKKKKKKKKKKKKKKKKKKKKKKKKKK")
     for watchlist_id in watchlists_array:
         watchlist = Watchlist.query.get(watchlist_id)
-        stock = Stock.query.filter(Stock.stock_symbol == stock_symbol).one()
-        print(stock, "STOCKKKKKKK")
-        watchlist.stocks.remove(stock)
+        print([stock.to_dict() for stock in watchlist.stocks], "Stockkkkkkk")
+        if stock in watchlist.stocks:
+            watchlist.stocks.remove(stock)
 
     db.session.commit()
 
 
-    return {}, 200
+    return {'message': "Successfully deleted stock from watchlists" }, 200
 
 
 

@@ -17,7 +17,8 @@ class Stock(db.Model):
     stock_symbol = db.Column(db.String(5), nullable=False,)
     company_name = db.Column(db.String(255), nullable=False)
 
-    watchlists = relationship("Watchlist", secondary=watchlists_stocks, back_populates="stocks", cascade="all, delete")
+    watchlists = relationship("Watchlist", secondary=watchlists_stocks, back_populates="stocks")
+    # watchlists = relationship("Watchlist", secondary=watchlists_stocks, back_populates="stocks", cascade="all, delete")
 
     def to_dict(self):
         return {

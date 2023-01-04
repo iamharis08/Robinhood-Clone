@@ -56,8 +56,8 @@ function WatchlistStockModal({ setShowAddModal, stockSymbol, hasStock }) {
     let watchlist_array = Object.values(watchlists).map((watchlist) => watchlist.id)
    let removeStocksFromWatchlists = watchlist_array.filter(id => !isClicked.includes(id))
 
-   dispatch(fetchAddWatchlistStocks(isClicked, stockSymbol))
-   dispatch(fetchDeleteWatchlistStocks(removeStocksFromWatchlists, stockSymbol))
+   dispatch(fetchAddWatchlistStocks(isClicked, stockSymbol)).then(() => dispatch(fetchDeleteWatchlistStocks(removeStocksFromWatchlists, stockSymbol)))
+
    .then(() => setShowAddModal(false))
   };
 
