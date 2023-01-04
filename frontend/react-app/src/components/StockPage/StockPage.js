@@ -3,23 +3,43 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import HomeNavBar from "../HomePage/HomeNavBar";
 import "../../css/StockPage.css";
-import addImg from "../../css/images/add.svg"
-import { fetchStockInfo, clearStockInfo  } from "../../store/stocks";
+import addImg from "../../css/images/add.svg";
+import { fetchStockInfo, clearStockInfo } from "../../store/stocks";
 import { Modal } from "../context/Modal";
 import WatchlistStockModal from "./WatchlistStockModal.js";
-
-
 
 const StockPage = () => {
   const dispatch = useDispatch();
   const stockInfo = useSelector((state) => state.stocks.stockInfo);
+  const watchlists = useSelector((state) => state.lists.watchlists);
   const { stockSymbol } = useParams();
-  const [clickedBuyIn, setClickedBuyIn] = useState('Shares')
-  const [clickedDropdown, setClickedDropDown] = useState(false)
-  const [showAddModal, setShowAddModal] = useState(false)
+  const [clickedBuyIn, setClickedBuyIn] = useState("Shares");
+  const [clickedDropdown, setClickedDropDown] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+
+  const [hasStock, setHasStock] = useState([]);
 
   useEffect(() => {
-    dispatch(clearStockInfo())
+
+      let includedStocks = []
+    Object.values(watchlists)?.forEach((watchlist) => {
+      if (
+        watchlist.stocks.find((stock) => stock.stock_symbol === stockSymbol)
+      ) {
+        includedStocks.push(watchlist.id)
+      }
+    });
+    setHasStock([...includedStocks])
+  }, [watchlists, stockSymbol]);
+
+
+
+//   useEffect(() => {
+
+//   }, [hasStock]);
+
+  useEffect(() => {
+    dispatch(clearStockInfo());
     dispatch(fetchStockInfo(stockSymbol));
   }, [dispatch, stockSymbol]);
 
@@ -128,35 +148,42 @@ const StockPage = () => {
                 </div>
                 <div className="buy-in">
                   <span>Buy In </span>
-                  <div className="buy-type-dropdown-container" onClick={() => setClickedDropDown(!clickedDropdown)}>
+                  <div
+                    className="buy-type-dropdown-container"
+                    onClick={() => setClickedDropDown(!clickedDropdown)}
+                  >
                     {clickedBuyIn}
                   </div>
                   {clickedDropdown && (
-                        <div className="buy-type-dropdown">
-                            <div className="Shares">Shares</div>
-                            <div className="Dollars">Dollars</div>
-                        </div>
-                    )}
+                    <div className="buy-type-dropdown">
+                      <div className="Shares">Shares</div>
+                      <div className="Dollars">Dollars</div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
-            <div className="add-stock-watchlist" onClick={() => setShowAddModal(true)}>
-                <div className="add-stock-button">
-                    Add to Lists
-                </div>
+            <div
+              className="add-stock-watchlist"
+              onClick={() => setShowAddModal(true)}
+            >
+              <div className="add-stock-button">Add to Lists</div>
             </div>
           </div>
         </div>
       </div>
 
       {showAddModal && (
-          <Modal onClose={() => setShowAddModal(false)}>
-            <WatchlistStockModal
-              setShowAddModal={setShowAddModal}
-              stockSymbol={stockSymbol}
-            />
-          </Modal>
-        )}
+        <Modal onClose={() => setShowAddModal(false)}>
+            {console.log(hasStock, "HASSSSSS STOCKKkk STOCK PAGE")}
+          <WatchlistStockModal
+            hasStock={hasStock}
+            setShowAddModal={setShowAddModal}
+            stockSymbol={stockSymbol}
+            setHasStock={setHasStock}
+          />
+        </Modal>
+      )}
     </div>
   );
 };

@@ -1,8 +1,8 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
 from app.models import db, User, Watchlist, Stock
-from app.forms import WatchlistForm
-
+from app.forms import WatchlistForm, WatchlistStocksForm
+import json
 watchlists_routes = Blueprint('watchlists', __name__)
 
 
@@ -69,6 +69,50 @@ def create_watchlist():
 
         return {'watchlist': watchlist.to_dict()}, 200
     return {"errors": ["Validation Error: Could not create Watchlist"]}
+
+#Add Stock to Watchlist
+@watchlists_routes.route('/stocks/<stock_symbol>', methods=["POST"])
+@login_required
+def add_watchlist_stock(stock_symbol):
+    """
+    Query for a user by id and returns that user in a dictionary
+    """
+    user = current_user
+    form = WatchlistStocksForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
+    watchlists_array = json.loads(form.data['array'])
+    for watchlist_id in watchlists_array:
+        stock = Stock.query.filter(Stock.stock_symbol == stock_symbol).one()
+        print(stock, "STOCKKKKKKK")
+        watchlist = Watchlist.query.get(watchlist_id)
+        watchlist.stocks.append(stock)
+
+    db.session.commit()
+    return {}, 200
+
+
+@watchlists_routes.route('/stocks/<stock_symbol>', methods=["DELETE"])
+@login_required
+def delete_watchlist_stock(stock_symbol):
+    """
+    Query for a user by id and returns that user in a dictionary
+    """
+    user = current_user
+    form = WatchlistStocksForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
+    watchlists_array = json.loads(form.data['array'])
+    for watchlist_id in watchlists_array:
+        watchlist = Watchlist.query.get(watchlist_id)
+        stock = Stock.query.filter(Stock.stock_symbol == stock_symbol).one()
+        print(stock, "STOCKKKKKKK")
+        watchlist.stocks.remove(stock)
+
+    db.session.commit()
+
+
+    return {}, 200
+
+
 
 
 ##UPDATE a Watchlist

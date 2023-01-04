@@ -5,3 +5,4 @@ from wtforms.validators import DataRequired, Length
 
 class WatchlistForm(FlaskForm):
     name = StringField("Watchlist Name", validators=[DataRequired(), Length(min=1, max=25)])
+

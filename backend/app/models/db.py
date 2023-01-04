@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import UniqueConstraint
 
 import os
 environment = os.getenv("FLASK_ENV")
@@ -23,7 +24,8 @@ watchlists_stocks = db.Table(
     ),
     db.Column(
         "stocks_id", db.Integer, db.ForeignKey(add_prefix_for_prod("stocks.id"), ondelete='CASCADE'), primary_key=True
-    )
+    ),
+    UniqueConstraint("watchlist_id", "stocks_id", name="unique_watchlist_stock")
 )
 
 if environment == "production":

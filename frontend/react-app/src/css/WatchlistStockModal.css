@@ -4,9 +4,16 @@
     width: 408px;
     border-radius: 10px;
     height: 525px;
+    padding: 16px 24px 24px;
+
 }
 
-
+.add-stock-header{
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+    font-weight: 800;
+}
 
 
 .add-watchlist-icon{
@@ -22,7 +29,27 @@
     height: 24px;
 }
 
-#close{
-    width: 18px;
-    height: 18px;
+.close-stock-modal img{
+    width: 24px;
+    height: 24px;
+}
+
+.watchlist-checkbox-container{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 343px;
+    height: 80px;
+    padding: 8px 0px;
+    cursor: pointer;
+}
+.add-watchlist-container{
+    overflow-y: scroll;
+}
+
+.name-watchlist{
+    margin-left: 12px;
+}
+.checkbox{
+    margin-right: 12px;
 }

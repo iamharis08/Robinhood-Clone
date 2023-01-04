@@ -42,6 +42,7 @@ export const fetchAllWatchlists = () => async (dispatch) => {
       dispatch(fetchAllWatchlists());
     }
   }
+
   export const fetchUpdateWatchlist = (name, listId) => async (dispatch) => {
     const response = await fetch(`/api/watchlists/${listId}`, {
       method: 'PUT',
@@ -65,6 +66,39 @@ export const fetchAllWatchlists = () => async (dispatch) => {
       headers: {
         'Content-Type': 'application/json'
       }
+    });
+    if (response.ok) {
+      const data = await response.json();
+      if (data.errors) {
+        return;
+      }
+      dispatch(fetchAllWatchlists());
+    }
+  }
+
+  export const fetchAddWatchlistStocks = (watchlistArray, stockId) => async (dispatch) => {
+    const response = await fetch(`/api/watchlists/stocks/${stockId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(watchlistArray),
+    });
+    if (response.ok) {
+      const data = await response.json();
+      if (data.errors) {
+        return;
+      }
+      dispatch(fetchAllWatchlists());
+    }
+  }
+  export const fetchDeleteWatchlistStocks = (watchlistArray, stockId) => async (dispatch) => {
+    const response = await fetch(`/api/watchlists/stocks/${stockId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(watchlistArray),
     });
     if (response.ok) {
       const data = await response.json();
