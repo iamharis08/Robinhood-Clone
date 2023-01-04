@@ -83,7 +83,6 @@ function WatchlistStockModal({ setShowAddModal, stockSymbol, hasStock }) {
             }}
           >
             <div className="checkbox">
-              {console.log(hasStock,isClicked, "INSIDEEEEEEE")}
               {isClicked.includes(watchlist.id) ? (
                 <img src={checkedImg} alt="checked" />
               ) : (
@@ -107,14 +106,14 @@ function WatchlistStockModal({ setShowAddModal, stockSymbol, hasStock }) {
     <div className="add-stock-container">
       <div className="add-stock-header">
         <div className="add-stock-title">Add {stockSymbol} to Your Lists</div>
-        <div className="close-stock-modal">
+        <div className="close-stock-modal" onClick={() => setShowAddModal(false)}>
           <img src={closeImg} alt="close" />
         </div>
       </div>
 
       <div className="add-watchlists-container">{watchlistsComponents}</div>
       <button className="edit-list-submit" onClick={handleSubmit}>
-        Save
+        Save Changes
       </button>
     </div>
   );
