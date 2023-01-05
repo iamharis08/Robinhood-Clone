@@ -45,6 +45,6 @@ class User(db.Model, UserMixin, TimestampMixin):
             'lastName': self.last_name,
             'username': self.username,
             'email': self.email,
-            'totalInvestment': self.total_investment,
+            'buying_power': self.buying_power,
             'createdAt': self.created_at
         }
