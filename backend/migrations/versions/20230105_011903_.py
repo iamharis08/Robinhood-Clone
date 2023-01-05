@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 2cc1833cb4df
+Revision ID: 4dfe19239245
 Revises:
-Create Date: 2023-01-05 00:59:02.814112
+Create Date: 2023-01-05 01:19:03.228497
 
 """
 from alembic import op
@@ -11,10 +11,8 @@ import sqlalchemy as sa
 import os
 environment = os.getenv("FLASK_ENV")
 SCHEMA = os.environ.get("SCHEMA")
-
-
 # revision identifiers, used by Alembic.
-revision = '2cc1833cb4df'
+revision = '4dfe19239245'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -69,6 +67,7 @@ def upgrade():
     sa.UniqueConstraint('watchlist_id', 'stocks_id', name='unique_watchlist_stock')
     )
     # ### end Alembic commands ###
+
     if environment == "production":
         op.execute(f"ALTER TABLE stocks SET SCHEMA {SCHEMA};")
 
