@@ -28,5 +28,19 @@ watchlists_stocks = db.Table(
     UniqueConstraint("watchlist_id", "stocks_id", name="unique_watchlist_stock")
 )
 
+# users_stocks = db.Table(
+#     "user_stocks",
+#     db.Model.metadata,
+#     db.Column("id", db.Integer, primary_key=True)
+#     db.Column("owner_id", db.Integer, db.ForeignKey((add_prefix_for_prod('users.id')), ondelete='CASCADE'), nullable=False)
+#     db.Column("stock_symbol", db.String(255), db.ForeignKey((add_prefix_for_prod('stocks.stock_symbol')), ondelete='CASCADE'), nullable=False)
+#     db.Column("buy_type", db.String(255), nullable=False)
+#     db.Column("stock_shares", db.Float, nullable=False)
+#     db.Column("price_per_share_bought", db.Float, nullable=False)
+# )
+
 if environment == "production":
     watchlists_stocks.schema = SCHEMA
+
+# if environment == "production":
+#     users_stocks.schema = SCHEMA

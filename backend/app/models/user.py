@@ -20,10 +20,12 @@ class User(db.Model, UserMixin, TimestampMixin):
     last_name = db.Column(db.String(55), nullable=False, unique=False)
     username = db.Column(db.String(55), nullable=False, unique=True)
     email = db.Column(db.String(55), nullable=False, unique=True)
-    total_investment = db.Column(db.Integer, nullable=False, unique=False)
+    buying_power = db.Column(db.Integer, nullable=False, unique=False)
     hashed_password = db.Column(db.String(255), nullable=False)
 
     watchlists = db.relationship("Watchlist", cascade="all, delete", back_populates="owner")
+    user_stocks = db.relationship("UserStock", back_populates="owner", cascade="all, delete")
+
 
     @property
     def password(self):

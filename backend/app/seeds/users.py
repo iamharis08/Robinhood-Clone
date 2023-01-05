@@ -4,21 +4,21 @@ from app.models import db, User, environment, SCHEMA
 # Adds a demo user, you can add other users here if you want
 def seed_users():
     demo = User(
-        first_name='Demo', last_name='User', username='Demo', email='demo@aa.io', total_investment=10000, password='password')
+        first_name='Demo', last_name='User', username='Demo', email='demo@aa.io', buying_power=10000, password='password')
     marnie = User(
-        first_name='Marnie', last_name='Lewinski', username='marnie', email='marnie@aa.io', total_investment=10000, password='password')
+        first_name='Marnie', last_name='Lewinski', username='marnie', email='marnie@aa.io', buying_power=10000, password='password')
     bobbie = User(
-        first_name='Bobbie', last_name='Tables', username='bobbie', email='bobbie@aa.io', total_investment=10000, password='password')
+        first_name='Bobbie', last_name='Tables', username='bobbie', email='bobbie@aa.io', buying_power=10000, password='password')
     trevor = User(
-        first_name='Trevor', last_name='Moore', username='trevorwmoore', email='trevor@aa.io', total_investment=10000, password='password')
+        first_name='Trevor', last_name='Moore', username='trevorwmoore', email='trevor@aa.io', buying_power=10000, password='password')
     tyler = User(
-        first_name='Tyler', last_name='Short', username='cahzm', email='christian@aa.io', total_investment=10000, password='password')
+        first_name='Tyler', last_name='Short', username='cahzm', email='christian@aa.io', buying_power=10000, password='password')
     haris = User(
-        first_name='Haris', last_name='Ahmed', username='harisahmed', email='haris@aa.io', total_investment=10000, password='password')
+        first_name='Haris', last_name='Ahmed', username='harisahmed', email='haris@aa.io', buying_power=10000, password='password')
     jacob = User(
-        first_name='Jacob', last_name='Lauxman', username='cobe', email='jacob@aa.io', total_investment=10000, password='password')
+        first_name='Jacob', last_name='Lauxman', username='cobe', email='jacob@aa.io', buying_power=10000, password='password')
     ryan = User(
-        first_name='Ryan', last_name='Schneider', username='ryan', email='ryan@aa.io', total_investment=10000, password='password')
+        first_name='Ryan', last_name='Schneider', username='ryan', email='ryan@aa.io', buying_power=10000, password='password')
 
     db.session.add(demo)
     db.session.add(marnie)

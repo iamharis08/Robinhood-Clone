@@ -12,7 +12,7 @@ from .api.stocks_routes import stocks_routes
 from .seeds import seed_commands
 from .config import Config
 from flask import Flask, render_template
-from flask_socketio import SocketIO
+# from flask_socketio import SocketIO
 
 app = Flask(__name__, static_folder='../../frontend/react-app/build', static_url_path='/')
 
