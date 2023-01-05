@@ -14,7 +14,7 @@ class Stock(db.Model):
         __table_args__ = {'schema': SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True)
-    stock_symbol = db.Column(db.String(5), nullable=False)
+    stock_symbol = db.Column(db.String(255), nullable=False)
     company_name = db.Column(db.String(255), nullable=False)
 
     watchlists = relationship("Watchlist", secondary=watchlists_stocks, back_populates="stocks")
