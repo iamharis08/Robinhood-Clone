@@ -85,7 +85,7 @@ const StockPage = () => {
               </div>
               <div className="founded-container">
                 <div className="founded-title">Sector</div>
-                <div className="founded-name">{stockInfo.sector}</div>
+                <div className="founded-name">{stockInfo.Sector}</div>
               </div>
             </div>
             <div className="key-statistics-container">

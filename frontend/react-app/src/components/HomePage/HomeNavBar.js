@@ -1,18 +1,24 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useDispatch } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink, useHistory } from "react-router-dom";
 import LogoutButton from "../auth/LogoutButton";
 import HomeNavBars from "../../css/HomeNavBar.css";
 import logoIcon from "../../css/images/risinghoodblackicon.png";
 import searchIcon from "../../css/images/searchIcon.svg";
 import { fetchStockSearch } from "../../store/stocks";
 
+
 const HomeNavBar = () => {
   const dispatch = useDispatch();
+  const history = useHistory()
+  const searchedStocks = useSelector((state) => state.stocks.searchedStocks);
   const [searchName, setSearchName] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef(null);
+  console.log(searchedStocks, "searcheds tocks");
+
   useEffect(() => {
+    console.log("fetching");
     dispatch(fetchStockSearch(searchName));
   }, [searchName]);
 
@@ -21,7 +27,7 @@ const HomeNavBar = () => {
       return;
     }
     const closeMenu = (event) => {
-      if (event.target.tagName !== 'INPUT') {
+      if (event.target.tagName !== "INPUT") {
         setIsFocused(false);
       }
     };
@@ -32,6 +38,7 @@ const HomeNavBar = () => {
 
     return () => document.removeEventListener("click", closeMenu);
   }, [isFocused]);
+
 
   return (
     <div className="home-nav-container">
@@ -46,13 +53,12 @@ const HomeNavBar = () => {
           <div className="home-left-search-box">
             <img src={searchIcon} alt="search" />
           </div>
-          <div className="home-main-search-input">
-            <form>
-              <label></label>
+
+
 
               <input
                 onKeyDown={(event) => {
-                  if (event.key === 'Enter') {
+                  if (event.key === "Enter") {
                     event.preventDefault();
                   }
                 }}
@@ -64,17 +70,32 @@ const HomeNavBar = () => {
                 value={searchName}
                 onChange={(e) => setSearchName(e.target.value)}
                 onClick={() => {
-                  const selectedInput = document.getElementById('myInput');
-                  if (document.activeElement === inputRef.current){
-                    setIsFocused(true)
+                  if (document.activeElement === inputRef.current) {
+                    setIsFocused(true);
                   }
                 }}
                 autoComplete="off"
               />
-            </form>
-          </div>
+
+
           {searchName && isFocused && (
-            <div className="stock-search-container"></div>
+            <div className="stock-search-container">
+              {searchedStocks.stocks?.map((stock, index) => {
+                return (
+                  <div key={index}>
+                    <div className="search-stock-container" onClick={() => history.push(`/stocks/${stock.stockSymbol}`)}>
+                      <div className="searched-stock-symbol">
+                        {console.log("STOCKKKKK", stock.stockSymbol)}
+                        {stock.stockSymbol}
+                      </div>
+                      <div className="searched-stock-company">
+                        {stock.companyName.includes('(') ? stock.companyName.split('(')[0] : stock.companyName}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           )}
         </div>
       </div>

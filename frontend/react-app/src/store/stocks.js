@@ -9,7 +9,7 @@ const getStockInfo = (stockInfo) => ({
 })
 
 const findStocks = (stocks) => ({
-    type: GET_STOCK,
+    type: FIND_STOCKS,
     stocks
 })
 
@@ -31,16 +31,17 @@ export const fetchStockInfo = (stockSymbol) => async (dispatch) => {
   }
 
 export const fetchStockSearch = (name) => async (dispatch) => {
-  const response = await fetch(`/api/stocks`, {
+  const response = await fetch(`/api/stocks/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({ name: name }),
   });
-    if (response.ok) {
-      const data = await response.json();
-      if (data.errors) {
+  if (response.ok) {
+    const data = await response.json();
+    console.log(data, "RESPONSEEEEEEEEEEEEEEEE")
+    if (data.errors) {
         return;
       }
 
