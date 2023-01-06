@@ -85,3 +85,167 @@
     height: 16px;
     fill: red;
 } */
+
+
+.transaction-header{
+    max-width: 100%;
+    padding: 4px 24px 0px;
+    height: 47px;
+    max-height: 52px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    border-bottom: solid #E3E9ED 1px;
+    font-size: 15px;
+}
+
+.clicked-transaction-type{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #00C805;
+    border-bottom: solid #00C805 2px;
+    font-weight: 800;
+    cursor: pointer;
+    height: 100%;
+}
+
+.buy-stock-title{
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.transaction-form{
+    padding: 12px 24px 0px;
+    font-size: 13px;
+}
+
+.order-type{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 48px;
+
+}
+.buy-in{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 48px;
+}
+
+.buy-in select{
+    height: 36px;
+    width: 134px;
+    padding: 1px 1px 0px 12px;
+    cursor: pointer;
+    border: solid #E3E9ED 1px;
+    transition: border-color 300ms ease 0s, box-shadow 300ms ease 0s;
+}
+
+.buy-in select:hover{
+    box-shadow: 0px 0px 25px rgba(185, 185, 185, 0.308);
+}
+
+.share-amount{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 48px;
+}
+.amount{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 48px;
+}
+.market-price{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 48px;
+}
+.market-price-text{
+    color: #00C805;
+}
+.transaction-total{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 48px;
+}
+.transactions-submit-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 48px;
+    padding: 34px 0px 10px;
+
+}
+.review-order-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 44px;
+    background-color: #00C805;
+    color: white;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 0px 48px;
+    border-radius: 30px;
+    cursor: pointer;
+}
+
+.review-order-button:hover {
+    background-color: #00b306;
+}
+
+input[name="amount"]:focus{
+    border: solid #00C805 1px;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+    text-align: end;
+    height: 36px;
+    width: 118px;
+    /* padding: 1px 12px 0px 0px; */
+    padding-right: 12px;
+    appearance: none;
+    border: solid #E3E9ED 1px;
+}
+
+input[type="number"]::placeholder{
+    text-align: end;
+}
+
+.estimated-text{
+    font-weight: 800;
+}
+
+.transactions-power{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 48px;
+    font-size: 13px;
+    border-top: solid #E3E9ED 1px;
+
+}
+
+.transactions-power-text{
+    text-align: center;
+    display: block;
+    width: 250px;
+    height: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
