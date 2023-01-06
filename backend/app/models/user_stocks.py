@@ -20,7 +20,7 @@ class UserStock(db.Model, TimestampMixin):
     owner_id = db.Column(db.Integer, db.ForeignKey((add_prefix_for_prod('users.id')), ondelete='CASCADE'), nullable=False)
     stock_symbol = db.Column(db.String(255), nullable=False)
     stock_shares = db.Column(db.Float, nullable=False)
-    average_price = db.Column(db.Float, nullable=False)
+    total_invested = db.Column(db.Float, nullable=False)
     # buy_type = db.Column(db.String(255), nullable=False)
 
     owner = relationship("User", back_populates="user_stocks")
@@ -32,5 +32,5 @@ class UserStock(db.Model, TimestampMixin):
             'ownerId': self.owner_id,
             'stockSymbol': self.stock_symbol,
             'stockShares': self.stock_shares,
-            'averagePrice': self.average_price,
+            'total_invested': self.total_invested,
         }

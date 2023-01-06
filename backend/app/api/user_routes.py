@@ -63,7 +63,7 @@ def buy_user_stocks():
             owner_id = user.id,
             stock_symbol = form.data['stock_symbol'].upper(),
             stock_shares = form.data['stock_shares'],
-            average_price = form.data['price_per_share']
+            total_invested = form.data['price_per_share'] * form.data['stock_shares']
         )
 
         subtract_buying_power = form.data['stock_shares'] * form.data['price_per_share']
@@ -103,7 +103,7 @@ def update_user_stocks():
             added_total_shares = user_stock.stock_shares + form.data['stock_shares_bought']
             user_stock.stock_shares = added_total_shares
             #change average price per share
-            user_stock.average_price = (user_stock.average_price + form.data['price_per_share']) / (added_total_shares)
+            user_stock.total_invested = (user_stock.total_invested + (form.data['price_per_share'] * form.data['stock_shares_bought']))
             subtract_buying_power = form.data['stock_shares_bought'] * form.data['price_per_share']
             new_buying_power = user.buying_power - subtract_buying_power
             user.buying_power = new_buying_power
@@ -117,11 +117,12 @@ def update_user_stocks():
             user_stock.stock_shares = subtracted_total_shares
             #change average price per share
             # user_stock.average_price = (user_stock.average_price + form.data['price_per_share']) / (added_total_shares)
+            user_stock.total_invested = (user_stock.total_invested - (form.data['price_per_share'] * form.data['stock_shares_sold']))
             add_buying_power = form.data['stock_shares_sold'] * form.data['price_per_share']
             new_buying_power = user.buying_power + add_buying_power
             user.buying_power = new_buying_power
             print(user.buying_power, "NEWWWWWWWW")
-            session.delete(user_stock)
+            
             db.session.commit()
 
             return {'userStocks': user_stock.to_dict()}, 200

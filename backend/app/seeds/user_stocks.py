@@ -4,7 +4,7 @@ from app.models import db, UserStock, environment, SCHEMA
 # Adds a demo user, you can add other users here if you want
 def seed_user_stocks():
     user_stocks1 = UserStock(
-        owner_id= 1, stock_symbol='AAPL', stock_shares=1, average_price=124.24)
+        owner_id= 1, stock_symbol='AAPL', stock_shares=1, total_invested=124.24)
 
     db.session.add(user_stocks1)
 
