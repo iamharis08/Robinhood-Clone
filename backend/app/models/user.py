@@ -20,7 +20,8 @@ class User(db.Model, UserMixin, TimestampMixin):
     last_name = db.Column(db.String(55), nullable=False, unique=False)
     username = db.Column(db.String(55), nullable=False, unique=True)
     email = db.Column(db.String(55), nullable=False, unique=True)
-    buying_power = db.Column(db.Integer, nullable=False, unique=False)
+    total_investment = db.Column(db.Float, nullable=False, unique=False)
+    buying_power = db.Column(db.Float, nullable=False, unique=False)
     hashed_password = db.Column(db.String(255), nullable=False)
 
     watchlists = db.relationship("Watchlist", cascade="all, delete", back_populates="owner")
@@ -45,6 +46,7 @@ class User(db.Model, UserMixin, TimestampMixin):
             'lastName': self.last_name,
             'username': self.username,
             'email': self.email,
+            'total_investment': self.total_investment,
             'buying_power': self.buying_power,
             'createdAt': self.created_at
         }

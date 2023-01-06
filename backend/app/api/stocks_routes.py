@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
 from app.models import db, User, Watchlist, Stock
 from app.forms import WatchlistForm, StocksSearchForm
-from sqlalchemy import or_, desc, asc
+from sqlalchemy import or_
 import yfinance as yf
 
 stocks_routes = Blueprint('stocks', __name__)

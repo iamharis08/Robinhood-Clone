@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify
-from flask_login import login_required
+from flask_login import login_required, current_user
 from app.models import User
 
 user_routes = Blueprint('users', __name__)
@@ -23,3 +23,24 @@ def user(id):
     """
     user = User.query.get(id)
     return user.to_dict()
+
+@user_routes.route('/stocks')
+@login_required
+def user_stocks():
+    """
+    Query for a user by id and returns that user in a dictionary
+    """
+    user = current_user
+
+    return {'user_stocks': [stock.to_dict() for stock in user.user_stocks]}
+
+
+# @user_routes.route('/stocks', methods=['POST'])
+# @login_required
+# def buy_user_stocks():
+#     """
+#     Query for a user by id and returns that user in a dictionary
+#     """
+#     user = current_user
+
+#     return {'user_stocks': [stock.to_dict() for stock in user.user_stocks]}
