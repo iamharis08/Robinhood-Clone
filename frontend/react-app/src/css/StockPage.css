@@ -202,8 +202,13 @@
     background-color: #00b306;
 }
 
-input[name="amount"]:focus{
+input[type="number"]:focus{
     border: solid #00C805 1px;
+    outline: none;
+}
+select:focus{
+    border: solid #00C805 1px;
+    outline: none;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
@@ -227,9 +232,14 @@ input[type="number"]::placeholder{
 }
 
 .estimated-text{
-    font-weight: 800;
+    font-weight: 700;
 }
-
+.estimated-price{
+    font-weight: 700;
+}
+.market-price-amount{
+    font-weight: 700;
+}
 .transactions-power{
     display: flex;
     justify-content: center;

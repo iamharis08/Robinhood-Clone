@@ -18,14 +18,18 @@ const StockPage = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [isBuy, setIsBuy] = useState(true);
   const [hasStock, setHasStock] = useState([]);
+  const [errors, setErrors] = useState([]);
 
   const handleSelect = (e) => {
     return setClickedBuyIn(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    return;
+    // const data = await dispatch();
+    // if (data) {
+    //   setErrors(data);
+    // }
   };
 
   useEffect(() => {
