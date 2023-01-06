@@ -59,6 +59,10 @@ def buy_user_stocks():
             if form.data['stock_symbol'].upper() == stock['stockSymbol']:
                 return {'error': "user already has stock"}, 400
 
+        subtract_buying_power = form.data['stock_shares'] * form.data['price_per_share']
+        if subtract_buying_power > user.buying_power:
+            return {'error': "Not enough buying power"}, 403
+
         new_user_stock = UserStock(
             owner_id = user.id,
             stock_symbol = form.data['stock_symbol'].upper(),
@@ -66,7 +70,7 @@ def buy_user_stocks():
             total_invested = form.data['price_per_share'] * form.data['stock_shares']
         )
 
-        subtract_buying_power = form.data['stock_shares'] * form.data['price_per_share']
+
         new_buying_power = user.buying_power - subtract_buying_power
         user.buying_power = new_buying_power
         print(user.buying_power, "NEWWWWWWWW")
@@ -97,14 +101,15 @@ def update_user_stocks():
     # print(user_stocks, form.data['stock_symbol'] == user_stocks[0]['stockSymbol'])
 
     if form.validate_on_submit():
-
         #add the stock shares bought to shares
         if form.data['stock_shares_bought']:
+            subtract_buying_power = form.data['stock_shares_bought'] * form.data['price_per_share']
+            if subtract_buying_power > user.buying_power:
+                return {'error': "Not enough buying power"}, 403
             added_total_shares = user_stock.stock_shares + form.data['stock_shares_bought']
             user_stock.stock_shares = added_total_shares
             #change average price per share
             user_stock.total_invested = (user_stock.total_invested + (form.data['price_per_share'] * form.data['stock_shares_bought']))
-            subtract_buying_power = form.data['stock_shares_bought'] * form.data['price_per_share']
             new_buying_power = user.buying_power - subtract_buying_power
             user.buying_power = new_buying_power
             print(user.buying_power, "NEWWWWWWWW")
@@ -112,20 +117,30 @@ def update_user_stocks():
 
             return {'userStocks': user_stock.to_dict()}, 200
 
-    if form.data['stock_shares_sold']:
+        if form.data['stock_shares_sold']:
             subtracted_total_shares = user_stock.stock_shares - form.data['stock_shares_sold']
             user_stock.stock_shares = subtracted_total_shares
             #change average price per share
             # user_stock.average_price = (user_stock.average_price + form.data['price_per_share']) / (added_total_shares)
             user_stock.total_invested = (user_stock.total_invested - (form.data['price_per_share'] * form.data['stock_shares_sold']))
+
+            if user_stock.stock_shares <= 0:
+                db.session.delete(user_stock)
+                user_stock = None
+
             add_buying_power = form.data['stock_shares_sold'] * form.data['price_per_share']
             new_buying_power = user.buying_power + add_buying_power
             user.buying_power = new_buying_power
-            print(user.buying_power, "NEWWWWWWWW")
-            
+            print(user.buying_power,"NEWWWWWWWW")
+
             db.session.commit()
 
-            return {'userStocks': user_stock.to_dict()}, 200
+            if user_stock == None:
+                return {'Message': "Stock Sold Successfully"}, 200
+            else:
+                return {'userStocks': user_stock.to_dict()}, 200
+
+    return {'userStocks': "transaction failed enter correct data"}, 404
 
 
 

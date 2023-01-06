@@ -89,7 +89,8 @@ const HomeNavBar = () => {
                         {stock.stockSymbol}
                       </div>
                       <div className="searched-stock-company">
-                        {stock.companyName.includes('(') ? stock.companyName.split('(')[0] : stock.companyName}
+                        {stock.companyName}
+                        {/* {stock.companyName.includes('(') ? stock.companyName.split('(')[0] : stock.companyName} */}
                       </div>
                     </div>
                   </div>
