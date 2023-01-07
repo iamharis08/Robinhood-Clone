@@ -15,6 +15,16 @@ def users():
     users = User.query.all()
     return {'users': [user.to_dict() for user in users]}
 
+@user_routes.route('/current')
+@login_required
+def current_users():
+    """
+    Query for all users and returns them in a list of user dictionaries
+    """
+    user = User.query.get(current_user.id)
+    print(user.to_dict(), "CURRRRRENT")
+    return {"user": user.to_dict()}, 200
+
 
 @user_routes.route('/<int:id>')
 @login_required
@@ -75,12 +85,15 @@ def buy_user_stocks():
 
 
         new_buying_power = user.buying_power - subtract_buying_power
-        user.buying_power = new_buying_power
-        print(user.buying_power, "NEWWWWWWWW")
+        user.buying_power = float(format(new_buying_power, '.2f'))
+
         db.session.add(new_user_stock)
         db.session.commit()
 
-        return {'userStock': new_user_stock.to_dict()}, 200
+        return {
+            'userStock': new_user_stock.to_dict(),
+            'message': "Shares bought successfully"
+            }, 200
     return {'error': "transaction failed enter correct data"}, 404
 
 @user_routes.route('/stocks', methods=['PUT'])
@@ -122,11 +135,14 @@ def update_user_stocks():
             #change average price per share
             user_stock.total_invested = (user_stock.total_invested + (form.data['price_per_share'] * form.data['stock_shares_bought']))
             new_buying_power = user.buying_power - subtract_buying_power
-            user.buying_power = new_buying_power
+            user.buying_power = float(format(new_buying_power, '.2f'))
             print(user.buying_power, "NEWWWWWWWW")
             db.session.commit()
 
-            return {'userStock': user_stock.to_dict()}, 200
+            return {
+                'message': "Shares bought successfully",
+                'userStock': user_stock.to_dict()
+                }, 200
 
         if form.data['stock_shares_sold']:
             subtracted_total_shares = user_stock.stock_shares - form.data['stock_shares_sold']
@@ -141,16 +157,19 @@ def update_user_stocks():
 
             add_buying_power = form.data['stock_shares_sold'] * form.data['price_per_share']
             new_buying_power = user.buying_power + add_buying_power
-            user.buying_power = new_buying_power
+            user.buying_power = float(format(new_buying_power, '.2f'))
             print(user.buying_power,"NEWWWWWWWW")
 
             db.session.commit()
 
             if user_stock == None:
-                return {'message': "Stock Sold Successfully",
+                return {'message': "All shares sold successfully",
                         'stockSymbol': form.data['stock_symbol']}, 200
             else:
-                return {'userStock': user_stock.to_dict()}, 200
+                return {
+                    'message': "Shares sold successfully",
+                    'userStock': user_stock.to_dict()
+                    }, 200
 
     return {'error': "transaction failed enter correct data"}, 400
 
@@ -181,11 +200,11 @@ def sell_user_stocks():
 
         add_buying_power = sell_user_stock.stock_shares * sell_user_stock.to_dict()["stockShares"]
         new_buying_power = user.buying_power + add_buying_power
-        user.buying_power = new_buying_power
+        user.buying_power = float(format(new_buying_power, '.2f'))
         # print(user.buying_power, "NEWWWWWWWWSELLLLL")
 
         db.session.delete(sell_user_stock)
         db.session.commit()
 
-        return {'message': "Stock Sold Successfully", 'soldStock': sell_user_stock.to_dict()}, 200
-    return {"message": "Invalid transaction input"}
+        return {'message': "All shares sold successfully", 'soldStock': sell_user_stock.to_dict()}, 200
+    return {"error": "Somethign went wrong try again"}

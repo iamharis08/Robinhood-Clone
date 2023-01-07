@@ -14,8 +14,10 @@ import WatchlistStockModal from "./WatchlistStockModal.js";
 import {
   fetchAllUserStocks,
   fetchBuyNewStocks,
+  fetchSellAllStocks,
   fetchUpdateStocks,
 } from "../../store/transactions";
+import { fetchUser } from "../../store/session";
 
 const StockPage = () => {
   const dispatch = useDispatch();
@@ -26,6 +28,7 @@ const StockPage = () => {
     (state) => state.transactions.allUserStocks
   );
   const liveStockPrice = useSelector((state) => state.stocks.liveStockPrice);
+  const user = useSelector((state) => state.session.user);
   const [clickedBuyIn, setClickedBuyIn] = useState("shares");
   const [clickedDropdown, setClickedDropDown] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -35,17 +38,33 @@ const StockPage = () => {
   const [dollarsInput, setDollarsInput] = useState(0);
   const [errors, setErrors] = useState([]);
   const [success, setSuccess] = useState([]);
+  const [click, setClick] = useState(false);
+  const [sellAll, setSellAll] = useState(false);
   const livePrice = liveStockPrice?.liveStockPrice?.toFixed(2);
   console.log(errors, "ERRRRRRRRRRRRRORSSS");
-
+    console.log(allUserStocks, "ALLUSER STOCKSSS")
   const handleSelect = (e) => {
     return setClickedBuyIn(e.target.value);
   };
+
+  const handleSellAll = () => {
+    const sellTransaction = {
+      stock_symbol: stockSymbol
+    }
+    dispatch(fetchSellAllStocks(sellTransaction))
+    .then((data) => {
+      setSellAll(false)
+      setIsBuy(true)
+      setSuccess(["All shares sold successfully"])
+    })
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSuccess([])
     setErrors([]);
+
+
 
     let shares;
 
@@ -77,14 +96,22 @@ const StockPage = () => {
         if (data.error) {
           setErrors([data.error]);
         }
+        if (data.success){
+          setSuccess([])
+          setSuccess([data.success])
+        }
       } else {
+        if (sharesInput > allUserStocks[stockSymbol].stockShares || sharesInput > allUserStocks[stockSymbol].stockShares){
+          return setErrors(["You do not have enough shares"])
+        }
         const data = await dispatch(fetchUpdateStocks(updateSellStock));
         if (data.error) {
           setErrors([data.error]);
         }
         console.log(data, "DATAAAAAAAAAAAAAAAAAAAAA FRONT")
-        if (data.success === "Shares successfully sold"){
+        if (data.success === "All shares sold successfully"){
           setIsBuy(true)
+          setSuccess([])
           setSuccess([data.success])
         }
       }
@@ -93,7 +120,14 @@ const StockPage = () => {
       if (data.error) {
         setErrors([data.error]);
       }
+      console.log(data, "BUY NEEWWWW STOCKKKKKK")
+      if (data.success){
+
+        setSuccess([])
+        setSuccess([data.success])
+      }
     }
+    setClick(!click)
   };
 
   useEffect(() => {
@@ -109,8 +143,11 @@ const StockPage = () => {
   }, [watchlists, stockSymbol]);
 
   useEffect(() => {
-    dispatch(fetchAllUserStocks());
-  }, []);
+    dispatch(fetchUser());
+    dispatch(fetchAllUserStocks())
+  }, [click]);
+
+
 
   useEffect(() => {
     dispatch(clearStockInfo());
@@ -316,17 +353,21 @@ const StockPage = () => {
                 </div>
                 {isBuy ? (
                   <div className="transaction-total">
-                    <div className="estimated-text">Estimated Cost</div>
+                    <div className="estimated-text">{clickedBuyIn === "shares" ? "Estimated Cost" : "Estimated Qty."}</div>
                     <div className="estimated-price">
                       {clickedBuyIn === "shares"
                         ? `$${(livePrice * sharesInput).toFixed(2)}`
-                        : `$${dollarsInput}`}
+                        : `${(dollarsInput / livePrice).toFixed(2)}`}
                     </div>
                   </div>
                 ) : (
                   <div className="transaction-total">
-                    <div className="estimated-text">Estimated Credit</div>
-                    <div className="estimated-price">{"$1000"}</div>
+                    <div className="estimated-text">{clickedBuyIn === "shares" ? "Estimated Credit" : "Estimated Qty."}</div>
+                    <div className="estimated-price">
+                      {clickedBuyIn === "shares"
+                        ? `$${(livePrice * sharesInput).toFixed(2)}`
+                        : `${(dollarsInput / livePrice).toFixed(2)}`}
+                    </div>
                   </div>
                 )}
 
@@ -344,8 +385,16 @@ const StockPage = () => {
                   <div className="review-order-button" onClick={handleSubmit}>
                     Review Order
                   </div>
-                </div>
 
+                </div>
+                {sellAll ? (
+                    <div className="sell-all-confirmation">
+                        <div className="sell-all-message">
+                        You are placing an order to sell all your shares of {stockSymbol}
+                       </div>
+                       <div className="accept-sell-all" onClick={handleSellAll}>Sell All</div>
+                       <div className="cancel-sell-all" onClick={() => setSellAll(false)}></div>
+                       </div>) : null}
                 {/* {clickedDropdown && (
                     <div className="buy-type-dropdown">
                       <div className="Shares">Shares</div>
@@ -356,13 +405,14 @@ const StockPage = () => {
               {isBuy ? (
                 <div className="transactions-power">
                   <div className="transactions-power-text">
-                    {"$200"} buying power avaialable
+                    ${user?.buying_power} buying power avaialable
                   </div>
                 </div>
               ) : (
                 <div className="transactions-power">
-                  <div className="transactions-power-text">
-                    {"1"} Shares Avaialable -<span>Sell All</span>{" "}
+                  <div className="transactions-power-text-sell">
+
+                    {clickedBuyIn === 'shares' ? (<><div className="investment-power">About {(allUserStocks[stockSymbol]?.stockShares)?.toFixed(4)} Shares Avaialable</div><div className="sell-all" onClick={() => setSellAll(true)}>-<span>Sell All</span></div></>) : (<><div className="investment-power">About ${(allUserStocks[stockSymbol]?.stockShares * livePrice)?.toFixed(4)} Avaialable</div><div className="sell-all" onClick={() => setSellAll(true)}>- <span>Sell All</span></div></>)}
                   </div>
                 </div>
               )}

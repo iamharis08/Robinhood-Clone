@@ -42,13 +42,15 @@
 
 .stock-transaction-container{
     width: 273px;
-    height: 538px;
+    height: fit-content;
+    /* height: 538px; */
 
 }
 
 .stock-transaction{
     width: 273px;
-    height: 445px;
+    height: fit-content;
+    /* height: 445px; */
     border: solid #E3E9ED 1px;
     border-radius: 5px;
     box-shadow: 0px 5px 25px rgba(185, 185, 185, 0.295);
@@ -267,7 +269,18 @@ input[type="number"]::placeholder{
 
 .transactions-power-text{
     text-align: center;
-    display: block;
+    display: flex;
+    justify-content: center;
+    width: 250px;
+    height: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.transactions-power-text-sell{
+    text-align: center;
+    display: flex;
+    /* justify-content: center; */
     width: 250px;
     height: 20px;
     overflow: hidden;
@@ -280,4 +293,26 @@ input[type="number"]::placeholder{
     top: 0;
     color: #00b306;
     font-size: 16px;
+}
+
+.sell-all{
+    display: block;
+    width: 10px;
+}
+.sell-all span{
+    cursor: pointer;
+    color: #00C805;
+}
+.sell-all span:hover{
+    text-decoration: underline;
+}
+
+.investment-power{
+    display: block;
+    justify-content: center;
+    /* text-align: end; */
+    width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
