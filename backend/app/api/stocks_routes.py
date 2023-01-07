@@ -83,7 +83,7 @@ def get_stock(stock_symbol):
 
     return formatted_res, 200
 
-@stocks_routes.route('/<stock_symbol>')
+@stocks_routes.route('/price/<stock_symbol>')
 @login_required
 def get_stock_price(stock_symbol):
     """

@@ -4,21 +4,39 @@ import { useParams } from "react-router-dom";
 import HomeNavBar from "../HomePage/HomeNavBar";
 import "../../css/StockPage.css";
 import addImg from "../../css/images/add.svg";
-import { fetchStockInfo, clearStockInfo } from "../../store/stocks";
+import {
+  fetchStockInfo,
+  clearStockInfo,
+  fetchStockPrice,
+} from "../../store/stocks";
 import { Modal } from "../context/Modal";
 import WatchlistStockModal from "./WatchlistStockModal.js";
+import {
+  fetchAllUserStocks,
+  fetchBuyNewStocks,
+  fetchUpdateStocks,
+} from "../../store/transactions";
 
 const StockPage = () => {
   const dispatch = useDispatch();
   const stockInfo = useSelector((state) => state.stocks.stockInfo);
   const watchlists = useSelector((state) => state.lists.watchlists);
   const { stockSymbol } = useParams();
+  const allUserStocks = useSelector(
+    (state) => state.transactions.allUserStocks
+  );
+  const liveStockPrice = useSelector((state) => state.stocks.liveStockPrice);
   const [clickedBuyIn, setClickedBuyIn] = useState("shares");
   const [clickedDropdown, setClickedDropDown] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [isBuy, setIsBuy] = useState(true);
   const [hasStock, setHasStock] = useState([]);
+  const [sharesInput, setSharesInput] = useState(0);
+  const [dollarsInput, setDollarsInput] = useState(0);
   const [errors, setErrors] = useState([]);
+  const [success, setSuccess] = useState([]);
+  const livePrice = liveStockPrice?.liveStockPrice?.toFixed(2);
+  console.log(errors, "ERRRRRRRRRRRRRORSSS");
 
   const handleSelect = (e) => {
     return setClickedBuyIn(e.target.value);
@@ -26,10 +44,56 @@ const StockPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const data = await dispatch();
-    // if (data) {
-    //   setErrors(data);
-    // }
+    setSuccess([])
+    setErrors([]);
+
+    let shares;
+
+    if (clickedBuyIn === "dollars") {
+      let dollarsToShares = dollarsInput / livePrice;
+      shares = dollarsToShares;
+    } else shares = sharesInput;
+
+    const buyNewStock = {
+      stock_symbol: stockSymbol,
+      stock_shares: shares,
+      price_per_share: livePrice,
+    };
+
+    if (allUserStocks[stockSymbol]) {
+      const updateBuyStock = {
+        stock_symbol: stockSymbol,
+        stock_shares_bought: shares,
+        price_per_share: livePrice,
+      };
+      const updateSellStock = {
+        stock_symbol: stockSymbol,
+        stock_shares_sold: shares,
+        price_per_share: livePrice,
+      };
+
+      if (isBuy) {
+        const data = await dispatch(fetchUpdateStocks(updateBuyStock));
+        if (data.error) {
+          setErrors([data.error]);
+        }
+      } else {
+        const data = await dispatch(fetchUpdateStocks(updateSellStock));
+        if (data.error) {
+          setErrors([data.error]);
+        }
+        console.log(data, "DATAAAAAAAAAAAAAAAAAAAAA FRONT")
+        if (data.success === "Shares successfully sold"){
+          setIsBuy(true)
+          setSuccess([data.success])
+        }
+      }
+    } else {
+      const data = await dispatch(fetchBuyNewStocks(buyNewStock));
+      if (data.error) {
+        setErrors([data.error]);
+      }
+    }
   };
 
   useEffect(() => {
@@ -44,16 +108,23 @@ const StockPage = () => {
     setHasStock([...includedStocks]);
   }, [watchlists, stockSymbol]);
 
-  //   useEffect(() => {
-
-  //   }, [hasStock]);
+  useEffect(() => {
+    dispatch(fetchAllUserStocks());
+  }, []);
 
   useEffect(() => {
     dispatch(clearStockInfo());
     dispatch(fetchStockInfo(stockSymbol));
+    liveStockPrice.liveStockPrice = 0;
   }, [dispatch, stockSymbol]);
 
-  useEffect(() => {}, [clickedBuyIn]);
+  useEffect(() => {
+    dispatch(fetchStockPrice(stockSymbol));
+    const interval = setInterval(() => {
+      dispatch(fetchStockPrice(stockSymbol));
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [dispatch]);
 
   return (
     <div className="stock-page-container">
@@ -153,24 +224,37 @@ const StockPage = () => {
         <div className="second-column">
           <div className="stock-transaction-container">
             <div className="stock-transaction">
-              <div className="transaction-header">
-                <div
-                  className={
-                    isBuy ? "clicked-transaction-type" : "buy-stock-title"
-                  }
-                  onClick={() => setIsBuy(true)}
-                >
-                  Buy {stockSymbol}
+              {!allUserStocks[stockSymbol] ? (
+                <div className="transaction-header">
+                  <div
+                    className={
+                      isBuy ? "clicked-transaction-type" : "buy-stock-title"
+                    }
+                    onClick={() => setIsBuy(true)}
+                  >
+                    Buy {stockSymbol}
+                  </div>
                 </div>
-                <div
-                  className={
-                    isBuy ? "buy-stock-title" : "clicked-transaction-type"
-                  }
-                  onClick={() => setIsBuy(false)}
-                >
-                  Sell {stockSymbol}
+              ) : (
+                <div className="transaction-header">
+                  <div
+                    className={
+                      isBuy ? "clicked-transaction-type" : "buy-stock-title"
+                    }
+                    onClick={() => setIsBuy(true)}
+                  >
+                    Buy {stockSymbol}
+                  </div>
+                  <div
+                    className={
+                      isBuy ? "buy-stock-title" : "clicked-transaction-type"
+                    }
+                    onClick={() => setIsBuy(false)}
+                  >
+                    Sell {stockSymbol}
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div className="transaction-form">
                 <div className="order-type">
@@ -178,10 +262,10 @@ const StockPage = () => {
                 </div>
                 <div className="buy-in">
                   {isBuy ? <span>Buy In </span> : <span>Sell In </span>}
-                  <div
+                  {/* <div
                     className="buy-type-dropdown-container"
                     onClick={() => setClickedDropDown(!clickedDropdown)}
-                  ></div>
+                  ></div> */}
                   <div className="buy-type-dropdown">
                     <select
                       name="buyType"
@@ -205,6 +289,8 @@ const StockPage = () => {
                         placeholder="$0.00"
                         type="number"
                         min="0"
+                        value={dollarsInput}
+                        onChange={(e) => setDollarsInput(e.target.value)}
                         required
                       />
                     </div>
@@ -213,18 +299,29 @@ const StockPage = () => {
                   <div className="share-amount">
                     <div className="share-amount-text">Shares</div>
                     <div className="share-amount-input">
-                      <input placeholder="0" type="number" min="0" required />
+                      <input
+                        placeholder="0"
+                        type="number"
+                        min="0"
+                        value={sharesInput}
+                        onChange={(e) => setSharesInput(e.target.value)}
+                        required
+                      />
                     </div>
                   </div>
                 )}
                 <div className="market-price">
                   <div className="market-price-text">Market Price</div>
-                  <div className="market-price-amount">N/A</div>
+                  <div className="market-price-amount">${livePrice}</div>
                 </div>
                 {isBuy ? (
                   <div className="transaction-total">
                     <div className="estimated-text">Estimated Cost</div>
-                    <div className="estimated-price">{"$10000000"}</div>
+                    <div className="estimated-price">
+                      {clickedBuyIn === "shares"
+                        ? `$${(livePrice * sharesInput).toFixed(2)}`
+                        : `$${dollarsInput}`}
+                    </div>
                   </div>
                 ) : (
                   <div className="transaction-total">
@@ -232,7 +329,18 @@ const StockPage = () => {
                     <div className="estimated-price">{"$1000"}</div>
                   </div>
                 )}
+
                 <div className="transactions-submit-button">
+                  <div className="errors">
+                    {errors?.map((error, ind) => (
+                      <div key={ind}>{error}</div>
+                    ))}
+                  </div>
+                    <div className="success">
+                      {success?.map((message, ind) => (
+                      <div key={ind}>{message}</div>
+                    ))}
+                    </div>
                   <div className="review-order-button" onClick={handleSubmit}>
                     Review Order
                   </div>
@@ -247,12 +355,15 @@ const StockPage = () => {
               </div>
               {isBuy ? (
                 <div className="transactions-power">
-                  <div className="transactions-power-text">{"$200"} buying power avaialable</div>
-
+                  <div className="transactions-power-text">
+                    {"$200"} buying power avaialable
+                  </div>
                 </div>
               ) : (
                 <div className="transactions-power">
-                  <div className="transactions-power-text">{"1"} Shares Avaialable -<span>Sell All</span> </div>
+                  <div className="transactions-power-text">
+                    {"1"} Shares Avaialable -<span>Sell All</span>{" "}
+                  </div>
                 </div>
               )}
             </div>

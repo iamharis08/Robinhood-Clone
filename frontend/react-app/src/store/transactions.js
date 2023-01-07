@@ -30,7 +30,7 @@ export const fetchAllUserStocks = () => async (dispatch) => {
     const response = await fetch(`/api/users/stocks`);
     if (response.ok) {
       const data = await response.json();
-      if (data.errors) {
+      if (data.error) {
         return;
       }
 
@@ -39,7 +39,8 @@ export const fetchAllUserStocks = () => async (dispatch) => {
   }
 
 export const fetchBuyNewStocks = (stockTransaction) => async (dispatch) => {
-    const response = await fetch(`/api/users/stocks/`, {
+    console.log(stockTransaction, "STOCKTRANSACTIONNN")
+    const response = await fetch(`/api/users/stocks`, {
         method: 'POST',
         headers: {
         'Content-Type': 'application/json'
@@ -48,15 +49,19 @@ export const fetchBuyNewStocks = (stockTransaction) => async (dispatch) => {
         });
     if (response.ok) {
       const data = await response.json();
-      if (data.errors) {
-        return;
+      console.log(data, "BUYYYYYYYY")
+
+      if (data.error) {
+        return data;
       }
 
       dispatch(getBoughtStock(data));
-    }
+      return data
+    }else return response.json()
   }
 export const fetchUpdateStocks = (stockTransaction) => async (dispatch) => {
-    const response = await fetch(`/api/users/stocks/`, {
+    console.log(stockTransaction, "PUTTTTTT")
+    const response = await fetch(`/api/users/stocks`, {
         method: 'PUT',
         headers: {
         'Content-Type': 'application/json'
@@ -65,12 +70,20 @@ export const fetchUpdateStocks = (stockTransaction) => async (dispatch) => {
         });
     if (response.ok) {
       const data = await response.json();
-      if (data.errors) {
-        return;
+      console.log(data, "UPDATEEEEEEEEEEEEEE")
+
+      if(data.message === "Stock Sold Successfully"){
+        dispatch(deleteSoldStock({userStock: {stockSymbol: data.stockSymbol}}))
+        return {"success": "Shares successfully sold"}
+      }
+
+      if (data.error) {
+        return data;
       }
 
       dispatch(getUpdateStock(data));
-    }
+      return data
+    }else return response.json()
   }
 
 export const fetchSellAllStocks = (stockTransaction) => async (dispatch) => {
@@ -83,11 +96,14 @@ export const fetchSellAllStocks = (stockTransaction) => async (dispatch) => {
         });
     if (response.ok) {
       const data = await response.json();
-      if (data.errors) {
-        return;
+      if (data.error) {
+        return data;
       }
 
-      dispatch(deleteSoldStock(data.soldStock));
+      dispatch(deleteSoldStock(data.soldStock))
+      if(data.message === "Stock Sold Successfully"){
+        return {"success": "Shares successfully sold"}
+      }
     }
   }
 
@@ -96,7 +112,7 @@ export const fetchSellAllStocks = (stockTransaction) => async (dispatch) => {
 const normalize = (dataArray) => {   //{'1': message1, '2': message2}
     let newObj = {}
     dataArray.forEach(stock => {
-    newObj[stock.id] = stock
+    newObj[stock.stockSymbol] = stock
   })
    return newObj
   }
@@ -111,17 +127,17 @@ const normalize = (dataArray) => {   //{'1': message1, '2': message2}
         return { ...state, allUserStocks: normalizedUserStocks }
       }
       case GET_BOUGHT_STOCK:{
-        let normalizedUserStock = normalize(action.stock.userStock)
-        return { ...state, allUserStocks: {...state.allUserStocks, [normalizedUserStock.id]: normalizedUserStock }, stock: action.stock.userStock }
+        let userStock = action.stock.userStock
+        return { ...state, allUserStocks: {...state.allUserStocks, [userStock.stockSymbol]: userStock }, stock: action.stock.userStock }
       }
       case GET_UPDATE_STOCK:{
-        let normalizedUserStock = normalize(action.stock.userStock)
-        return { ...state, allUserStocks: {...state.allUserStocks, [normalizedUserStock.id]: normalizedUserStock }, stock: action.stock.userStock }
+        let userStock = action.stock.userStock
+        return { ...state, allUserStocks: {...state.allUserStocks, [userStock.stockSymbol]: userStock }, stock: action.stock.userStock }
       }
       case DELETE_SOLD_STOCK:{
-        let normalizedSoldStock = normalize(action.stock.userStock)
-        removed_stock_obj = state.allUserStocks
-        delete removed_stock_obj[normalizedSoldStock.id]
+        let soldStock = action.stock.userStock
+        let removed_stock_obj = state.allUserStocks
+        delete removed_stock_obj[soldStock.stockSymbol]
         return { ...state, allUserStocks: {...removed_stock_obj }, stock: {} }
       }
       case CLEAR_STOCK:{

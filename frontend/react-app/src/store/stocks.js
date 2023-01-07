@@ -36,13 +36,13 @@ export const fetchStockInfo = (stockSymbol) => async (dispatch) => {
     }
   }
 export const fetchStockPrice = (stockSymbol) => async (dispatch) => {
-    const response = await fetch(`/api/stocks/${stockSymbol}`);
+    const response = await fetch(`/api/stocks/price/${stockSymbol}`);
     if (response.ok) {
       const data = await response.json();
       if (data.errors) {
         return;
       }
-
+      console.log(data, "RESPONSEEEEEEEE")
       dispatch(getLiveStockPrice(data));
     }
   }

@@ -54,7 +54,10 @@ def buy_user_stocks():
     print(isStock, "ISTOCKKKKKKKKKKKKK")
     print(user_stocks, form.data['stock_symbol'] == user_stocks[0]['stockSymbol'])
 
+    if form.data['stock_shares'] is not None and form.data['stock_shares'] <= 0:
+        return {'error': "Shares or amount must be greater than 0"}, 400
     if form.validate_on_submit():
+
         for stock in user_stocks:
             if form.data['stock_symbol'].upper() == stock['stockSymbol']:
                 return {'error': "user already has stock"}, 400
@@ -78,7 +81,7 @@ def buy_user_stocks():
         db.session.commit()
 
         return {'userStock': new_user_stock.to_dict()}, 200
-
+    return {'error': "transaction failed enter correct data"}, 404
 
 @user_routes.route('/stocks', methods=['PUT'])
 @login_required
@@ -90,18 +93,26 @@ def update_user_stocks():
 
 
     form['csrf_token'].data = request.cookies['csrf_token']
+
     user = current_user
     isStock = Stock.query.filter(Stock.stock_symbol == form.data['stock_symbol'].upper()).first()
+
     if isStock == None:
         return {'error': "stock not found"}, 404
     user_stock = UserStock.query.filter(and_(UserStock.owner_id == user.id, UserStock.stock_symbol == form.data['stock_symbol'].upper())).first()
 
+    # if form.data['stock_shares_bought'] or
 
     # print(isStock, "ISTOCKKKKKKKKKKKKK")
     # print(user_stocks, form.data['stock_symbol'] == user_stocks[0]['stockSymbol'])
 
     if form.validate_on_submit():
         #add the stock shares bought to shares
+        if form.data['stock_shares_bought'] is not None and form.data['stock_shares_bought'] <= 0:
+            return {'error': "Shares or amount must be greater than 0"}, 400
+        if form.data['stock_shares_sold'] is not None and form.data['stock_shares_sold'] <= 0:
+            return {'error': "Shares or amount must be greater than 0"}, 400
+
         if form.data['stock_shares_bought']:
             subtract_buying_power = form.data['stock_shares_bought'] * form.data['price_per_share']
             if subtract_buying_power > user.buying_power:
@@ -136,11 +147,12 @@ def update_user_stocks():
             db.session.commit()
 
             if user_stock == None:
-                return {'Message': "Stock Sold Successfully"}, 200
+                return {'message': "Stock Sold Successfully",
+                        'stockSymbol': form.data['stock_symbol']}, 200
             else:
                 return {'userStock': user_stock.to_dict()}, 200
 
-    return {'userStock': "transaction failed enter correct data"}, 404
+    return {'error': "transaction failed enter correct data"}, 400
 
 
 
@@ -157,15 +169,17 @@ def sell_user_stocks():
     form['csrf_token'].data = request.cookies['csrf_token']
     user = current_user
     sell_user_stock = UserStock.query.filter(and_(UserStock.owner_id == user.id, UserStock.stock_symbol == form.data['stock_symbol'].upper())).first()
+    if sell_user_stock == None:
+        return {'error': "stock is not owned"}, 404
     isStock = Stock.query.filter(Stock.stock_symbol == form.data['stock_symbol'].upper()).first()
     if isStock == None:
         return {'error': "stock not found"}, 404
 
-    # print(isStock, "ISTOCKKKKKKKKKKKKK")
+    print(sell_user_stock.to_dict(), "ISTOCKKKKKKKKKKKKK")
 
     if form.validate_on_submit():
 
-        add_buying_power = sell_user_stock.stock_shares * form.data["price_per_share_sold"]
+        add_buying_power = sell_user_stock.stock_shares * sell_user_stock.to_dict()["stockShares"]
         new_buying_power = user.buying_power + add_buying_power
         user.buying_power = new_buying_power
         # print(user.buying_power, "NEWWWWWWWWSELLLLL")
