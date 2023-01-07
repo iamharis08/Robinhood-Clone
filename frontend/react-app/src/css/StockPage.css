@@ -316,3 +316,55 @@ input[type="number"]::placeholder{
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+.sell-all-confirmation{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    border-top: solid #e3e9ed 1px;
+    padding-top: 10px;
+}
+
+.sell-all-message{
+    width: 200px;
+    text-align: center;
+    font-size: 13px;
+}
+
+.accept-sell-all{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #00C805;
+    color: white;
+    width: 100%;
+    height: 44px;
+    border-radius: 25px;
+    font-weight: 600;
+    margin: 10px 0px;
+    cursor: pointer;
+}
+
+.cancel-sell-all{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    color: #00C805;
+    border: solid #00C805 2px;
+    width: 100%;
+    height: 44px;
+    border-radius: 25px;
+    font-weight: 600;
+    margin: 10px 0px;
+    cursor: pointer;
+}
+
+.cancel-sell-all:hover{
+    background-color: #E5F9E6;
+}
+.accept-sell-all:hover{
+    background-color: #00b306;
+}

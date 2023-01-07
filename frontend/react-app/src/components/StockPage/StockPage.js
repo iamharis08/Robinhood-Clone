@@ -371,6 +371,7 @@ const StockPage = () => {
                   </div>
                 )}
 
+                {!sellAll ?
                 <div className="transactions-submit-button">
                   <div className="errors">
                     {errors?.map((error, ind) => (
@@ -382,18 +383,19 @@ const StockPage = () => {
                       <div key={ind}>{message}</div>
                     ))}
                     </div>
-                  <div className="review-order-button" onClick={handleSubmit}>
+                   <div className="review-order-button" onClick={handleSubmit}>
                     Review Order
                   </div>
 
-                </div>
+                </div> : null}
+
                 {sellAll ? (
                     <div className="sell-all-confirmation">
                         <div className="sell-all-message">
                         You are placing an order to sell all your shares of {stockSymbol}
                        </div>
                        <div className="accept-sell-all" onClick={handleSellAll}>Sell All</div>
-                       <div className="cancel-sell-all" onClick={() => setSellAll(false)}></div>
+                       <div className="cancel-sell-all" onClick={() => setSellAll(false)}>Cancel</div>
                        </div>) : null}
                 {/* {clickedDropdown && (
                     <div className="buy-type-dropdown">
