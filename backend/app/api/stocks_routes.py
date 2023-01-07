@@ -4,6 +4,8 @@ from app.models import db, User, Watchlist, Stock
 from app.forms import WatchlistForm, StocksSearchForm
 from sqlalchemy import or_
 import yfinance as yf
+from yahoo_fin import stock_info as si
+
 
 stocks_routes = Blueprint('stocks', __name__)
 
@@ -81,6 +83,15 @@ def get_stock(stock_symbol):
 
     return formatted_res, 200
 
+@stocks_routes.route('/<stock_symbol>')
+@login_required
+def get_stock_price(stock_symbol):
+    """
+    Query for all user watchlists with user_id and returns all watchlsits in a dictionary
+    """
+    price = si.get_live_price(stock_symbol)
+
+    return {"liveStockPrice": price}, 200
 
 ## GET a specific Watchlist by id
 

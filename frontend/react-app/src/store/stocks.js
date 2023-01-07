@@ -2,10 +2,16 @@
 const GET_STOCK = 'stocks/GET_STOCK';
 const CLEAR_STOCK = 'stocks/CLEAR_STOCK';
 const FIND_STOCKS = 'stocks/FIND_STOCKS'
+const GET_LIVE_PRICE = 'stock/GET_LIVE_PRICE'
 
 const getStockInfo = (stockInfo) => ({
     type: GET_STOCK,
     stockInfo
+})
+
+const getLiveStockPrice = (liveStockPrice) => ({
+    type: GET_LIVE_PRICE,
+    liveStockPrice
 })
 
 const findStocks = (stocks) => ({
@@ -27,6 +33,17 @@ export const fetchStockInfo = (stockSymbol) => async (dispatch) => {
       }
 
       dispatch(getStockInfo(data));
+    }
+  }
+export const fetchStockPrice = (stockSymbol) => async (dispatch) => {
+    const response = await fetch(`/api/stocks/${stockSymbol}`);
+    if (response.ok) {
+      const data = await response.json();
+      if (data.errors) {
+        return;
+      }
+
+      dispatch(getLiveStockPrice(data));
     }
   }
 
@@ -60,13 +77,17 @@ export const fetchStockSearch = (name) => async (dispatch) => {
 //  return newObj
 // }
 
-  const initialState = {stockInfo: {}, searchedStocks: {}}
+  const initialState = {stockInfo: {}, searchedStocks: {}, liveStockPrice: {}}
 
   export default function reducer(state = initialState, action) {
     switch (action.type) {
       case GET_STOCK:{
 
         return { ...state, stockInfo:{...action.stockInfo} }
+      }
+      case GET_LIVE_PRICE:{
+
+        return { ...state, liveStockPrice: action.liveStockPrice }
       }
       case CLEAR_STOCK:{
 

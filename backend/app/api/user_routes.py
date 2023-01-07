@@ -33,7 +33,7 @@ def user_stocks():
     """
     user = current_user
 
-    return {'user_stocks': [stock.to_dict() for stock in user.user_stocks]}, 200
+    return {'userStocks': [stock.to_dict() for stock in user.user_stocks]}, 200
 
 
 
@@ -77,7 +77,7 @@ def buy_user_stocks():
         db.session.add(new_user_stock)
         db.session.commit()
 
-        return {'userStocks': new_user_stock.to_dict()}, 200
+        return {'userStock': new_user_stock.to_dict()}, 200
 
 
 @user_routes.route('/stocks', methods=['PUT'])
@@ -115,7 +115,7 @@ def update_user_stocks():
             print(user.buying_power, "NEWWWWWWWW")
             db.session.commit()
 
-            return {'userStocks': user_stock.to_dict()}, 200
+            return {'userStock': user_stock.to_dict()}, 200
 
         if form.data['stock_shares_sold']:
             subtracted_total_shares = user_stock.stock_shares - form.data['stock_shares_sold']
@@ -138,9 +138,9 @@ def update_user_stocks():
             if user_stock == None:
                 return {'Message': "Stock Sold Successfully"}, 200
             else:
-                return {'userStocks': user_stock.to_dict()}, 200
+                return {'userStock': user_stock.to_dict()}, 200
 
-    return {'userStocks': "transaction failed enter correct data"}, 404
+    return {'userStock': "transaction failed enter correct data"}, 404
 
 
 
@@ -173,4 +173,5 @@ def sell_user_stocks():
         db.session.delete(sell_user_stock)
         db.session.commit()
 
-        return {'message': "Stock Sold Successfully"}, 200
+        return {'message': "Stock Sold Successfully", 'soldStock': sell_user_stock.to_dict()}, 200
+    return {"message": "Invalid transaction input"}

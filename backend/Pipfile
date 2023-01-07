@@ -32,6 +32,7 @@ eventlet = "*"
 finnhub-python = "*"
 requests = "*"
 yfinance = "*"
+yahoo-fin = "*"
 
 [dev-packages]
 

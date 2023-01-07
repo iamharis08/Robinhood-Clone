@@ -3,10 +3,13 @@ import thunk from 'redux-thunk';
 import session from './session'
 import lists from './lists'
 import stocks from './stocks'
+import transactions from './transactions'
+
 const rootReducer = combineReducers({
   session,
   lists,
-  stocks
+  stocks,
+  transactions
 });
 
 
