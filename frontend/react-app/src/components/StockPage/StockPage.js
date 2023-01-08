@@ -44,8 +44,8 @@ const StockPage = () => {
   const [regularMarketPrice, setRegularMarketPrice] = useState(false);
   const [tooltipPrice, setToolTipPrice] = useState('');
   const livePrice = liveStockPrice?.liveStockPrice?.toFixed(2);
-  console.log(errors, "ERRRRRRRRRRRRRORSSS");
-    console.log(allUserStocks, "ALLUSER STOCKSSS")
+  // console.log(errors, "ERRRRRRRRRRRRRORSSS");
+  //   console.log(allUserStocks, "ALLUSER STOCKSSS")
   const handleSelect = (e) => {
     return setClickedBuyIn(e.target.value);
   };
@@ -111,7 +111,7 @@ const StockPage = () => {
         if (data.error) {
           setErrors([data.error]);
         }
-        console.log(data, "DATAAAAAAAAAAAAAAAAAAAAA FRONT")
+        // console.log(data, "DATAAAAAAAAAAAAAAAAAAAAA FRONT")
         if (data.success === "All shares sold successfully"){
           setIsBuy(true)
           setSuccess([])
@@ -123,7 +123,7 @@ const StockPage = () => {
       if (data.error) {
         setErrors([data.error]);
       }
-      console.log(data, "BUY NEEWWWW STOCKKKKKK")
+      // console.log(data, "BUY NEEWWWW STOCKKKKKK")
       if (data.success){
 
         setSuccess([])
@@ -443,7 +443,7 @@ const StockPage = () => {
 
       {showAddModal && (
         <Modal onClose={() => setShowAddModal(false)}>
-          {console.log(hasStock, "HASSSSSS STOCKKkk STOCK PAGE")}
+          {/* {console.log(hasStock, "HASSSSSS STOCKKkk STOCK PAGE")} */}
           <WatchlistStockModal
             hasStock={hasStock}
             setShowAddModal={setShowAddModal}

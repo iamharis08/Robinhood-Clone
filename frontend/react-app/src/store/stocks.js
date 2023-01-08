@@ -76,22 +76,26 @@ export const fetchStocksPrices = (stockSymbols) => async (dispatch) => {
   }
 
 export const fetchHistoricalData = (stocksInfo) => async (dispatch) => {
-  // console.log(JSON.stringify({stock_symbols: JSON.stringify(stockSymbols)}), "STOCKARRAYYYYYY BEFOREEEEEEEEEEEEE")
+  console.log(JSON.stringify({stocks_info : JSON.stringify(stocksInfo)}), "STOCKARRAYYYYYY BEFOREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
     const response = await fetch(`/api/stocks/historical`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({stock_symbols: JSON.stringify(stocksInfo)}),
+      body: JSON.stringify({stocks_info : JSON.stringify(stocksInfo)}),
     });
     if (response.ok) {
       const data = await response.json();
+      console.log(data, "RESPONSEEEEEEEEDATAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
       if (data.errors) {
         return;
       }
-      console.log(data, "RESPONSEEEEEEEE")
       dispatch(getHistoricalData(data));
       return data
+    }else {
+      let newData = await response.json()
+      console.log(newData, "RESPONSEEEEEEEEDATAAAAAAAAAAAAAAAAAAAAAAAAAAAANEWWWWWWWWWWWWW")
+
     }
 
   }

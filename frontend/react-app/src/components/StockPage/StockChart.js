@@ -11,9 +11,11 @@ const StockChart = ({ setToolTipPrice, setRegularMarketPrice }) => {
   const { stockSymbol } = useParams();
   const historicalData = useSelector((state) => state.stocks.historicalData);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isSelected, setIsSelected] = useState('1w');
+  const [timeInterval, setTimeInterval] = useState("5m");
+  const [period, setPeriod] = useState("1wk");
 
-
-  console.log(isLoaded, "HISTORICALLLLLLLLLLLLLLLLLLLLL");
+  //   console.log(isLoaded, "HISTORICALLLLLLLLLLLLLLLLLLLLL");
 
   const [data, setData] = useState({
     options: {
@@ -39,11 +41,13 @@ const StockChart = ({ setToolTipPrice, setRegularMarketPrice }) => {
         categories: [],
         labels: {
           show: false,
+          showAlways: false,
         },
         yaxis: {
-          show: true,
+          show: false,
+          showAlways: false,
           labels: {
-            show: true,
+            show: false,
           },
           axisBorder: {
             show: false,
@@ -53,33 +57,41 @@ const StockChart = ({ setToolTipPrice, setRegularMarketPrice }) => {
       noData: {
         text: "Loading...",
         align: "center",
-        verticalAlign: "top",
+        verticalAlign: "center",
         style: {
           color: "black",
           fontSize: "30px",
         },
       },
+      legend: {
+        show: false,
+      },
     },
-
 
     series: [],
   });
 
   useEffect(() => {
     setIsLoaded(false);
-    dispatch(fetchHistoricalData([stockSymbol])).then((data) => {
+    console.log(
+      { stock_symbols: [stockSymbol] },
+      "STOCKINFOOOOOOOOOOOOOOOOOOOOO"
+    );
+    dispatch(
+      fetchHistoricalData({ stock_symbols: [[stockSymbol, timeInterval, period]] })
+    ).then((data) => {
       setIsLoaded(true);
 
-      const historicalDataTimestamps = Object.keys(data);
-      const historicalDataPrices = Object.values(data);
-      console.log(historicalDataPrices, "PRICEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+      //   const historicalDataTimestamps = Object.keys(data[stockSymbol]);
+      //   const historicalDataPrices = Object.values(data[stockSymbol]);
+      //   console.log(historicalDataPrices, "PRICEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
       setData({
         options: {
           chart: {
             id: "basic-bar",
             type: "line",
             events: {
-                mouseLeave: () => setRegularMarketPrice(true)
+              mouseLeave: () => setRegularMarketPrice(true),
             },
             toolbar: {
               show: false,
@@ -100,7 +112,7 @@ const StockChart = ({ setToolTipPrice, setRegularMarketPrice }) => {
           colors: ["#00C805"],
           xaxis: {
             position: "top",
-            categories: Object.keys(data[stockSymbol]),
+            categories: Object.keys(data),
             labels: {
               format: "MMM/d/h/mm",
               formatter: function (value, timestamp) {
@@ -109,6 +121,7 @@ const StockChart = ({ setToolTipPrice, setRegularMarketPrice }) => {
                   month: "short",
                   hour: "2-digit",
                   minute: "2-digit",
+                  year: "2-digit"
                 };
 
                 return new Date(Number(value)).toLocaleDateString(
@@ -136,10 +149,11 @@ const StockChart = ({ setToolTipPrice, setRegularMarketPrice }) => {
             },
           ],
           annotations: {
-            yaxis: [{
-                y: Object.values(data[stockSymbol])[0],
-
-            }]
+            yaxis: [
+              {
+                y: Object.values(data)[0],
+              },
+            ],
           },
           tooltip: {
             enabled: true,
@@ -158,20 +172,21 @@ const StockChart = ({ setToolTipPrice, setRegularMarketPrice }) => {
                 formatter: (seriesName) => (seriesName = "price"),
               },
               formatter: (value) => {
-                setRegularMarketPrice(false)
-                setToolTipPrice(value)}
+                setRegularMarketPrice(false);
+                setToolTipPrice(value);
+              },
             },
           },
         },
         series: [
           {
             name: "series-1",
-            data: Object.values(data[stockSymbol]),
+            data: Object.values(data),
           },
         ],
       });
     });
-  }, [stockSymbol]);
+  }, [stockSymbol, timeInterval, period]);
 
   return (
     <div className="stock-chart-container">
@@ -181,6 +196,49 @@ const StockChart = ({ setToolTipPrice, setRegularMarketPrice }) => {
         width="676"
         height="auto"
       />
+      <div className="time-interval">
+        <div
+          className={isSelected == '1d' ? "selected" : "date"}
+          onClick={() => {
+            setTimeInterval("5m");
+            setPeriod("1d");
+            setIsSelected('1d')
+
+          }}
+        >
+          1D
+        </div>
+        <div
+          className={isSelected == '1wk' ? "selected" : "date"}
+          onClick={() => {
+            setTimeInterval("5m");
+            setPeriod("1wk");
+            setIsSelected('1wk')
+          }}
+        >
+          1W
+        </div>
+        <div className={isSelected == '1m' ? "selected" : "date"} onClick={() => {
+            setTimeInterval('1h')
+            setPeriod('1mo')
+            setIsSelected('1m')
+        }}>1M</div>
+        <div className={isSelected == '3m' ? "selected" : "date"} onClick={() => {
+            setTimeInterval('1d')
+            setPeriod('3mo')
+            setIsSelected('3m')
+        }}>3M</div>
+        <div className={isSelected == '1y' ? "selected" : "date"} onClick={() => {
+            setTimeInterval('1d')
+            setPeriod('1y')
+            setIsSelected('1y')
+        }}>1Y</div>
+        <div className={isSelected == '5y' ? "selected" : "date" } onClick={() => {
+            setTimeInterval('1wk')
+            setPeriod('5y')
+            setIsSelected('5y')
+        }}>5Y</div>
+      </div>
     </div>
   );
 };

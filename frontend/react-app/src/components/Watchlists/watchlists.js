@@ -41,7 +41,7 @@ const Watchlists = () => {
   const [listId, setListId] = useState("");
   const [errors, setErrors] = useState([]);
   const stocksArray = Object.values(allUserStocks)
-
+console.log(allUserStocks, "ALLUSERSTOCKSSSS")
   useEffect(() => {
     dispatch(fetchAllWatchlists());
     dispatch(fetchAllUserStocks())

@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request, json
 from flask_login import login_required, current_user
 from app.models import db, User, Watchlist, Stock
-from app.forms import WatchlistForm, StocksSearchForm, TickerPricesForm
+from app.forms import WatchlistForm, StocksSearchForm, TickerPricesForm, HistoricalDataForm
 from sqlalchemy import or_
 import yfinance as yf
 from yahoo_fin import stock_info as si
@@ -102,8 +102,8 @@ def get_stocks_prices():
     form = TickerPricesForm()
     form['csrf_token'].data = request.cookies['csrf_token']
     # stock_symbols=form.data["stock_symbols"]
+    print(form.data['stock_symbols'], "STOCKKKKKSYMBOLLLLLS")
     stocks = json.loads(form.data['stock_symbols'])
-    print(stocks, "STOCKKKKKSYMBOLLLLLS")
     prices = {}
     for stock in stocks:
         price = si.get_live_price(stock["stockSymbol"])
@@ -118,32 +118,99 @@ def get_stocks_historical_data():
     Query for all user watchlists with user_id and returns all watchlsits in a dictionary
     """
 
-    form = TickerPricesForm()
+    form = HistoricalDataForm()
     form['csrf_token'].data = request.cookies['csrf_token']
-    # stock_symbols=form.data["stock_symbols"]
-    # stocks = json.loads(form.data['stock_symbols'])
-    # print(stocks, "STOCKKKKKSYMBOLLLLLS")
-    data = {}
+    print(form.data["stocks_info"], "FOMRDATAAAAAAAAAAAAAAAA")
+    data=json.loads(form.data['stocks_info'])
+    # print(data, "daaaaaaaaataaaa")
+    # stocks_info_json = data["stock_symbols"]
+    stock_symbols = data["stock_symbols"]
+    # time_intervals = data["time_intervals"]
+    # print(stocks_info_json, "STOCKINFOJSONN")
+    # stocks_info = json.loads(stocks_info_json)
+    # print(stock_symbols, "STOCKSYMBOLSSSSS")
+    # stock_symbols = stocks_info["stock_symbols"]
+    print(stock_symbols, "STOCKSYMBOLSSSSS")
+    # print(stocks_info, "SYMBOLSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
+
+    # print(stock_symbols, "STOCKKKKKSYMBOLLLLLSSSSSSSSSSSSSSSSSSSSSSS")
+
+    # if form.validate_on_submit():
+    #     print(form.data["stocks_info"], "FOMRDATAAAAAAAAAAAAAAAA")
+    #     print(data, "daaaaaaaaataaaa")
+    #     print(stocks_info_json, "STOCKINFOJSONN")
+        # print(stocks_info, "STOCKINFOOO")
+        # print(stock_symbols, "STOCKSYMBOLSSSSS")
+    #     return {'messsage': "idk failed"}
 
     ticker = yf.Ticker('AAPL')
     from datetime import datetime, timedelta
     now = datetime.now()
-    one_week_ago = now - timedelta(weeks=1)
+    one_week_ago = now - timedelta(days=1)
     date_string = one_week_ago.strftime('%m/%d/%Y')
     print(date_string)
-    symbol = 'AAPL'
+
+    # symbols = ['AAPL', "TSLA"]
     start_date = one_week_ago
     end_date = now
-    interval = '5m'
 
-    historical_data = yf.download(tickers=symbol, start=start_date, end=end_date, interval=interval)
-    close_prices = historical_data['Close']
+    new_data = {}
 
-    print(close_prices.to_json())
+    for stock in stock_symbols:
+        from datetime import datetime, timedelta
+        now = datetime.now()
+        symbol = stock[0]
+        interval = stock[1]
+        period = stock[2]
+        time_period = None
+        # date_string = None
+        if period == '1wk':
+            time_period = now - timedelta(weeks=1)
+            # date_string = time_period.strftime('%m/%d/%Y')
+        elif period == '1d':
+            time_period = now - timedelta(days=1)
+            # date_string = time_period.strftime('%m/%d/%Y')
+        elif period == '1mo':
+            time_period = now - timedelta(weeks=4)
+            # date_string = time_period.strftime('%m/%d/%Y')
+        elif period == '3mo':
+            time_period = now - timedelta(weeks=12)
+            # date_string = time_period.strftime('%m/%d/%Y')
+        elif period == '1y':
+            time_period = now - timedelta(days=365)
+            # date_string = time_period.strftime('%m/%d/%Y')
+        elif period == '5y':
+            time_period = now - timedelta(days=1825)
+            # date_string = time_period.strftime('%m/%d/%Y')
+
+
+
+        print(time_period, "TIME PERIODDDDDDDDDDDDDDDDDDDDDDD")
+
+        # symbols = ['AAPL', "TSLA"]
+        start_date = time_period
+        end_date = now
+        if period == '1d':
+            historical_data = yf.download(tickers=symbol, period=period, interval=interval)
+            close_prices = historical_data['Close']
+
+            new_data.update(json.loads(close_prices.to_json()))
+        else:
+            historical_data = yf.download(tickers=symbol, start=start_date, end=end_date, interval=interval)
+            close_prices = historical_data['Close']
+
+            new_data.update(json.loads(close_prices.to_json()))
+
+
+
+    # print(new_data, "NEWWWWDATTTTTTTTAAAA")
     # for stock in stocks:
-    data[symbol] = json.loads(close_prices.to_json(orient="index"))
+    # new_data = {}
+    # for symbol in symbols:
+    #     data[symbol] = json.loads(data[symbol])
     # print(historical_data, "PRICESSSSSSSSSSSSSSSS")
-    return data, 200
+    return new_data, 200
+
 
 
 ## GET a specific Watchlist by id

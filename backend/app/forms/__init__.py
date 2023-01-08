@@ -7,3 +7,4 @@ from .buy_stock_form import BuyStockForm
 from .sell_stock_form import SellStockForm
 from .update_stock_form import UpdateStockForm
 from .stock_symbols_form import TickerPricesForm
+from .stock_historical_form import HistoricalDataForm
