@@ -18,6 +18,7 @@ import {
   fetchUpdateStocks,
 } from "../../store/transactions";
 import { fetchUser } from "../../store/session";
+import StockChart from "./StockChart";
 
 const StockPage = () => {
   const dispatch = useDispatch();
@@ -40,6 +41,8 @@ const StockPage = () => {
   const [success, setSuccess] = useState([]);
   const [click, setClick] = useState(false);
   const [sellAll, setSellAll] = useState(false);
+  const [regularMarketPrice, setRegularMarketPrice] = useState(false);
+  const [tooltipPrice, setToolTipPrice] = useState('');
   const livePrice = liveStockPrice?.liveStockPrice?.toFixed(2);
   console.log(errors, "ERRRRRRRRRRRRRORSSS");
     console.log(allUserStocks, "ALLUSER STOCKSSS")
@@ -173,12 +176,15 @@ const StockPage = () => {
           <div className="chart-container">
             <div className="chart-header">
               <div className="main-name">{stockSymbol}</div>
-              <div className="stock-price">$129.97</div>
+              <div className="stock-price">{!regularMarketPrice ? Number(tooltipPrice).toFixed(2): livePrice} </div>
               <div className="price-change">-$18.33(-12.36%) Past month</div>
             </div>
             <div className="chart">
-              <div className="line-chart"></div>
-              <div className="time-period"></div>
+              {/* <div className="line-chart">
+
+              </div>
+              <div className="time-period"></div> */}
+              <StockChart setToolTipPrice={setToolTipPrice} setRegularMarketPrice={setRegularMarketPrice} />
             </div>
           </div>
           <div className="stock-info-container">

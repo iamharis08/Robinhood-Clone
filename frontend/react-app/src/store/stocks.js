@@ -4,10 +4,15 @@ const CLEAR_STOCK = 'stocks/CLEAR_STOCK';
 const FIND_STOCKS = 'stocks/FIND_STOCKS'
 const GET_LIVE_PRICE = 'stock/GET_LIVE_PRICE'
 const GET_LIVE_PRICES = 'stock/GET_LIVE_PRICES'
+const GET_HISTORICAL_DATA = 'stock/GET_HISTORICAL_DATA'
 
 const getStockInfo = (stockInfo) => ({
     type: GET_STOCK,
     stockInfo
+})
+const getHistoricalData = (stocksInfo) => ({
+    type: GET_HISTORICAL_DATA,
+    stocksInfo
 })
 
 const getLiveStockPrice = (liveStockPrice) => ({
@@ -70,6 +75,27 @@ export const fetchStocksPrices = (stockSymbols) => async (dispatch) => {
     }
   }
 
+export const fetchHistoricalData = (stocksInfo) => async (dispatch) => {
+  // console.log(JSON.stringify({stock_symbols: JSON.stringify(stockSymbols)}), "STOCKARRAYYYYYY BEFOREEEEEEEEEEEEE")
+    const response = await fetch(`/api/stocks/historical`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({stock_symbols: JSON.stringify(stocksInfo)}),
+    });
+    if (response.ok) {
+      const data = await response.json();
+      if (data.errors) {
+        return;
+      }
+      console.log(data, "RESPONSEEEEEEEE")
+      dispatch(getHistoricalData(data));
+      return data
+    }
+
+  }
+
 export const fetchStockSearch = (name) => async (dispatch) => {
   const response = await fetch(`/api/stocks/`, {
     method: 'POST',
@@ -100,7 +126,7 @@ export const fetchStockSearch = (name) => async (dispatch) => {
 //  return newObj
 // }
 
-  const initialState = {stockInfo: {}, searchedStocks: {}, liveStockPrice: {}, liveStocksPrices: {}}
+  const initialState = {stockInfo: {}, searchedStocks: {}, liveStockPrice: {}, liveStocksPrices: {}, historicalData: {}}
 
   export default function reducer(state = initialState, action) {
     switch (action.type) {
@@ -115,6 +141,10 @@ export const fetchStockSearch = (name) => async (dispatch) => {
       case GET_LIVE_PRICES:{
 
         return { ...state, liveStocksPrices: action.liveStocksPrices.liveStockPrices }
+      }
+      case GET_HISTORICAL_DATA:{
+
+        return { ...state, historicalData: action.stocksInfo }
       }
       case CLEAR_STOCK:{
 

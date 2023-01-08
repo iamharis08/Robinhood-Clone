@@ -203,3 +203,8 @@
     font-size: 13px;
     padding-right: 24px;
 }
+
+.stock-chart-container{
+    width: 100%;
+    height: 100%;
+}

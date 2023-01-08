@@ -104,16 +104,47 @@ def get_stocks_prices():
     # stock_symbols=form.data["stock_symbols"]
     stocks = json.loads(form.data['stock_symbols'])
     print(stocks, "STOCKKKKKSYMBOLLLLLS")
-    # request_body = request.data.decode()
-    # print(request_body, "DATAAAAAAAAAAAAAAA")
-    # return {}
-    # print(form.data["stock_symbols"])
     prices = {}
     for stock in stocks:
         price = si.get_live_price(stock["stockSymbol"])
         prices[stock["stockSymbol"]]=price
     print(prices, "PRICESSSSSSSSSSSSSSSS")
     return {"liveStockPrices": prices}, 200
+
+@stocks_routes.route('/historical', methods=['POST'])
+@login_required
+def get_stocks_historical_data():
+    """
+    Query for all user watchlists with user_id and returns all watchlsits in a dictionary
+    """
+
+    form = TickerPricesForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
+    # stock_symbols=form.data["stock_symbols"]
+    # stocks = json.loads(form.data['stock_symbols'])
+    # print(stocks, "STOCKKKKKSYMBOLLLLLS")
+    data = {}
+
+    ticker = yf.Ticker('AAPL')
+    from datetime import datetime, timedelta
+    now = datetime.now()
+    one_week_ago = now - timedelta(weeks=1)
+    date_string = one_week_ago.strftime('%m/%d/%Y')
+    print(date_string)
+    symbol = 'AAPL'
+    start_date = one_week_ago
+    end_date = now
+    interval = '5m'
+
+    historical_data = yf.download(tickers=symbol, start=start_date, end=end_date, interval=interval)
+    close_prices = historical_data['Close']
+
+    print(close_prices.to_json())
+    # for stock in stocks:
+    data[symbol] = json.loads(close_prices.to_json(orient="index"))
+    # print(historical_data, "PRICESSSSSSSSSSSSSSSS")
+    return data, 200
+
 
 ## GET a specific Watchlist by id
 
@@ -129,6 +160,7 @@ def find_stocks():
     if len(list(stocks)) > 0:
         return {'stocks': [stock.to_dict() for stock in stocks]}, 200
     else: return {"errors": "could not find stocks"}
+
 
 
 # ##Create Watchlist
