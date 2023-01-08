@@ -267,7 +267,10 @@ const StockPage = () => {
                     className={
                       isBuy ? "clicked-transaction-type" : "buy-stock-title"
                     }
-                    onClick={() => setIsBuy(true)}
+                    onClick={() => {
+                      setIsBuy(true)
+                      setSellAll(false)
+                    }}
                   >
                     Buy {stockSymbol}
                   </div>
@@ -278,7 +281,10 @@ const StockPage = () => {
                     className={
                       isBuy ? "clicked-transaction-type" : "buy-stock-title"
                     }
-                    onClick={() => setIsBuy(true)}
+                    onClick={() => {
+                      setIsBuy(true)
+                      setSellAll(false)
+                    }}
                   >
                     Buy {stockSymbol}
                   </div>

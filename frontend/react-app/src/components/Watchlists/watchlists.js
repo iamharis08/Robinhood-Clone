@@ -10,13 +10,25 @@ import "../../css/Watchlists.css";
 import editImg from "../../css/images/edit.svg";
 import arrowImg from "../../css/images/arrow.svg";
 import addImg from "../../css/images/add.svg";
-import { fetchAddWatchlist, fetchAllWatchlists, fetchUpdateWatchlist } from "../../store/lists";
+import {
+  fetchAddWatchlist,
+  fetchAllWatchlists,
+  fetchUpdateWatchlist,
+} from "../../store/lists";
 import EditWatchlistModal from "./EditWatchlistModal";
 import DeleteWatchlistModal from "./DeleteWatchlistModal";
 import { Modal } from "../context/Modal";
+import { fetchAllUserStocks } from "../../store/transactions";
+import { fetchStocksPrices } from "../../store/stocks";
 
 const Watchlists = () => {
   const dispatch = useDispatch();
+  const allUserStocks = useSelector(
+    (state) => state.transactions.allUserStocks
+  );
+  const allStockPrices = useSelector(
+    (state) => state.stocks.liveStocksPrices
+  );
   const watchlists = useSelector((state) => state.lists.watchlists);
   const [hoveredList, setHoveredList] = useState(null);
   const [isClicked, setIsClicked] = useState([]);
@@ -24,15 +36,30 @@ const Watchlists = () => {
   const [clickedList, setClickedList] = useState(null);
   const [isAddingWatchlist, setIsAddingWatchlist] = useState(false);
   const [showEditWatchlistMenu, setshowEditWatchlistMenu] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false)
-  const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const [listId, setListId] = useState('')
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [listId, setListId] = useState("");
   const [errors, setErrors] = useState([]);
-
+  const stocksArray = Object.values(allUserStocks)
 
   useEffect(() => {
     dispatch(fetchAllWatchlists());
+    dispatch(fetchAllUserStocks())
   }, []);
+
+
+
+  useEffect(() => {
+
+   if(stocksArray){
+    dispatch(fetchStocksPrices(stocksArray))
+    const interval = setInterval(() => {
+      dispatch(fetchStocksPrices(stocksArray));
+    }, 10000);
+    return () => clearInterval(interval);
+  }
+
+  }, [stocksArray.length]);
 
   useEffect(() => {
     if (!showEditWatchlistMenu) {
@@ -99,20 +126,34 @@ const Watchlists = () => {
                 setIsClicked([...removedIndex]);
               }
             }}
-            >
+          >
             {clickedList === index && showEditWatchlistMenu && (
-                  <div className="edit-dropdown" onClick={(e) => {
-                    e.stopPropagation()}}>
-                    <div className="edit-list" onClick={() => {
-                          setShowEditModal(true)
-                          setListId(watchlist.id)
-                    }}>Edit list</div>
-                    <div className="delete-list" onClick={() => {
-                          setShowDeleteModal(true)
-                          setListId(watchlist.id)
-                    }}>Delete list</div>
-                  </div>
-                )}
+              <div
+                className="edit-dropdown"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <div
+                  className="edit-list"
+                  onClick={() => {
+                    setShowEditModal(true);
+                    setListId(watchlist.id);
+                  }}
+                >
+                  Edit list
+                </div>
+                <div
+                  className="delete-list"
+                  onClick={() => {
+                    setShowDeleteModal(true);
+                    setListId(watchlist.id);
+                  }}
+                >
+                  Delete list
+                </div>
+              </div>
+            )}
             <div className="watchlist-name">
               <div className="bulb">
                 <img
@@ -137,9 +178,7 @@ const Watchlists = () => {
                 </div>
               )}
 
-
               <div className="watchlist-arrow">
-
                 <img src={arrowImg} />
               </div>
             </div>
@@ -148,14 +187,17 @@ const Watchlists = () => {
             watchlist.stocks.map((stock, index) => {
               return (
                 <div key={index}>
-                <NavLink className="stock-links" to={`/stocks/${stock.stock_symbol}`}>
-                <div className="watchlist-header">
-                  <div className="watchlist-name stocks">
-                  {stock.stock_symbol}
-                  </div>
-                </div>
+                  <NavLink
+                    className="stock-links"
+                    to={`/stocks/${stock.stock_symbol}`}
+                  >
+                    <div className="watchlist-header">
+                      <div className="watchlist-name stocks">
+                        {stock.stock_symbol}
+                      </div>
+                    </div>
                   </NavLink>
-                  </div>
+                </div>
               );
             })}
         </div>
@@ -163,13 +205,47 @@ const Watchlists = () => {
     }
   );
 
+  const userStocksComponents = Object.values(allUserStocks)?.map(
+    (stock, index) => {
+      return (
+        <div key={index} className="user-stocks">
+          <NavLink
+                    className="stock-links"
+                    to={`/stocks/${stock.stockSymbol}`}
+                  >
+          <div className="user-stock-link">
+            <div className="user-stock-header">
+              <div className="user-stock-left">
+              <div className="user-stock-name">
+                {stock.stockSymbol}
+              </div>
+              <div className="user-stock-shares">{`${stock.stockShares}`.length > 1 ? stock.stockShares.toFixed(4) : stock.stockShares} Shares</div>
+              </div>
+              <div className="user-stock-price-container">
+                {
+
+                    <div className="stock-price">
+                      {allStockPrices ? (`$${allStockPrices[stock.stockSymbol]?.toFixed(2)}`) : "...Loading"}
+                    </div>
+
+                }
+              </div>
+            </div>
+          </div>
+          </NavLink>
+        </div>
+      )
+    })
+
   return (
     <div className="lists-container">
       <div className="stocks-list">
         <div className="header-title">
           <div className="header-text">Stocks</div>
         </div>
-        <div className="user-stocks"></div>
+        <div className="user-stocks-container">
+          {userStocksComponents}
+        </div>
       </div>
       <div className="stocks-list">
         <div className="header-title">
@@ -216,23 +292,23 @@ const Watchlists = () => {
         <div className="watchlists">{watchlistsComponents}</div>
       </div>
       {showEditModal && (
-          <Modal onClose={() => setShowEditModal(false)}>
-            <EditWatchlistModal
-              setShowEditModal={setShowEditModal}
-              listId = {listId}
-              // showModal={showEditModal}
-            />
-          </Modal>
-        )}
+        <Modal onClose={() => setShowEditModal(false)}>
+          <EditWatchlistModal
+            setShowEditModal={setShowEditModal}
+            listId={listId}
+            // showModal={showEditModal}
+          />
+        </Modal>
+      )}
       {showDeleteModal && (
-          <Modal onClose={() => setShowDeleteModal(false)}>
-            <DeleteWatchlistModal
-              setShowDeleteModal={setShowDeleteModal}
-              listId = {listId}
-              // showModal={showEditModal}
-            />
-          </Modal>
-        )}
+        <Modal onClose={() => setShowDeleteModal(false)}>
+          <DeleteWatchlistModal
+            setShowDeleteModal={setShowDeleteModal}
+            listId={listId}
+            // showModal={showEditModal}
+          />
+        </Modal>
+      )}
     </div>
   );
 };

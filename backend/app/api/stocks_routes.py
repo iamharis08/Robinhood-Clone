@@ -1,7 +1,7 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, json
 from flask_login import login_required, current_user
 from app.models import db, User, Watchlist, Stock
-from app.forms import WatchlistForm, StocksSearchForm
+from app.forms import WatchlistForm, StocksSearchForm, TickerPricesForm
 from sqlalchemy import or_
 import yfinance as yf
 from yahoo_fin import stock_info as si
@@ -92,6 +92,28 @@ def get_stock_price(stock_symbol):
     price = si.get_live_price(stock_symbol)
 
     return {"liveStockPrice": price}, 200
+
+@stocks_routes.route('/prices', methods=['POST'])
+@login_required
+def get_stocks_prices():
+    """
+    Query for all user watchlists with user_id and returns all watchlsits in a dictionary
+    """
+    form = TickerPricesForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
+    # stock_symbols=form.data["stock_symbols"]
+    stocks = json.loads(form.data['stock_symbols'])
+    print(stocks, "STOCKKKKKSYMBOLLLLLS")
+    # request_body = request.data.decode()
+    # print(request_body, "DATAAAAAAAAAAAAAAA")
+    # return {}
+    # print(form.data["stock_symbols"])
+    prices = {}
+    for stock in stocks:
+        price = si.get_live_price(stock["stockSymbol"])
+        prices[stock["stockSymbol"]]=price
+    print(prices, "PRICESSSSSSSSSSSSSSSS")
+    return {"liveStockPrices": prices}, 200
 
 ## GET a specific Watchlist by id
 

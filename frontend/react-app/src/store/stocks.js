@@ -3,6 +3,7 @@ const GET_STOCK = 'stocks/GET_STOCK';
 const CLEAR_STOCK = 'stocks/CLEAR_STOCK';
 const FIND_STOCKS = 'stocks/FIND_STOCKS'
 const GET_LIVE_PRICE = 'stock/GET_LIVE_PRICE'
+const GET_LIVE_PRICES = 'stock/GET_LIVE_PRICES'
 
 const getStockInfo = (stockInfo) => ({
     type: GET_STOCK,
@@ -12,6 +13,10 @@ const getStockInfo = (stockInfo) => ({
 const getLiveStockPrice = (liveStockPrice) => ({
     type: GET_LIVE_PRICE,
     liveStockPrice
+})
+const getLiveStocksPrices = (liveStocksPrices) => ({
+    type: GET_LIVE_PRICES,
+    liveStocksPrices
 })
 
 const findStocks = (stocks) => ({
@@ -46,6 +51,24 @@ export const fetchStockPrice = (stockSymbol) => async (dispatch) => {
       dispatch(getLiveStockPrice(data));
     }
   }
+export const fetchStocksPrices = (stockSymbols) => async (dispatch) => {
+  console.log(JSON.stringify({stock_symbols: JSON.stringify(stockSymbols)}), "STOCKARRAYYYYYY BEFOREEEEEEEEEEEEE")
+    const response = await fetch(`/api/stocks/prices`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({stock_symbols: JSON.stringify(stockSymbols)}),
+    });
+    if (response.ok) {
+      const data = await response.json();
+      if (data.errors) {
+        return;
+      }
+      console.log(data, "RESPONSEEEEEEEE")
+      dispatch(getLiveStocksPrices(data));
+    }
+  }
 
 export const fetchStockSearch = (name) => async (dispatch) => {
   const response = await fetch(`/api/stocks/`, {
@@ -77,7 +100,7 @@ export const fetchStockSearch = (name) => async (dispatch) => {
 //  return newObj
 // }
 
-  const initialState = {stockInfo: {}, searchedStocks: {}, liveStockPrice: {}}
+  const initialState = {stockInfo: {}, searchedStocks: {}, liveStockPrice: {}, liveStocksPrices: {}}
 
   export default function reducer(state = initialState, action) {
     switch (action.type) {
@@ -88,6 +111,10 @@ export const fetchStockSearch = (name) => async (dispatch) => {
       case GET_LIVE_PRICE:{
 
         return { ...state, liveStockPrice: action.liveStockPrice }
+      }
+      case GET_LIVE_PRICES:{
+
+        return { ...state, liveStocksPrices: action.liveStocksPrices.liveStockPrices }
       }
       case CLEAR_STOCK:{
 
