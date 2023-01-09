@@ -21,3 +21,57 @@
     height: 100%;
     width: 100%;
 }
+
+
+.login-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 500px;
+    height: 100vh;
+    gap: 18px;
+    padding-left: 50px;
+}
+
+.login-title{
+    font-size: 21px;
+}
+
+input[name="email"],
+input[name="password"]{
+    width: 394px;
+    height: 34px;
+
+}
+
+.login-password{
+    margin-top: 12px;
+    height: 100px;
+
+}
+
+#login-button{
+    margin-top: 50px;
+    padding: 10px 50px;
+    background-color: black;
+    color: white;
+    border-radius: 25px;
+    cursor: pointer;
+}
+
+.login-errors{
+    color: red;
+
+}
+
+.demo-login{
+    cursor: pointer;
+    margin-top: 10px;
+    text-decoration: underline;
+}
+
+.demo-login:hover{
+    text-decoration: underline;
+    text-decoration-color: black;
+}

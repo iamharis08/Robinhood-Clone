@@ -6,16 +6,25 @@ import HomeNavBars from "../../css/HomeNavBar.css";
 import logoIcon from "../../css/images/risinghoodblackicon.png";
 import searchIcon from "../../css/images/searchIcon.svg";
 import { fetchStockSearch } from "../../store/stocks";
+import User from "../User";
+import { logout } from "../../store/session";
 
 
 const HomeNavBar = () => {
   const dispatch = useDispatch();
   const history = useHistory()
   const searchedStocks = useSelector((state) => state.stocks.searchedStocks);
+  const user = useSelector((state) => state.session.user);
   const [searchName, setSearchName] = useState("");
   const [isFocused, setIsFocused] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
   const inputRef = useRef(null);
   console.log(searchedStocks, "searcheds tocks");
+
+
+    const onLogout = async (e) => {
+      await dispatch(logout());
+    };
 
   useEffect(() => {
     console.log("fetching");
@@ -39,6 +48,20 @@ const HomeNavBar = () => {
     return () => document.removeEventListener("click", closeMenu);
   }, [isFocused]);
 
+  useEffect(() => {
+    if (!isClicked) {
+      return;
+    }
+    const closeMenu = () => {
+      setIsClicked(false);
+    };
+
+    // click event listener to whole doc -- if we click on page it will run
+    // closeMenu!! -- really sets 'setShowMenu' to false or our slice of state on showing menu
+    document.addEventListener("click", closeMenu);
+
+    return () => document.removeEventListener("click", closeMenu);
+  }, [isClicked]);
 
   return (
     <div className="home-nav-container">
@@ -116,9 +139,16 @@ const HomeNavBar = () => {
         <NavLink className="home-link" to="/stocks/AMC">
           Notifications
         </NavLink> */}
-        <NavLink className="home-link" to="/stocks/GME">
+        <div className="account-link" onClick={() => setIsClicked(!isClicked)}>
           Account
-        </NavLink>
+        </div>
+        {isClicked && (
+          <div className="account-dropdown-container">
+            <div className="logout-container" onClick={onLogout}><div className="logout-text">Logout</div></div>
+            <div className="first-name-dropdown"><div className="first-name-text">{user.firstName} {user.lastName}</div></div>
+            <div className="user-buying-power-dropdown"><div className="buying-power-dropdown-text">Buying Power : ${user.buying_power}</div></div>
+          </div>
+        )}
       </div>
     </div>
   );

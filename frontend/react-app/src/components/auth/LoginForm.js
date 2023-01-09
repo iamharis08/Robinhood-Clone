@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { login } from "../../store/session";
+import "../../css/LoginPage.css"
 
 const LoginForm = () => {
   const [errors, setErrors] = useState([]);
@@ -41,53 +42,15 @@ const LoginForm = () => {
   return (
     <form onSubmit={onLogin}>
       <div className="login-container">
+        <div className="login-title">Login to Risinghood</div>
         <div className="login-errors">
           {errors.map((error, ind) => (
             <div key={ind}>{error}</div>
           ))}
         </div>
-        {/* <div>
-        <label htmlFor='FirstName'>First Name</label>
-        <input
-          name='name'
-          type='text'
-          placeholder='First Name'
-          value={email}
-          onChange={updateEmail}
-        />
-      </div>
-      <div>
-        <label htmlFor='LastName'>Last Name</label>
-        <input
-          name='name'
-          type='text'
-          placeholder='Last Name'
-          value={email}
-          onChange={updateEmail}
-        />
-      </div>
-      <div>
-        <label htmlFor='Username'>Username</label>
-        <input
-          name='name'
-          type='text'
-          placeholder='Username'
-          value={email}
-          onChange={updateEmail}
-        />
-      </div>
-      <div>
-        <label htmlFor='email'>Email</label>
-        <input
-          name='email'
-          type='text'
-          placeholder='Email'
-          value={email}
-          onChange={updateEmail}
-        />
-      </div> */}
+
         <div className="login-email">
-          <label htmlFor="email">Email</label>
+          <div className="email-title" >Email</div>
           <input
             name="email"
             type="text"
@@ -97,7 +60,7 @@ const LoginForm = () => {
           />
         </div>
         <div className="login-password">
-          <label htmlFor="password">Password</label>
+          <div className="password-title">Password</div>
           <input
             name="password"
             type="password"
@@ -105,8 +68,9 @@ const LoginForm = () => {
             value={password}
             onChange={updatePassword}
           />
-          <button type="submit">Login</button>
+        <div className="demo-login" onClick={demoLogin}>Demo Login</div>
         </div>
+          <button id="login-button" type="submit">Login</button>
       </div>
     </form>
   );

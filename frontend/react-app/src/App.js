@@ -55,9 +55,9 @@ function App() {
         <Route path="/" exact={true}>
           <SplashPage />
         </Route>
-        <Route path={`/stocks/:stockSymbol`} exact={true}>
+        <ProtectedRoute path={`/stocks/:stockSymbol`} exact={true}>
           <StockPage />
-        </Route>
+        </ProtectedRoute>
       </Switch>
     </BrowserRouter>
   );

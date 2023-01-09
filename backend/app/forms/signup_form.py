@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField
-from wtforms.validators import DataRequired, Email, ValidationError
+from wtforms.validators import DataRequired, Email, ValidationError, NumberRange
 from app.models import User
 
 
@@ -25,6 +25,7 @@ class SignUpForm(FlaskForm):
     last_name = StringField('Last Name', validators=[DataRequired()])
     username = StringField('username', validators=[DataRequired(), username_exists])
     email = StringField('email', validators=[DataRequired(), user_exists])
+    total_investment = IntegerField('total investment', validators=[DataRequired(), NumberRange(min=0, max=1000000, message="Initial investment is currently limited to $1,000,000")])
     buying_power = IntegerField('buying power', validators=[DataRequired()])
 
     password = StringField('password', validators=[DataRequired()])

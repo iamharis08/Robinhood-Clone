@@ -26,9 +26,16 @@
     font-weight: 500;
     padding-right: 10px;
     border-right: solid black 1px;
+    text-decoration: none;
+}
+
+#splash-logo:visited{
+    text-decoration: none;
+    color: black;
 }
 #splash-logo{
     font-size: 24px;
+    text-decoration: none;
 }
 
 #splash-logo img {
@@ -71,7 +78,7 @@
     border: solid black 1px;
     border-radius: 50px;
     cursor: pointer;
-
+    text-decoration: none;
 }
 
 .signup{
@@ -83,6 +90,61 @@
     border: solid black 1px;
     border-radius: 50px;
     background-color: black;
+    text-decoration: none;
     color: white;
     cursor: pointer;
+}
+
+.signup:visited{
+    text-decoration: none;
+    color: white;
+}
+.login:visited{
+    text-decoration: none;
+    color: black;
+}
+
+#github-logo{
+    width: 35px;
+    height: 35px;
+}
+
+.nav-links{
+    display: flex;
+    align-items: center;
+    padding-left: 50px;
+    text-decoration: none;
+    color: black;
+}
+.haris-developer {
+    display: flex;
+    width: 300px;
+    height: 40px;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: black;
+    /* flex-direction: row; */
+    /* text-align: center; */
+}
+.github{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: black;
+}
+
+.haris-text{
+    text-decoration: none;
+    color: black;
+}
+a {
+    color: unset;
+    text-decoration: unset;
+  }
+
+.haris-text:visited{
+    text-decoration: none;
+    color: black;
 }

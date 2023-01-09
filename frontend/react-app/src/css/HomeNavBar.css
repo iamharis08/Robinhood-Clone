@@ -88,6 +88,7 @@ input[name="expanded-search-bar"]:hover {
 }
 
 .home-nav-links {
+  position: relative;
   display: flex;
   justify-content: flex-end;
   /* width: 400px; */
@@ -142,4 +143,57 @@ input[name="expanded-search-bar"]:hover {
 
 .search-stock-container:hover {
   background-color: #f5f8fa;
+}
+
+.account-link{
+  margin-right: 5%;
+  cursor: pointer;
+  font-weight: 600;
+
+}
+
+.account-link:hover{
+  text-decoration: underline;
+}
+
+.account-dropdown-container{
+  position: absolute;
+    width: 200px;
+    height: 100px;
+    top: 35px;
+    background-color: white;
+    border: solid black 1px;
+    box-shadow: 0px 10px 35px rgba(185, 185, 185, 0.295);
+}
+
+.logout-container{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+  border-bottom: solid #e3e9ed 1px;
+  border-top: solid #e3e9ed 1px;
+  height: 35px;
+  /* padding-left: 10px; */
+}
+
+.logout-container:hover{
+  background-color: #e3e9ed;
+}
+.logout-text{
+  padding-left: 10px;
+  font-weight: 700;
+  color:red;
+}
+
+.first-name-dropdown{
+  padding-left: 10px;
+  padding-top: 10px;
+  font-weight: 500;
+}
+
+.user-buying-power-dropdown{
+  padding-left: 10px;
+  font-weight: 500;
 }
