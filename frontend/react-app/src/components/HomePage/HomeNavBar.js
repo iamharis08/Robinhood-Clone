@@ -101,7 +101,7 @@ const HomeNavBar = () => {
         </div>
       </div>
       <div className="home-nav-links">
-        <NavLink className="home-link" to="/stocks/AAPL">
+        {/* <NavLink className="home-link" to="/stocks/AAPL">
           Rewards
         </NavLink>
         <NavLink className="home-link" to="/stocks/TSLA">
@@ -115,7 +115,7 @@ const HomeNavBar = () => {
         </NavLink>
         <NavLink className="home-link" to="/stocks/AMC">
           Notifications
-        </NavLink>
+        </NavLink> */}
         <NavLink className="home-link" to="/stocks/GME">
           Account
         </NavLink>

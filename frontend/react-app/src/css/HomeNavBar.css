@@ -89,7 +89,9 @@ input[name="expanded-search-bar"]:hover {
 
 .home-nav-links {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
+  /* width: 400px; */
+  /* padding-right: 240px; */
   margin-right: 34px;
   width: 550px;
 }

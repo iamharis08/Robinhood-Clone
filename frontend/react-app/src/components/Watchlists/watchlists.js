@@ -302,22 +302,27 @@ const Watchlists = () => {
         {isAddingWatchlist && (
           <div className="add-watchlist-container">
             <div className="watchlist-form">
+              <div className="bulb-container">
+
               <div className="bulb">
                 <img
                   src={"https://cdn.robinhood.com/emoji/v0/128/1f4a1.png"}
                   alt="bulb"
                 />
               </div>
+              </div>
               <form onSubmit={handleSubmit}>
                 <input
                   placeholder="List Name"
                   minlength="3"
                   maxlength="20"
+                  name="input"
                   type="text"
                   value={listName}
                   onChange={(e) => setListName(e.target.value)}
                   required
                 />
+                <div className="buttons-add">
                 <div
                   className="cancel-add-list"
                   onClick={() => setIsAddingWatchlist(false)}
@@ -327,6 +332,7 @@ const Watchlists = () => {
                 <button className="add-list-submit" type="submit">
                   Create List
                 </button>
+                </div>
               </form>
             </div>
           </div>

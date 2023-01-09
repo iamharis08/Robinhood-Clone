@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchHistoricalData } from "../../store/stocks";
 import { useParams } from "react-router-dom";
 
-const StockChart = ({ setToolTipPrice, setRegularMarketPrice }) => {
+const StockChart = ({ setToolTipPrice, setRegularMarketPrice, setPriceChange, setPercentChange }) => {
   const dispatch = useDispatch();
   const { stockSymbol } = useParams();
   const historicalData = useSelector((state) => state.stocks.historicalData);
@@ -84,9 +84,14 @@ const StockChart = ({ setToolTipPrice, setRegularMarketPrice }) => {
     dispatch(
       fetchHistoricalData({ stock_symbols: [[stockSymbol, timeInterval, period]] })
     ).then((data) => {
-        console.log(data, "INSIDETHENNNNNNNNNNNNNNNNNNNNN")
-      setIsLoaded(true);
-
+        setIsLoaded(true);
+        let dataArray = Object.values(data)
+        let priceArray = Object.values(dataArray[0])
+        let priceChange = priceArray[priceArray.length - 1] - priceArray[0]
+        let percentChange = (priceChange/priceArray.length) *100
+        console.log(priceArray, "INSIDETHENNNNNNNNNNNNNNNNNNNNNNNNNNN")
+      setPercentChange(percentChange.toFixed(2))
+      setPriceChange(priceChange.toFixed(2))
       //   const historicalDataTimestamps = Object.keys(data[stockSymbol]);
       //   const historicalDataPrices = Object.values(data[stockSymbol]);
       //   console.log(historicalDataPrices, "PRICEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
@@ -202,6 +207,7 @@ const StockChart = ({ setToolTipPrice, setRegularMarketPrice }) => {
           },
         ],
       });
+
     });
   }, [stockSymbol, timeInterval, period]);
 

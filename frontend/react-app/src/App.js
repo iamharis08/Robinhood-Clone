@@ -54,7 +54,6 @@ function App() {
         </ProtectedRoute>
         <Route path="/" exact={true}>
           <SplashPage />
-          <h1>My Home Page</h1>
         </Route>
         <Route path={`/stocks/:stockSymbol`} exact={true}>
           <StockPage />

@@ -27,14 +27,15 @@ const HomePage = () => {
             <div className="home-chart">
               <div className="investment-container">
                   <div className="investment"> ${Object.values(allUserStocks).length ? ( ((price ? price : 0) - (Object.values(allUserStocks)[0]["total_invested"] ? Object.values(allUserStocks)[0]["total_invested"] : 0) + user?.total_investment ).toFixed(2) ) : user.total_investment}</div>
-                  
+
               </div>
               <UserInvestmentChart setPrice={setPrice} setRegularMarketPrice={setRegularMarketPrice} setToolTipPrice={setToolTipPrice} />
             </div>
             <div className="buying-power">
               Buying Power <span>${user.buying_power}</span>
             </div>
-            <div className="buying-power">
+
+            {/* <div className="buying-power">
              Trending List
             </div>
             <div className="buying-power">
@@ -66,7 +67,7 @@ const HomePage = () => {
             </div>
             <div className="buying-power">
               News
-            </div>
+            </div> */}
           </div>
           <Watchlists />
           {/* <div className="lists-container">

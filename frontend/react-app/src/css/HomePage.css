@@ -23,13 +23,13 @@
   width: 100%;
   height: 100%;
   margin-top: 64px;
-  border: solid black 2px;
+  /* border: solid black 2px; */
 }
 
 .left-content {
   width: 85vw;
   height: 100%;
-  border: solid black 1px;
+  /* border: solid black 1px; */
   display: flex;
   /* flex-flow: row wrap; */
 
@@ -40,9 +40,13 @@
 }
 
 .home-chart {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   width: 100%;
   height: 375px;
-  border: solid black 1px;
+  border-bottom: solid #e3e9ed 1px;
+  /* border: solid black 1px; */
   /* min-width: 421px; */
   max-width: 1014px;
 }
@@ -58,7 +62,7 @@
   width: 28vw;
   max-width: 331px;
   height: 84vh;
-  border: solid #E3E9ED 1px;
+  border: solid #e3e9ed 1px;
   margin: 36px 0px 0px 18px;
   overflow-y: scroll;
   /* padding: 0px 24px 0px 24px; */
@@ -69,7 +73,29 @@
   background-color: transparent;
 }
 
-.investment{
+.investment {
   font-size: 32px;
   font-weight: 500;
+}
+
+.buying-power {
+  display: flex;
+  justify-content: space-between;
+  height: fit-content;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 600;
+  max-height: 73px;
+  padding: 24px 0px;
+  /* border-top: solid #E3E9ED 1px; */
+  border-bottom: solid #e3e9ed 1px;
+}
+
+.buying-power span {
+  font-size: 15px;
+}
+
+.user-investment-chart-container {
+  width: 100%;
+  z-index: -100;
 }

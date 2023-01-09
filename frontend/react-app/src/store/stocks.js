@@ -54,6 +54,7 @@ export const fetchStockPrice = (stockSymbol) => async (dispatch) => {
       }
       console.log(data, "RESPONSEEEEEEEE")
       dispatch(getLiveStockPrice(data));
+      return data
     }
   }
 export const fetchStocksPrices = (stockSymbols) => async (dispatch) => {

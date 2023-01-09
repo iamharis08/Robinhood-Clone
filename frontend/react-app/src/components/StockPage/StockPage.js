@@ -40,9 +40,12 @@ const StockPage = () => {
   const [errors, setErrors] = useState([]);
   const [success, setSuccess] = useState([]);
   const [click, setClick] = useState(false);
+  const [priceLive, setPriceLive] = useState(liveStockPrice?.liveStockPrice?.toFixed(2));
   const [sellAll, setSellAll] = useState(false);
-  const [regularMarketPrice, setRegularMarketPrice] = useState(false);
-  const [tooltipPrice, setToolTipPrice] = useState('');
+  const [percentChange, setPercentChange] = useState('');
+  const [priceChange, setPriceChange] = useState('');
+  const [regularMarketPrice, setRegularMarketPrice] = useState(true);
+  const [tooltipPrice, setToolTipPrice] = useState("");
   const livePrice = liveStockPrice?.liveStockPrice?.toFixed(2);
   // console.log(errors, "ERRRRRRRRRRRRRORSSS");
   //   console.log(allUserStocks, "ALLUSER STOCKSSS")
@@ -53,24 +56,20 @@ const StockPage = () => {
   const handleSellAll = () => {
     const sellTransaction = {
       stock_symbol: stockSymbol,
-      price_per_share_sold : livePrice
-    }
-    dispatch(fetchSellAllStocks(sellTransaction))
-    .then((data) => {
-      setSellAll(false)
-      setIsBuy(true)
-      setSuccess(["All shares sold successfully"])
-      dispatch(fetchUser())
-    })
-
-  }
+      price_per_share_sold: livePrice,
+    };
+    dispatch(fetchSellAllStocks(sellTransaction)).then((data) => {
+      setSellAll(false);
+      setIsBuy(true);
+      setSuccess(["All shares sold successfully"]);
+      dispatch(fetchUser());
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSuccess([])
+    setSuccess([]);
     setErrors([]);
-
-
 
     let shares;
 
@@ -102,23 +101,26 @@ const StockPage = () => {
         if (data.error) {
           setErrors([data.error]);
         }
-        if (data.success){
-          setSuccess([])
-          setSuccess([data.success])
+        if (data.success) {
+          setSuccess([]);
+          setSuccess([data.success]);
         }
       } else {
-        if (sharesInput > allUserStocks[stockSymbol].stockShares || sharesInput > allUserStocks[stockSymbol].stockShares){
-          return setErrors(["You do not have enough shares"])
+        if (
+          sharesInput > allUserStocks[stockSymbol].stockShares ||
+          sharesInput > allUserStocks[stockSymbol].stockShares
+        ) {
+          return setErrors(["You do not have enough shares"]);
         }
         const data = await dispatch(fetchUpdateStocks(updateSellStock));
         if (data.error) {
           setErrors([data.error]);
         }
         // console.log(data, "DATAAAAAAAAAAAAAAAAAAAAA FRONT")
-        if (data.success){
-          setIsBuy(true)
-          setSuccess([])
-          setSuccess([data.success])
+        if (data.success) {
+          setIsBuy(true);
+          setSuccess([]);
+          setSuccess([data.success]);
         }
       }
     } else {
@@ -127,14 +129,13 @@ const StockPage = () => {
         setErrors([data.error]);
       }
       // console.log(data, "BUY NEEWWWW STOCKKKKKK")
-      if (data.success){
-
-        setSuccess([])
-        setSuccess([data.success])
+      if (data.success) {
+        setSuccess([]);
+        setSuccess([data.success]);
       }
     }
-    setClick(!click)
-    dispatch(fetchUser())
+    setClick(!click);
+    dispatch(fetchUser());
   };
 
   useEffect(() => {
@@ -151,24 +152,25 @@ const StockPage = () => {
 
   useEffect(() => {
     dispatch(fetchUser());
-    dispatch(fetchAllUserStocks())
+    dispatch(fetchAllUserStocks());
   }, [click]);
-
-
 
   useEffect(() => {
     dispatch(clearStockInfo());
     dispatch(fetchStockInfo(stockSymbol));
     liveStockPrice.liveStockPrice = 0;
-  }, [dispatch, stockSymbol]);
+  }, [ stockSymbol]);
 
   useEffect(() => {
-    dispatch(fetchStockPrice(stockSymbol));
+    dispatch(fetchStockPrice(stockSymbol))
+    .then((data) => setPriceLive(data.liveStockPrice?.toFixed(2)))
     const interval = setInterval(() => {
       dispatch(fetchStockPrice(stockSymbol));
     }, 5000);
     return () => clearInterval(interval);
-  }, [dispatch, stockSymbol]);
+  }, [dispatch, stockSymbol, livePrice]);
+
+
 
   return (
     <div className="stock-page-container">
@@ -180,15 +182,24 @@ const StockPage = () => {
           <div className="chart-container">
             <div className="chart-header">
               <div className="main-name">{stockSymbol}</div>
-              <div className="stock-price">{!regularMarketPrice ? Number(tooltipPrice).toFixed(2): livePrice} </div>
-              <div className="price-change">-$18.33(-12.36%) Past month</div>
+              <div className="stock-page-price">
+                ${regularMarketPrice
+                  ? livePrice
+                  : Number(tooltipPrice).toFixed(2)}
+              </div>
+              <div className={percentChange < 0 ? "negative" : "positive" }><span >${priceChange}</span> &nbsp; <span>({percentChange}%)</span> </div>
             </div>
             <div className="chart">
               {/* <div className="line-chart">
 
               </div>
               <div className="time-period"></div> */}
-              <StockChart setToolTipPrice={setToolTipPrice} setRegularMarketPrice={setRegularMarketPrice} />
+              <StockChart
+                setToolTipPrice={setToolTipPrice}
+                setRegularMarketPrice={setRegularMarketPrice}
+                setPercentChange={setPercentChange}
+                setPriceChange={setPriceChange}
+              />
             </div>
           </div>
           <div className="stock-info-container">
@@ -196,73 +207,85 @@ const StockPage = () => {
               <div className="about">About</div>
             </div>
             <div className="stock-description">
-              {stockInfo.stockDescription}
+              {stockInfo?.stockDescription
+                ? stockInfo?.stockDescription
+                : "...Loading"}
             </div>
             <div className="company-info-container">
               {/* <div className="ceo-container">
                     <div className="ceo-title">CEO</div>
                     <div className="ceo-name">Timothy Donald Cook</div>
                 </div> */}
-              <div className="employees-container">
-                <div className="employees-title">Employees</div>
-                <div className="employees-name">{stockInfo.employees}</div>
-              </div>
-              <div className="headquarters-container">
-                <div className="headquarters-title">Headquarters</div>
-                <div className="headquarters-name">
-                  {stockInfo.headquarters}
+              <div className="info-container">
+                <div className="info-title">Employees</div>
+                <div className="info-name">
+                  {stockInfo?.employees ? stockInfo?.employees : "...Loading"}
                 </div>
               </div>
-              <div className="founded-container">
-                <div className="founded-title">Sector</div>
-                <div className="founded-name">{stockInfo.Sector}</div>
+              <div className="info-container">
+                <div className="info-title">Headquarters</div>
+                <div className="info-name">
+                  {stockInfo?.headquarters
+                    ? stockInfo?.headquarters
+                    : "...Loading"}
+                </div>
+              </div>
+              <div className="info-container">
+                <div className="info-title">Sector</div>
+                <div className="info-name">
+                  {stockInfo?.Sector ? stockInfo?.Sector : "...Loading"}
+                </div>
               </div>
             </div>
             <div className="key-statistics-container">
               <div className="key-statistics-title">Key statistics</div>
-              <div className="key-info-container">
-                <div className="key-info-title">Market cap</div>
-                <div className="key-info-name">{stockInfo.marketCap}</div>
-              </div>
-              <div className="key-info-container">
-                <div className="key-info-title">Price-Earnings ratio</div>
-                <div className="key-info-name">
-                  {stockInfo.priceEarningsRatio}
+              <div className="key-container">
+                <div className="key-info-container">
+                  <div className="key-info-title">Market cap</div>
+                  <div className="key-info-name">{stockInfo?.marketCap ? stockInfo?.marketCap : "...Loading"}</div>
                 </div>
-              </div>
-              <div className="key-info-container">
-                <div className="key-info-title">Dividend yield</div>
-                <div className="key-info-name">{stockInfo.dividendYield}</div>
-              </div>
-              <div className="key-info-container">
-                <div className="key-info-title">Average volume</div>
-                <div className="key-info-name">{stockInfo.averageVolume}</div>
-              </div>
-              <div className="key-info-container">
-                <div className="key-info-title">High today</div>
-                <div className="key-info-name">{stockInfo.highToday}</div>
-              </div>
-              <div className="key-info-container">
-                <div className="key-info-title">Low today</div>
-                <div className="key-info-name">{stockInfo.lowToday}</div>
-              </div>
-              <div className="key-info-container">
-                <div className="key-info-title">Open price</div>
-                <div className="employees-name">{stockInfo.openPrice}</div>
-              </div>
-              <div className="key-info-container">
-                <div className="key-info-title">Volume</div>
-                <div className="key-info-name">{stockInfo.volume}</div>
-              </div>
-              <div className="key-info-container">
-                <div className="key-info-title">52 Week high</div>
-                <div className="key-info-name">
-                  {stockInfo.fiftyTwoWeekHigh}
+                <div className="key-info-container">
+                  <div className="key-info-title">Price-Earnings ratio</div>
+                  <div className="key-info-name">
+                    {stockInfo?.priceEarningsRatio ? stockInfo?.priceEarningsRatio : "...Loading"}
+                  </div>
                 </div>
-              </div>
-              <div className="key-info-container">
-                <div className="key-info-title">52 Week low</div>
-                <div className="key-info-name">{stockInfo.fiftyTwoWeekLow}</div>
+                <div className="key-info-container">
+                  <div className="key-info-title">Dividend yield</div>
+                  <div className="key-info-name">{stockInfo?.dividendYield ? stockInfo?.dividendYield : "...Loading" }</div>
+                </div>
+                <div className="key-info-container">
+                  <div className="key-info-title">Average volume</div>
+                  <div className="key-info-name">{stockInfo?.averageVolume ? stockInfo?.averageVolume : "...Loading"}</div>
+                </div>
+                <div className="key-info-container">
+                  <div className="key-info-title">High today</div>
+                  <div className="key-info-name">${stockInfo?.highToday ? stockInfo?.highToday : "...Loading"}</div>
+                </div>
+                <div className="key-info-container">
+                  <div className="key-info-title">Low today</div>
+                  <div className="key-info-name">${stockInfo?.lowToday ? stockInfo?.lowToday : "...Loading" }</div>
+                </div>
+                <div className="key-info-container">
+                  <div className="key-info-title">Open price</div>
+                  <div className="key-info-name">${stockInfo?.openPrice ? stockInfo?.openPrice : "...Loading"}</div>
+                </div>
+                <div className="key-info-container">
+                  <div className="key-info-title">Volume</div>
+                  <div className="key-info-name">{stockInfo?.volume ? stockInfo?.volume : "...Loading"}</div>
+                </div>
+                <div className="key-info-container">
+                  <div className="key-info-title">52 Week high</div>
+                  <div className="key-info-name">
+                    ${stockInfo?.fiftyTwoWeekHigh ? stockInfo?.fiftyTwoWeekHigh : "...Loading"}
+                  </div>
+                </div>
+                <div className="key-info-container">
+                  <div className="key-info-title">52 Week low</div>
+                  <div className="key-info-name">
+                    ${stockInfo?.fiftyTwoWeekLow ? stockInfo?.fiftyTwoWeekLow : "...Loading"}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -278,8 +301,8 @@ const StockPage = () => {
                       isBuy ? "clicked-transaction-type" : "buy-stock-title"
                     }
                     onClick={() => {
-                      setIsBuy(true)
-                      setSellAll(false)
+                      setIsBuy(true);
+                      setSellAll(false);
                     }}
                   >
                     Buy {stockSymbol}
@@ -292,8 +315,8 @@ const StockPage = () => {
                       isBuy ? "clicked-transaction-type" : "buy-stock-title"
                     }
                     onClick={() => {
-                      setIsBuy(true)
-                      setSellAll(false)
+                      setIsBuy(true);
+                      setSellAll(false);
                     }}
                   >
                     Buy {stockSymbol}
@@ -369,7 +392,11 @@ const StockPage = () => {
                 </div>
                 {isBuy ? (
                   <div className="transaction-total">
-                    <div className="estimated-text">{clickedBuyIn === "shares" ? "Estimated Cost" : "Estimated Qty."}</div>
+                    <div className="estimated-text">
+                      {clickedBuyIn === "shares"
+                        ? "Estimated Cost"
+                        : "Estimated Qty."}
+                    </div>
                     <div className="estimated-price">
                       {clickedBuyIn === "shares"
                         ? `$${(livePrice * sharesInput).toFixed(2)}`
@@ -378,7 +405,11 @@ const StockPage = () => {
                   </div>
                 ) : (
                   <div className="transaction-total">
-                    <div className="estimated-text">{clickedBuyIn === "shares" ? "Estimated Credit" : "Estimated Qty."}</div>
+                    <div className="estimated-text">
+                      {clickedBuyIn === "shares"
+                        ? "Estimated Credit"
+                        : "Estimated Qty."}
+                    </div>
                     <div className="estimated-price">
                       {clickedBuyIn === "shares"
                         ? `$${(livePrice * sharesInput).toFixed(2)}`
@@ -387,32 +418,41 @@ const StockPage = () => {
                   </div>
                 )}
 
-                {!sellAll ?
-                <div className="transactions-submit-button">
-                  <div className="errors">
-                    {errors?.map((error, ind) => (
-                      <div key={ind}>{error}</div>
-                    ))}
-                  </div>
+                {!sellAll ? (
+                  <div className="transactions-submit-button">
+                    <div className="errors">
+                      {errors?.map((error, ind) => (
+                        <div key={ind}>{error}</div>
+                      ))}
+                    </div>
                     <div className="success">
                       {success?.map((message, ind) => (
-                      <div key={ind}>{message}</div>
-                    ))}
+                        <div key={ind}>{message}</div>
+                      ))}
                     </div>
-                   <div className="review-order-button" onClick={handleSubmit}>
-                    Review Order
+                    <div className="review-order-button" onClick={handleSubmit}>
+                      Review Order
+                    </div>
                   </div>
-
-                </div> : null}
+                ) : null}
 
                 {sellAll ? (
-                    <div className="sell-all-confirmation">
-                        <div className="sell-all-message">
-                        You are placing an order to sell all your shares of {stockSymbol}
-                       </div>
-                       <div className="accept-sell-all" onClick={handleSellAll}>Sell All</div>
-                       <div className="cancel-sell-all" onClick={() => setSellAll(false)}>Cancel</div>
-                       </div>) : null}
+                  <div className="sell-all-confirmation">
+                    <div className="sell-all-message">
+                      You are placing an order to sell all your shares of{" "}
+                      {stockSymbol}
+                    </div>
+                    <div className="accept-sell-all" onClick={handleSellAll}>
+                      Sell All
+                    </div>
+                    <div
+                      className="cancel-sell-all"
+                      onClick={() => setSellAll(false)}
+                    >
+                      Cancel
+                    </div>
+                  </div>
+                ) : null}
                 {/* {clickedDropdown && (
                     <div className="buy-type-dropdown">
                       <div className="Shares">Shares</div>
@@ -429,8 +469,41 @@ const StockPage = () => {
               ) : (
                 <div className="transactions-power">
                   <div className="transactions-power-text-sell">
-
-                    {clickedBuyIn === 'shares' ? (<><div className="investment-power">About {allUserStocks[stockSymbol]?.stockShares.length > 1 ? (allUserStocks[stockSymbol]?.stockShares)?.toFixed(4) : allUserStocks[stockSymbol]?.stockShares} Shares Avaialable</div><div className="sell-all" onClick={() => setSellAll(true)}>-<span>Sell All</span></div></>) : (<><div className="investment-power">About ${(allUserStocks[stockSymbol]?.stockShares * livePrice)?.toFixed(4)} Avaialable</div><div className="sell-all" onClick={() => setSellAll(true)}>- <span>Sell All</span></div></>)}
+                    {clickedBuyIn === "shares" ? (
+                      <>
+                        <div className="investment-power">
+                          About{" "}
+                          {allUserStocks[stockSymbol]?.stockShares.length > 1
+                            ? allUserStocks[stockSymbol]?.stockShares?.toFixed(
+                                4
+                              )
+                            : allUserStocks[stockSymbol]?.stockShares}{" "}
+                          Shares Avaialable
+                        </div>
+                        <div
+                          className="sell-all"
+                          onClick={() => setSellAll(true)}
+                        >
+                          -<span>Sell All</span>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="investment-power">
+                          About $
+                          {(
+                            allUserStocks[stockSymbol]?.stockShares * livePrice
+                          )?.toFixed(4)}{" "}
+                          Avaialable
+                        </div>
+                        <div
+                          className="sell-all"
+                          onClick={() => setSellAll(true)}
+                        >
+                          - <span>Sell All</span>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               )}

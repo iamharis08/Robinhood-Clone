@@ -120,6 +120,42 @@
     font-weight: 700;
     width: 90px;
 }
+.add-watchlist-container{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 101px;
+    /* min-height: 101px; */
+    overflow-y: hidden;
+    /* padding: 8px 24px 8px 18px; */
+}
+.buttons-add{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    gap: 15px;
+}
+
+input[name="input"]{
+    width: 100%;
+    max-width: 200px;
+    height: 36px;
+}
+
+.bulb img{
+    width: 18px;
+    height: 18px;
+}
+.watchlist-form{
+    display: flex;
+    justify-content:flex-start;
+    align-items: center;
+    padding-left: 28px;
+    width: 303px;
+    height: 100%;
+}
+
 .add-watchlist-button{
     display: flex;
     justify-content: center;
@@ -129,6 +165,43 @@
     margin-right: 20px;
     border-radius: 5px;
     cursor: pointer;
+    overflow: hidden;
+}
+.cancel-add-list{
+    cursor: pointer;
+    font-size: 13px;
+    background-color: white;
+    border: solid #00C805 2px;
+    color: #00C805;
+    padding: 5px 25px;
+    border-radius: 25px;
+
+}
+
+.cancel-add-list:hover{
+    background-color: #2cc53198;
+    color:white;
+}
+
+.add-list-submit{
+    cursor: pointer;
+    font-size: 13px;
+    background-color: #00C805;
+    border: solid #00C805 2px;
+    color: white;
+    padding: 5px 25px;
+    border-radius: 25px;
+
+}
+.bulb-container{
+    display: flex;
+    align-items: flex-start;
+    padding-top: 24px;
+    height: 100%;
+}
+.add-list-submit:hover{
+    background-color: #00af06;
+    color:white;
 }
 
 .add-watchlist-button:hover{
@@ -145,13 +218,23 @@
     top: 60px;
     left: 25%;
     width: 200px;
-    height: 118px;
+    height: fit-content;
     border: solid black 1px;
     background-color: white;
     z-index: 100;
 }
-.edit-dropdown{
-    cursor: default;
+
+.edit-list{
+    height: 40px;
+    display: flex;
+    align-items: center;
+    border-bottom: solid gray 1px;
+}
+
+.delete-list{
+    height: 40px;
+    display: flex;
+    align-items: center;
 }
 
 .edit-list:hover,
@@ -235,4 +318,78 @@
 
 .home-stocks-chart-container{
     margin-right: 50px;
+}
+
+.delete-form-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    width: 408px;
+}
+
+.delete-title{
+    font-size: 24px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.delete-list-submit{
+    cursor: pointer;
+    font-size: 13px;
+    background-color: rgb(235, 3, 3);
+    border: none;
+    margin-top: 24px;
+    color: white;
+    padding: 10px 50px;
+    border-radius: 25px;
+}
+
+.delete-list-submit:hover{
+    background-color: rgb(211, 3, 3);
+}
+
+.edit-form-container{
+    width: 468px;
+    height: 208px;
+    display: flex;
+    flex-direction: column;
+
+}
+
+input[name="edit"]{
+    width: 330px;
+    height: 36px;
+
+}
+
+.edit-title{
+    font-size: 25px;
+    font-weight: 600;
+    padding: 24px 24px ;
+}
+.edit-list-form{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.edit-list-submit .edit{
+    margin-left: 24px;
+    margin-top: 24px;
+
+}
+
+.bulb-input-container{
+    display: flex;
+    justify-content: center;
+}
+
+.submit-button-edit{
+    width: 330;
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
 }

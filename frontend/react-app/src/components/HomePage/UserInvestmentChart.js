@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import "../../css/Watchlists.css";
+import "../../css/HomePage.css";
 import Chart from "react-apexcharts";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchHistoricalData } from "../../store/stocks";
@@ -208,6 +208,17 @@ useEffect(() => {
               axisTicks: {
                 show: false,
               },
+              responsive: [{
+                breakpoint: 1200,
+                options: {
+                  chart: {
+                    width: 600
+                  },
+                  legend: {
+                    position: 'bottom'
+                  }
+                }
+              }],
               annotations: {
                 yaxis: [
                   {
@@ -260,7 +271,7 @@ useEffect(() => {
 
   }, [historicalData, allUserStocks]);
 
- 
+
 
   return (
     <div className="user-investment-chart-container">
@@ -285,6 +296,17 @@ useEffect(() => {
                   enabled: false,
                 },
               },
+              responsive: [{
+                breakpoint: 480,
+                options: {
+                  chart: {
+                    width: 200
+                  },
+                  legend: {
+                    position: 'bottom'
+                  }
+                }
+              }],
               grid: {
                 show: false,
               },
