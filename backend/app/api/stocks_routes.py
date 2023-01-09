@@ -106,8 +106,8 @@ def get_stocks_prices():
     stocks = json.loads(form.data['stock_symbols'])
     prices = {}
     for stock in stocks:
-        price = si.get_live_price(stock["stockSymbol"])
-        prices[stock["stockSymbol"]]=price
+        price = si.get_live_price(stock)
+        prices[stock]=price
     print(prices, "PRICESSSSSSSSSSSSSSSS")
     return {"liveStockPrices": prices}, 200
 
@@ -125,12 +125,13 @@ def get_stocks_historical_data():
     # print(data, "daaaaaaaaataaaa")
     # stocks_info_json = data["stock_symbols"]
     stock_symbols = data["stock_symbols"]
+
+
     # time_intervals = data["time_intervals"]
     # print(stocks_info_json, "STOCKINFOJSONN")
     # stocks_info = json.loads(stocks_info_json)
     # print(stock_symbols, "STOCKSYMBOLSSSSS")
     # stock_symbols = stocks_info["stock_symbols"]
-    print(stock_symbols, "STOCKSYMBOLSSSSS")
     # print(stocks_info, "SYMBOLSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
 
     # print(stock_symbols, "STOCKKKKKSYMBOLLLLLSSSSSSSSSSSSSSSSSSSSSSS")
@@ -143,8 +144,9 @@ def get_stocks_historical_data():
         # print(stock_symbols, "STOCKSYMBOLSSSSS")
     #     return {'messsage': "idk failed"}
 
-    ticker = yf.Ticker('AAPL')
+    # ticker = yf.Ticker('AAPL')
     from datetime import datetime, timedelta
+
     now = datetime.now()
     one_week_ago = now - timedelta(days=1)
     date_string = one_week_ago.strftime('%m/%d/%Y')
@@ -155,9 +157,37 @@ def get_stocks_historical_data():
     end_date = now
 
     new_data = {}
+    if 'tickers' in data:
+        ticker_data = {}
+        tickers = data["tickers"]
 
+        removed_duplicates =[]
+
+
+
+
+        print(removed_duplicates, "TICKERSSSSSCOMON MATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+        if (len(tickers) == 1) or ((len(tickers) == 2) and (tickers[0] == tickers[1])):
+            historical_data = yf.download(tickers=tickers[0], period='1wk', interval='30m')
+            close_prices = historical_data['Close']
+            ticker_data[tickers[0]] = json.loads(close_prices.to_json())
+            print(ticker_data, "PLEASEEEEEEEEETICKERDATAAAAAAAAAAAAAAAA")
+            return ticker_data, 200
+
+        historical_data = yf.download(tickers=tickers, period='1wk', interval='30m')
+        close_prices = historical_data['Close']
+
+
+
+        # ticker_data[symbol]=json.loads(close_prices.to_json())
+
+        print(close_prices.to_json(), "STOCKSYMBOLSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
+        return close_prices.to_json(), 200
+
+
+
+    print(stock_symbols, "FINALLLLSTOCKSUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU")
     for stock in stock_symbols:
-        from datetime import datetime, timedelta
         now = datetime.now()
         symbol = stock[0]
         interval = stock[1]
@@ -194,14 +224,17 @@ def get_stocks_historical_data():
             historical_data = yf.download(tickers=symbol, period=period, interval=interval)
             close_prices = historical_data['Close']
 
-            new_data.update(json.loads(close_prices.to_json()))
+
+            # new_data.update(json.loads(close_prices.to_json()))
         else:
             historical_data = yf.download(tickers=symbol, start=start_date, end=end_date, interval=interval)
             close_prices = historical_data['Close']
 
-            new_data.update(json.loads(close_prices.to_json()))
 
+            # new_data.update(json.loads(close_prices.to_json()))
+        new_data[symbol]=json.loads(close_prices.to_json())
 
+    print(new_data)
 
     # print(new_data, "NEWWWWDATTTTTTTTAAAA")
     # for stock in stocks:

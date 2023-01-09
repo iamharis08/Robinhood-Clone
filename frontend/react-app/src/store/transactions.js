@@ -87,7 +87,10 @@ export const fetchUpdateStocks = (stockTransaction) => async (dispatch) => {
       }
 
       dispatch(getUpdateStock(data));
-      return data
+      if(data.message === "Stock Sold Successfully"){
+
+        return {"success": "Shares successfully sold"}
+      }
     }else return response.json()
   }
 

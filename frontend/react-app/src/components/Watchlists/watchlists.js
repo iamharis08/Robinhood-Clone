@@ -19,16 +19,15 @@ import EditWatchlistModal from "./EditWatchlistModal";
 import DeleteWatchlistModal from "./DeleteWatchlistModal";
 import { Modal } from "../context/Modal";
 import { fetchAllUserStocks } from "../../store/transactions";
-import { fetchStocksPrices } from "../../store/stocks";
+import { fetchHistoricalData, fetchStocksPrices } from "../../store/stocks";
+import HomeStockChart from "../HomePage/HomeStockChart";
 
 const Watchlists = () => {
   const dispatch = useDispatch();
   const allUserStocks = useSelector(
     (state) => state.transactions.allUserStocks
   );
-  const allStockPrices = useSelector(
-    (state) => state.stocks.liveStocksPrices
-  );
+  const allStockPrices = useSelector((state) => state.stocks.liveStocksPrices);
   const watchlists = useSelector((state) => state.lists.watchlists);
   const [hoveredList, setHoveredList] = useState(null);
   const [isClicked, setIsClicked] = useState([]);
@@ -40,25 +39,58 @@ const Watchlists = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [listId, setListId] = useState("");
   const [errors, setErrors] = useState([]);
-  const stocksArray = Object.values(allUserStocks)
-console.log(allUserStocks, "ALLUSERSTOCKSSSS")
+  console.log(allUserStocks, "ALLUSERSTOCKSSSS");
   useEffect(() => {
     dispatch(fetchAllWatchlists());
     dispatch(fetchAllUserStocks())
   }, []);
 
+  const formatStocks = () => {
+    let stockInfoArray = [];
+
+    if (Object.values(allUserStocks).length != 0 )
+    { Object.values(allUserStocks).forEach((stock) => {
+      stockInfoArray.push(stock.stockSymbol);
+    });}
+    if (Object.values(watchlists).length != 0) {
+    Object.values(watchlists).forEach((watchlist) => {
+      watchlist.stocks.forEach((stock) => {
+        stockInfoArray.push(stock.stock_symbol);
+      });
+    });}
+    console.log(stockInfoArray, "STOCKFORMTATEDDDDDDDDDDDDDDDDDDDDDDDDD")
+    return stockInfoArray
+    //  if (Object.values(allUserStocks).length != 0 && Object.values(watchlists).length != 0)
+    //  { Object.values(allUserStocks).forEach((stock) => {
+      //     stockInfoArray.push([stock.stockSymbol, "1wk", "30m"]);
+      //   });
+      //   Object.values(watchlists).forEach((watchlist) => {
+        //     watchlist.stocks.forEach((stock) => {
+          //       stockInfoArray.push([stock.stock_symbol, "1wk", "30m"]);
+          //     });
+          //   });}
+          //   console.log(stockInfoArray, "STOCKFORMTATEDDDDDDDDDDDDDDDDDDDDDDDDD")
+          //   return stockInfoArray
+        };
+
+        useEffect(() => {
+
+          dispatch(
+            fetchHistoricalData({ stock_symbols: [], tickers: formatStocks() })
+            )
+
+          }, [watchlists, allUserStocks]);
 
 
-  useEffect(() => {
-
-   if(stocksArray){
-    dispatch(fetchStocksPrices(stocksArray))
-    const interval = setInterval(() => {
-      dispatch(fetchStocksPrices(stocksArray));
-    }, 10000);
-    return () => clearInterval(interval);
-  }
-
+          const stocksArray = formatStocks();
+          useEffect(() => {
+            if (stocksArray.length) {
+              dispatch(fetchStocksPrices(stocksArray));
+              const interval = setInterval(() => {
+                dispatch(fetchStocksPrices(stocksArray));
+      }, 10000);
+      return () => clearInterval(interval);
+    }
   }, [stocksArray.length]);
 
   useEffect(() => {
@@ -195,6 +227,14 @@ console.log(allUserStocks, "ALLUSERSTOCKSSSS")
                       <div className="watchlist-name stocks">
                         {stock.stock_symbol}
                       </div>
+                      <div className="home-charts">
+                      <HomeStockChart stockSymbol={stock.stock_symbol} />
+                      </div>
+                      <div className="watchlist-price">
+                      {Object.values(allStockPrices).length
+                        ? `$${allStockPrices[stock.stock_symbol]?.toFixed(2)}`
+                        : "...Loading"}
+                    </div>
                     </div>
                   </NavLink>
                 </div>
@@ -209,33 +249,37 @@ console.log(allUserStocks, "ALLUSERSTOCKSSSS")
     (stock, index) => {
       return (
         <div key={index} className="user-stocks">
-          <NavLink
-                    className="stock-links"
-                    to={`/stocks/${stock.stockSymbol}`}
-                  >
-          <div className="user-stock-link">
-            <div className="user-stock-header">
-              <div className="user-stock-left">
-              <div className="user-stock-name">
-                {stock.stockSymbol}
-              </div>
-              <div className="user-stock-shares">{`${stock.stockShares}`.length > 1 ? stock.stockShares.toFixed(4) : stock.stockShares} Shares</div>
-              </div>
-              <div className="user-stock-price-container">
-                {
+          <NavLink className="stock-links" to={`/stocks/${stock.stockSymbol}`}>
+            <div className="user-stock-link">
+              <div className="user-stock-header">
+                <div className="user-stock-left">
+                  <div className="user-stock-name">{stock.stockSymbol}</div>
+                  <div className="user-stock-shares">
+                    {`${stock.stockShares}`.length > 1
+                      ? stock.stockShares.toFixed(2)
+                      : stock.stockShares}{" "}
+                    Shares
+                  </div>
+                </div>
+                <div className="user-stocks-chart">
+                <HomeStockChart stockSymbol={stock.stockSymbol} />
+                </div>
+                <div className="user-stock-price-container">
 
                     <div className="stock-price">
-                      {allStockPrices ? (`$${allStockPrices[stock.stockSymbol]?.toFixed(2)}`) : "...Loading"}
+                      {Object.values(allStockPrices).length
+                        ? `$${allStockPrices[stock.stockSymbol]?.toFixed(2)}`
+                        : "...Loading"}
                     </div>
 
-                }
+                </div>
               </div>
             </div>
-          </div>
           </NavLink>
         </div>
-      )
-    })
+      );
+    }
+  );
 
   return (
     <div className="lists-container">
@@ -243,12 +287,10 @@ console.log(allUserStocks, "ALLUSERSTOCKSSSS")
         <div className="header-title">
           <div className="header-text">Stocks</div>
         </div>
-        <div className="user-stocks-container">
-          {userStocksComponents}
-        </div>
+        <div className="user-stocks-container">{userStocksComponents}</div>
       </div>
       <div className="stocks-list">
-        <div className="header-title">
+        <div className="header-title list-header">
           <div className="header-text">Lists</div>
           <div
             className="add-watchlist-button"

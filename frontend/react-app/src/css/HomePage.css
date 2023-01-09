@@ -17,7 +17,7 @@
   display: flex;
   margin: 0px auto;
   max-width: 1440px;
-  min-width: 1049px;
+  /* min-width: 1049px; */
   padding-left: 24px;
   padding-right: 24px;
   width: 100%;
@@ -43,7 +43,7 @@
   width: 100%;
   height: 375px;
   border: solid black 1px;
-  min-width: 721px;
+  /* min-width: 421px; */
   max-width: 1014px;
 }
 
@@ -67,4 +67,9 @@
 .lists-container::-webkit-scrollbar {
   width: 0;
   background-color: transparent;
+}
+
+.investment{
+  font-size: 32px;
+  font-weight: 500;
 }

@@ -62,7 +62,7 @@ def buy_user_stocks():
         return {'error': "stock not found"}, 404
 
     print(isStock, "ISTOCKKKKKKKKKKKKK")
-    print(user_stocks, form.data['stock_symbol'] == user_stocks[0]['stockSymbol'])
+    # print(user_stocks, form.data['stock_symbol'] == user_stocks[0]['stockSymbol'])
 
     if form.data['stock_shares'] is not None and form.data['stock_shares'] <= 0:
         return {'error': "Shares or amount must be greater than 0"}, 400
@@ -198,7 +198,7 @@ def sell_user_stocks():
 
     if form.validate_on_submit():
 
-        add_buying_power = sell_user_stock.stock_shares * sell_user_stock.to_dict()["stockShares"]
+        add_buying_power = sell_user_stock.stock_shares * form.data["price_per_share_sold"]
         new_buying_power = user.buying_power + add_buying_power
         user.buying_power = float(format(new_buying_power, '.2f'))
         # print(user.buying_power, "NEWWWWWWWWSELLLLL")

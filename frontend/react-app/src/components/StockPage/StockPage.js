@@ -52,14 +52,17 @@ const StockPage = () => {
 
   const handleSellAll = () => {
     const sellTransaction = {
-      stock_symbol: stockSymbol
+      stock_symbol: stockSymbol,
+      price_per_share_sold : livePrice
     }
     dispatch(fetchSellAllStocks(sellTransaction))
     .then((data) => {
       setSellAll(false)
       setIsBuy(true)
       setSuccess(["All shares sold successfully"])
+      dispatch(fetchUser())
     })
+
   }
 
   const handleSubmit = async (e) => {
@@ -112,7 +115,7 @@ const StockPage = () => {
           setErrors([data.error]);
         }
         // console.log(data, "DATAAAAAAAAAAAAAAAAAAAAA FRONT")
-        if (data.success === "All shares sold successfully"){
+        if (data.success){
           setIsBuy(true)
           setSuccess([])
           setSuccess([data.success])
@@ -131,6 +134,7 @@ const StockPage = () => {
       }
     }
     setClick(!click)
+    dispatch(fetchUser())
   };
 
   useEffect(() => {
@@ -164,7 +168,7 @@ const StockPage = () => {
       dispatch(fetchStockPrice(stockSymbol));
     }, 5000);
     return () => clearInterval(interval);
-  }, [dispatch]);
+  }, [dispatch, stockSymbol]);
 
   return (
     <div className="stock-page-container">
@@ -426,7 +430,7 @@ const StockPage = () => {
                 <div className="transactions-power">
                   <div className="transactions-power-text-sell">
 
-                    {clickedBuyIn === 'shares' ? (<><div className="investment-power">About {(allUserStocks[stockSymbol]?.stockShares)?.toFixed(4)} Shares Avaialable</div><div className="sell-all" onClick={() => setSellAll(true)}>-<span>Sell All</span></div></>) : (<><div className="investment-power">About ${(allUserStocks[stockSymbol]?.stockShares * livePrice)?.toFixed(4)} Avaialable</div><div className="sell-all" onClick={() => setSellAll(true)}>- <span>Sell All</span></div></>)}
+                    {clickedBuyIn === 'shares' ? (<><div className="investment-power">About {allUserStocks[stockSymbol]?.stockShares.length > 1 ? (allUserStocks[stockSymbol]?.stockShares)?.toFixed(4) : allUserStocks[stockSymbol]?.stockShares} Shares Avaialable</div><div className="sell-all" onClick={() => setSellAll(true)}>-<span>Sell All</span></div></>) : (<><div className="investment-power">About ${(allUserStocks[stockSymbol]?.stockShares * livePrice)?.toFixed(4)} Avaialable</div><div className="sell-all" onClick={() => setSellAll(true)}>- <span>Sell All</span></div></>)}
                   </div>
                 </div>
               )}
