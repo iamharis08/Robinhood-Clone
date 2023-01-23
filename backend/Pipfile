@@ -33,6 +33,7 @@ finnhub-python = "*"
 requests = "*"
 yfinance = "*"
 yahoo-fin = "*"
+beautifulsoup4 = "*"
 
 [dev-packages]
 
