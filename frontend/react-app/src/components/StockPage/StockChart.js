@@ -11,7 +11,7 @@ const StockChart = ({ setToolTipPrice, setRegularMarketPrice, setPriceChange, se
   const { stockSymbol } = useParams();
   const historicalData = useSelector((state) => state.stocks.historicalData);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isSelected, setIsSelected] = useState('1w');
+  const [isSelected, setIsSelected] = useState('1wk');
   const [timeInterval, setTimeInterval] = useState("5m");
   const [period, setPeriod] = useState("1wk");
   const [wait, setWait] = useState(false);
@@ -225,49 +225,57 @@ const StockChart = ({ setToolTipPrice, setRegularMarketPrice, setPriceChange, se
         <div
           className={isSelected == '1d' ? "selected" : "date"}
           onClick={() => {
+            if (isSelected !== '1d'){
             setTimeInterval("5m");
             setPeriod("1d");
             setIsSelected('1d')
             setData({...data, series: []})
-          }}
+          }}}
         >
           1D
         </div>
         <div
           className={isSelected == '1wk' ? "selected" : "date"}
           onClick={() => {
-            setTimeInterval("5m");
-            setPeriod("1wk");
-            setIsSelected('1wk')
-            setData({...data, series: []})
+            if (isSelected !== '1wk'){
+              setTimeInterval("5m");
+              setPeriod("1wk");
+              setIsSelected('1wk')
+              setData({...data, series: []})
+            }
+
           }}
         >
           1W
         </div>
         <div className={isSelected == '1m' ? "selected" : "date"} onClick={() => {
+          if (isSelected !== '1m'){
             setTimeInterval('1h')
             setPeriod('1mo')
             setIsSelected('1m')
             setData({...data, series: []})
-        }}>1M</div>
+        }}}>1M</div>
         <div className={isSelected == '3m' ? "selected" : "date"} onClick={() => {
+          if (isSelected !== '3m'){
             setTimeInterval('1d')
             setPeriod('3mo')
             setIsSelected('3m')
             setData({...data, series: []})
-        }}>3M</div>
+        }}}>3M</div>
         <div className={isSelected == '1y' ? "selected" : "date"} onClick={() => {
+          if (isSelected !== '1y'){
             setTimeInterval('1d')
             setPeriod('1y')
             setIsSelected('1y')
             setData({...data, series: []})
-        }}>1Y</div>
+        }}}>1Y</div>
         <div className={isSelected == '5y' ? "selected" : "date" } onClick={() => {
+          if (isSelected !== '5y'){
             setTimeInterval('1wk')
             setPeriod('5y')
             setIsSelected('5y')
             setData({...data, series: []})
-        }}>5Y</div>
+        }}}>5Y</div>
       </div>
     </div>
   );

@@ -395,6 +395,7 @@ input[type="number"]::placeholder {
   border-bottom: solid #00c805 2px;
   padding-bottom: 12px;
   color: #00c805;
+  cursor: default;
 }
 
 .stock-chart-container {
