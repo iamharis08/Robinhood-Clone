@@ -9,6 +9,7 @@ from yahoo_fin import stock_info as si
 from bs4 import BeautifulSoup, SoupStrainer
 import threading
 import requests
+import time
 stocks_routes = Blueprint('stocks', __name__)
 
 
@@ -84,7 +85,7 @@ def get_stocks_prices():
 @login_required
 def get_stocks_historical_data():
 
-
+    start = time.time()
     form = HistoricalDataForm()
     form['csrf_token'].data = request.cookies['csrf_token']
     print(form.data["stocks_info"], "FOMRDATAAAAAAAAAAAAAAAA")
@@ -93,25 +94,6 @@ def get_stocks_historical_data():
     # stocks_info_json = data["stock_symbols"]
     stock_symbols = data["stock_symbols"]
 
-
-    # time_intervals = data["time_intervals"]
-    # print(stocks_info_json, "STOCKINFOJSONN")
-    # stocks_info = json.loads(stocks_info_json)
-    # print(stock_symbols, "STOCKSYMBOLSSSSS")
-    # stock_symbols = stocks_info["stock_symbols"]
-    # print(stocks_info, "SYMBOLSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
-
-    # print(stock_symbols, "STOCKKKKKSYMBOLLLLLSSSSSSSSSSSSSSSSSSSSSSS")
-
-    # if form.validate_on_submit():
-    #     print(form.data["stocks_info"], "FOMRDATAAAAAAAAAAAAAAAA")
-    #     print(data, "daaaaaaaaataaaa")
-    #     print(stocks_info_json, "STOCKINFOJSONN")
-        # print(stocks_info, "STOCKINFOOO")
-        # print(stock_symbols, "STOCKSYMBOLSSSSS")
-    #     return {'messsage': "idk failed"}
-
-    # ticker = yf.Ticker('AAPL')
     from datetime import datetime, timedelta
 
     now = datetime.now()
@@ -141,14 +123,14 @@ def get_stocks_historical_data():
             print(ticker_data, "PLEASEEEEEEEEETICKERDATAAAAAAAAAAAAAAAA")
             return ticker_data, 200
 
-        historical_data = yf.download(tickers=tickers, period='1wk', interval='30m')
+        historical_data = yf.download(tickers=tickers, period='1wk', interval='30m', threads=True)
         close_prices = historical_data['Close']
 
 
 
-        # ticker_data[symbol]=json.loads(close_prices.to_json())
-
         print(close_prices.to_json(), "STOCKSYMBOLSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
+        end = time.time()
+        print(end - start, "TIMEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
         return close_prices.to_json(), 200
 
 
@@ -184,7 +166,7 @@ def get_stocks_historical_data():
 
         print(time_period, "TIME PERIODDDDDDDDDDDDDDDDDDDDDDD")
 
-        # symbols = ['AAPL', "TSLA"]
+
         start_date = time_period
         end_date = now
         if period == '1d':
@@ -192,23 +174,14 @@ def get_stocks_historical_data():
             close_prices = historical_data['Close']
 
 
-            # new_data.update(json.loads(close_prices.to_json()))
         else:
             historical_data = yf.download(tickers=symbol, start=start_date, end=end_date, interval=interval)
             close_prices = historical_data['Close']
 
-
-            # new_data.update(json.loads(close_prices.to_json()))
         new_data[symbol]=json.loads(close_prices.to_json())
 
     print(new_data)
 
-    # print(new_data, "NEWWWWDATTTTTTTTAAAA")
-    # for stock in stocks:
-    # new_data = {}
-    # for symbol in symbols:
-    #     data[symbol] = json.loads(data[symbol])
-    # print(historical_data, "PRICESSSSSSSSSSSSSSSS")
     return new_data, 200
 
 
