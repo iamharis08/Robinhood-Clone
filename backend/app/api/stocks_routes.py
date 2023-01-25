@@ -141,7 +141,7 @@ def get_stocks_historical_data():
             print(ticker_data, "PLEASEEEEEEEEETICKERDATAAAAAAAAAAAAAAAA")
             return ticker_data, 200
 
-        historical_data = yf.download(tickers=tickers, period='1wk', interval='30m')
+        historical_data = yf.download(tickers=tickers, period='1wk', interval='30m', threads=True)
         close_prices = historical_data['Close']
 
 
