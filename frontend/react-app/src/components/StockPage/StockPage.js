@@ -138,17 +138,17 @@ const StockPage = () => {
     dispatch(fetchUser());
   };
 
-  useEffect(() => {
-    let includedStocks = [];
-    Object.values(watchlists)?.forEach((watchlist) => {
-      if (
-        watchlist.stocks.find((stock) => stock.stock_symbol === stockSymbol)
-      ) {
-        includedStocks.push(watchlist.id);
-      }
-    });
-    setHasStock([...includedStocks]);
-  }, [watchlists, stockSymbol]);
+  // useEffect(() => {
+  //   let includedStocks = [];
+  //   Object.values(watchlists)?.forEach((watchlist) => {
+  //     if (
+  //       watchlist.stocks.find((stock) => stock.stock_symbol === stockSymbol)
+  //     ) {
+  //       includedStocks.push(watchlist.id);
+  //     }
+  //   });
+  //   setHasStock([...includedStocks]);
+  // }, [watchlists, stockSymbol]);
 
   useEffect(() => {
     dispatch(fetchUser());

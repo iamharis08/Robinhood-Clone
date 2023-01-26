@@ -41,30 +41,31 @@ const Watchlists = () => {
   const [errors, setErrors] = useState([]);
   console.log(allUserStocks, "ALLUSERSTOCKSSSS");
   useEffect(() => {
+    
     dispatch(fetchAllWatchlists());
     dispatch(fetchAllUserStocks());
   }, []);
 
-  const formatWatchlistStocks = (index) => {
-    let stockInfoArray = [];
-    Object.values(watchlists)[index].stocks.forEach((stock) => {
-      stockInfoArray.push(stock.stock_symbol);
-    });
+  // const formatWatchlistStocks = (index) => {
+  //   let stockInfoArray = [];
+  //   Object.values(watchlists)[index].stocks.forEach((stock) => {
+  //     stockInfoArray.push(stock.stock_symbol);
+  //   });
 
-    return stockInfoArray;
-  };
+  //   return stockInfoArray;
+  // };
 
-  const formatUserStocks = () => {
-    let stockInfoArray = [];
+  // const formatUserStocks = () => {
+  //   let stockInfoArray = [];
 
-    if (Object.values(allUserStocks).length != 0) {
-      Object.values(allUserStocks).forEach((stock) => {
-        stockInfoArray.push(stock.stockSymbol);
-      });
-    }
+  //   if (Object.values(allUserStocks).length != 0) {
+  //     Object.values(allUserStocks).forEach((stock) => {
+  //       stockInfoArray.push(stock.stockSymbol);
+  //     });
+  //   }
 
-    return stockInfoArray;
-  };
+  //   return stockInfoArray;
+  // };
   const formatStocks = () => {
     let stockInfoArray = [];
 
@@ -87,9 +88,9 @@ const Watchlists = () => {
 
   useEffect(() => {
     dispatch(
-      fetchHistoricalData({ stock_symbols: [], tickers: formatUserStocks() })
+      fetchHistoricalData({ stock_symbols: [], tickers: formatStocks() })
     );
-  }, [watchlists, allUserStocks]);
+  }, [watchlists, stocksArray.length]);
 
   useEffect(() => {
     if (stocksArray.length) {
@@ -158,7 +159,6 @@ const Watchlists = () => {
             className="watchlist-header"
             onClick={() => {
               if (!isClicked.includes(index)) {
-                dispatch(fetchHistoricalData({ stock_symbols: [], tickers: formatWatchlistStocks(index) }));
                 setIsClicked([...isClicked, index]);
               } else {
                 let i = isClicked.indexOf(index);
