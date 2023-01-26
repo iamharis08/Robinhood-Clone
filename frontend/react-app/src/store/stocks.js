@@ -5,6 +5,7 @@ const FIND_STOCKS = 'stocks/FIND_STOCKS'
 const GET_LIVE_PRICE = 'stock/GET_LIVE_PRICE'
 const GET_LIVE_PRICES = 'stock/GET_LIVE_PRICES'
 const GET_HISTORICAL_DATA = 'stock/GET_HISTORICAL_DATA'
+const CLEAR_HISTORICAL_DATA = 'stock/CLEAR_HISTORICAL_DATA'
 
 const getStockInfo = (stockInfo) => ({
     type: GET_STOCK,
@@ -13,6 +14,10 @@ const getStockInfo = (stockInfo) => ({
 const getHistoricalData = (stocksInfo) => ({
     type: GET_HISTORICAL_DATA,
     stocksInfo
+})
+export const clearHistoricalData = () => ({
+    type: CLEAR_HISTORICAL_DATA,
+
 })
 
 const getLiveStockPrice = (liveStockPrice) => ({
@@ -150,6 +155,10 @@ export const fetchStockSearch = (name) => async (dispatch) => {
       case GET_HISTORICAL_DATA:{
 
         return { ...state, historicalData: action.stocksInfo }
+      }
+      case CLEAR_HISTORICAL_DATA:{
+
+        return { ...state, historicalData: {} }
       }
       case CLEAR_STOCK:{
 

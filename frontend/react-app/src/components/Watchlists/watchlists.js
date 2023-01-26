@@ -19,7 +19,7 @@ import EditWatchlistModal from "./EditWatchlistModal";
 import DeleteWatchlistModal from "./DeleteWatchlistModal";
 import { Modal } from "../context/Modal";
 import { fetchAllUserStocks } from "../../store/transactions";
-import { fetchHistoricalData, fetchStocksPrices } from "../../store/stocks";
+import { clearHistoricalData, fetchHistoricalData, fetchStocksPrices } from "../../store/stocks";
 import HomeStockChart from "../HomePage/HomeStockChart";
 
 const Watchlists = () => {
@@ -41,9 +41,11 @@ const Watchlists = () => {
   const [errors, setErrors] = useState([]);
   console.log(allUserStocks, "ALLUSERSTOCKSSSS");
   useEffect(() => {
-    
-    dispatch(fetchAllWatchlists());
-    dispatch(fetchAllUserStocks());
+      dispatch(clearHistoricalData())
+      dispatch(fetchAllWatchlists());
+      dispatch(fetchAllUserStocks());
+
+
   }, []);
 
   // const formatWatchlistStocks = (index) => {

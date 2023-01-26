@@ -385,6 +385,7 @@ input[type="number"]::placeholder {
 
 .date {
   padding-bottom: 12px;
+  cursor: pointer;
 }
 .date:hover {
   color: #00c805;
