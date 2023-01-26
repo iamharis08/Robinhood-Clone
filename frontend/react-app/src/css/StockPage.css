@@ -381,7 +381,6 @@ input[type="number"]::placeholder {
   display: flex;
   font-size: 13px;
   font-weight: 700;
-  cursor: pointer;
 }
 
 .date {

@@ -7,18 +7,19 @@ import "../../css/WatchlistStockModal.css";
 import uncheckedImg from "../../css/images/unchecked.svg";
 import checkedImg from "../../css/images/check.svg";
 
-function WatchlistStockModal({ setShowAddModal, stockSymbol, hasStock }) {
-  console.log(hasStock, "HASSSSSS TOCKKkk")
+function WatchlistStockModal({ setShowAddModal}) {
+  // console.log(hasStock, "HASSSSSS TOCKKkk")
   const dispatch = useDispatch();
+  const { stockSymbol } = useParams();
   const watchlists = useSelector((state) => state.lists.watchlists);
   const [newListName, setNewListName] = useState("");
-  // const [hasStock, setHasStock] = useState([]);
+  const [hasStock, setHasStock] = useState([]);
   const [isClicked, setIsClicked] = useState([]);
 
   console.log(isClicked, "ISCLICKEDDDDDDDD")
   useEffect(() => {
 
-    const storedHasStock = localStorage.getItem("hasStock");
+    const storedHasStock = sessionStorage.getItem("hasStock");
     if (!hasStock && storedHasStock) {
       setIsClicked(JSON.parse(storedHasStock));
     }
@@ -26,7 +27,7 @@ function WatchlistStockModal({ setShowAddModal, stockSymbol, hasStock }) {
 
   useEffect(() => {
 
-    localStorage.setItem("hasStock", JSON.stringify(hasStock));
+    sessionStorage.setItem("hasStock", JSON.stringify(hasStock));
   }, [stockSymbol]);
 
   useEffect(() => {
@@ -39,6 +40,18 @@ function WatchlistStockModal({ setShowAddModal, stockSymbol, hasStock }) {
     dispatch(fetchAllWatchlists());
 
   }, []);
+
+    useEffect(() => {
+    let includedStocks = [];
+    Object.values(watchlists)?.forEach((watchlist) => {
+      if (
+        watchlist.stocks.find((stock) => stock.stock_symbol === stockSymbol)
+      ) {
+        includedStocks.push(watchlist.id);
+      }
+    });
+    setHasStock([...includedStocks]);
+  }, [watchlists, stockSymbol]);
 
   // useEffect(() => {
 

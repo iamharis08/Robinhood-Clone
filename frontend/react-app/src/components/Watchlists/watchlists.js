@@ -42,52 +42,60 @@ const Watchlists = () => {
   console.log(allUserStocks, "ALLUSERSTOCKSSSS");
   useEffect(() => {
     dispatch(fetchAllWatchlists());
-    dispatch(fetchAllUserStocks())
+    dispatch(fetchAllUserStocks());
   }, []);
 
+  const formatWatchlistStocks = (index) => {
+    let stockInfoArray = [];
+    Object.values(watchlists)[index].stocks.forEach((stock) => {
+      stockInfoArray.push(stock.stock_symbol);
+    });
+
+    return stockInfoArray;
+  };
+
+  const formatUserStocks = () => {
+    let stockInfoArray = [];
+
+    if (Object.values(allUserStocks).length != 0) {
+      Object.values(allUserStocks).forEach((stock) => {
+        stockInfoArray.push(stock.stockSymbol);
+      });
+    }
+
+    return stockInfoArray;
+  };
   const formatStocks = () => {
     let stockInfoArray = [];
 
-    if (Object.values(allUserStocks).length != 0 )
-    { Object.values(allUserStocks).forEach((stock) => {
-      stockInfoArray.push(stock.stockSymbol);
-    });}
-    if (Object.values(watchlists).length != 0) {
-    Object.values(watchlists).forEach((watchlist) => {
-      watchlist.stocks.forEach((stock) => {
-        stockInfoArray.push(stock.stock_symbol);
+    if (Object.values(allUserStocks).length != 0) {
+      Object.values(allUserStocks).forEach((stock) => {
+        stockInfoArray.push(stock.stockSymbol);
       });
-    });}
-    console.log(stockInfoArray, "STOCKFORMTATEDDDDDDDDDDDDDDDDDDDDDDDDD")
-    return stockInfoArray
-    //  if (Object.values(allUserStocks).length != 0 && Object.values(watchlists).length != 0)
-    //  { Object.values(allUserStocks).forEach((stock) => {
-      //     stockInfoArray.push([stock.stockSymbol, "1wk", "30m"]);
-      //   });
-      //   Object.values(watchlists).forEach((watchlist) => {
-        //     watchlist.stocks.forEach((stock) => {
-          //       stockInfoArray.push([stock.stock_symbol, "1wk", "30m"]);
-          //     });
-          //   });}
-          //   console.log(stockInfoArray, "STOCKFORMTATEDDDDDDDDDDDDDDDDDDDDDDDDD")
-          //   return stockInfoArray
-        };
+    }
+    if (Object.values(watchlists).length != 0) {
+      Object.values(watchlists).forEach((watchlist) => {
+        watchlist.stocks.forEach((stock) => {
+          stockInfoArray.push(stock.stock_symbol);
+        });
+      });
+    }
+    console.log(stockInfoArray, "STOCKFORMTATEDDDDDDDDDDDDDDDDDDDDDDDDD");
+    return stockInfoArray;
+  };
+  const stocksArray = formatStocks();
 
-        useEffect(() => {
+  useEffect(() => {
+    dispatch(
+      fetchHistoricalData({ stock_symbols: [], tickers: formatUserStocks() })
+    );
+  }, [watchlists, allUserStocks]);
 
-          dispatch(
-            fetchHistoricalData({ stock_symbols: [], tickers: formatStocks() })
-            )
-
-          }, [watchlists, allUserStocks]);
-
-
-          const stocksArray = formatStocks();
-          useEffect(() => {
-            if (stocksArray.length) {
-              dispatch(fetchStocksPrices(stocksArray));
-              const interval = setInterval(() => {
-                dispatch(fetchStocksPrices(stocksArray));
+  useEffect(() => {
+    if (stocksArray.length) {
+      dispatch(fetchStocksPrices(stocksArray));
+      const interval = setInterval(() => {
+        dispatch(fetchStocksPrices(stocksArray));
       }, 10000);
       return () => clearInterval(interval);
     }
@@ -150,6 +158,7 @@ const Watchlists = () => {
             className="watchlist-header"
             onClick={() => {
               if (!isClicked.includes(index)) {
+                dispatch(fetchHistoricalData({ stock_symbols: [], tickers: formatWatchlistStocks(index) }));
                 setIsClicked([...isClicked, index]);
               } else {
                 let i = isClicked.indexOf(index);
@@ -228,13 +237,13 @@ const Watchlists = () => {
                         {stock.stock_symbol}
                       </div>
                       <div className="home-charts">
-                      <HomeStockChart stockSymbol={stock.stock_symbol} />
+                        <HomeStockChart stockSymbol={stock.stock_symbol} />
                       </div>
                       <div className="watchlist-price">
-                      {Object.values(allStockPrices).length
-                        ? `$${allStockPrices[stock.stock_symbol]?.toFixed(2)}`
-                        : "...Loading"}
-                    </div>
+                        {Object.values(allStockPrices).length
+                          ? `$${allStockPrices[stock.stock_symbol]?.toFixed(2)}`
+                          : "...Loading"}
+                      </div>
                     </div>
                   </NavLink>
                 </div>
@@ -262,16 +271,14 @@ const Watchlists = () => {
                   </div>
                 </div>
                 <div className="user-stocks-chart">
-                <HomeStockChart stockSymbol={stock.stockSymbol} />
+                  <HomeStockChart stockSymbol={stock.stockSymbol} />
                 </div>
                 <div className="user-stock-price-container">
-
-                    <div className="stock-price">
-                      {Object.values(allStockPrices).length
-                        ? `$${allStockPrices[stock.stockSymbol]?.toFixed(2)}`
-                        : "...Loading"}
-                    </div>
-
+                  <div className="stock-price">
+                    {Object.values(allStockPrices).length
+                      ? `$${allStockPrices[stock.stockSymbol]?.toFixed(2)}`
+                      : "...Loading"}
+                  </div>
                 </div>
               </div>
             </div>
@@ -303,13 +310,12 @@ const Watchlists = () => {
           <div className="add-watchlist-container">
             <div className="watchlist-form">
               <div className="bulb-container">
-
-              <div className="bulb">
-                <img
-                  src={"https://cdn.robinhood.com/emoji/v0/128/1f4a1.png"}
-                  alt="bulb"
-                />
-              </div>
+                <div className="bulb">
+                  <img
+                    src={"https://cdn.robinhood.com/emoji/v0/128/1f4a1.png"}
+                    alt="bulb"
+                  />
+                </div>
               </div>
               <form onSubmit={handleSubmit}>
                 <input
@@ -323,15 +329,15 @@ const Watchlists = () => {
                   required
                 />
                 <div className="buttons-add">
-                <div
-                  className="cancel-add-list"
-                  onClick={() => setIsAddingWatchlist(false)}
-                >
-                  Cancel
-                </div>
-                <button className="add-list-submit" type="submit">
-                  Create List
-                </button>
+                  <div
+                    className="cancel-add-list"
+                    onClick={() => setIsAddingWatchlist(false)}
+                  >
+                    Cancel
+                  </div>
+                  <button className="add-list-submit" type="submit">
+                    Create List
+                  </button>
                 </div>
               </form>
             </div>

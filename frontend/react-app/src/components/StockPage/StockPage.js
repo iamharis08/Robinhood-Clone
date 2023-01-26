@@ -34,7 +34,7 @@ const StockPage = () => {
   const [clickedDropdown, setClickedDropDown] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [isBuy, setIsBuy] = useState(true);
-  const [hasStock, setHasStock] = useState([]);
+  // const [hasStock, setHasStock] = useState([]);
   const [sharesInput, setSharesInput] = useState(0);
   const [dollarsInput, setDollarsInput] = useState(0);
   const [errors, setErrors] = useState([]);
@@ -522,10 +522,10 @@ const StockPage = () => {
         <Modal onClose={() => setShowAddModal(false)}>
           {/* {console.log(hasStock, "HASSSSSS STOCKKkk STOCK PAGE")} */}
           <WatchlistStockModal
-            hasStock={hasStock}
+            // hasStock={hasStock}
             setShowAddModal={setShowAddModal}
-            stockSymbol={stockSymbol}
-            setHasStock={setHasStock}
+            // stockSymbol={stockSymbol}
+            // setHasStock={setHasStock}
           />
         </Modal>
       )}
