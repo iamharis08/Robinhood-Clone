@@ -26,7 +26,7 @@ def get_stock_info(stock_symbol):
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36'}
 
     stock= Stock.query.filter(Stock.stock_symbol == symbol).first()
-    print(stock, "PRINTTTTTTTTTTTTTTTTTTTTEDDDDDDDDDDDDDDDDDDDDDD")
+
     x = threading.Thread(target=keyStatistics, args=(symbol, session))
     x.start()
     # y = threading.Thread(target=funcTwo, args=(symbol, session, headers))
