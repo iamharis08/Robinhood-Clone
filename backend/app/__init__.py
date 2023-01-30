@@ -4,7 +4,7 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect, generate_csrf
 from flask_login import LoginManager
-from .models import db, User, Stock, Watchlist
+from .models import db, User, Stock, Watchlist, Transaction, UserStock
 from .api.user_routes import user_routes
 from .api.auth_routes import auth_routes
 from .api.watchlists_routes import watchlists_routes

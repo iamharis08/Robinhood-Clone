@@ -74,12 +74,6 @@ function WatchlistStockModal({ setShowAddModal}) {
    .then(() => setShowAddModal(false))
   };
 
-  const stringCheck = (str) =>
-    str
-      .split(" ")
-      .filter((c) => c !== "")
-      .join("").length >= 3;
-  const inputReducer = (str) => str.replace(/\s+/g, " ").trim();
 
   const watchlistsComponents = Object.values(watchlists)?.map(
     (watchlist, index) => {
@@ -88,7 +82,6 @@ function WatchlistStockModal({ setShowAddModal}) {
           <div
             className="watchlist-checkbox-container"
             onClick={() => {
-              console.log(isClicked.filter((element) => element !== watchlist.id), watchlist.id, "CLEARRRCHECKKKK")
               if (!isClicked.includes(watchlist.id)) {
                 setIsClicked([...isClicked, watchlist.id]);
               } else

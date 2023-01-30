@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 01d4a61d1e0a
+Revision ID: a7a013ed78b6
 Revises:
-Create Date: 2023-01-09 10:37:11.761647
+Create Date: 2023-01-29 16:24:52.182799
 
 """
 from alembic import op
@@ -13,7 +13,7 @@ environment = os.getenv("FLASK_ENV")
 SCHEMA = os.environ.get("SCHEMA")
 
 # revision identifiers, used by Alembic.
-revision = '01d4a61d1e0a'
+revision = 'a7a013ed78b6'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -41,12 +41,25 @@ def upgrade():
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('username')
     )
+    op.create_table('transactions',
+    sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('updated_at', sa.DateTime(), nullable=True),
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('owner_id', sa.Integer(), nullable=False),
+    sa.Column('stock_symbol', sa.String(length=255), nullable=False),
+    sa.Column('is_buy', sa.Boolean(), nullable=False),
+    sa.Column('shares', sa.Float(), nullable=False),
+    sa.Column('price_per_share', sa.Float(), nullable=False),
+    sa.ForeignKeyConstraint(['owner_id'], ['users.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('user_stocks',
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('owner_id', sa.Integer(), nullable=False),
     sa.Column('stock_symbol', sa.String(length=255), nullable=False),
-    sa.Column('stock_shares', sa.Float(), nullable=False),
+    sa.Column('total_shares', sa.Float(), nullable=False),
+    sa.Column('average_price_per_share', sa.Float(), nullable=False),
     sa.Column('total_invested', sa.Float(), nullable=False),
     sa.ForeignKeyConstraint(['owner_id'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
@@ -68,6 +81,7 @@ def upgrade():
     sa.UniqueConstraint('watchlist_id', 'stocks_id', name='unique_watchlist_stock')
     )
     # ### end Alembic commands ###
+
     if environment == "production":
         op.execute(f"ALTER TABLE stocks SET SCHEMA {SCHEMA};")
 
@@ -88,6 +102,7 @@ def downgrade():
     op.drop_table('watchlists_stocks')
     op.drop_table('watchlists')
     op.drop_table('user_stocks')
+    op.drop_table('transactions')
     op.drop_table('users')
     op.drop_table('stocks')
     # ### end Alembic commands ###

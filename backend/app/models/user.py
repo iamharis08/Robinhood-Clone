@@ -26,6 +26,7 @@ class User(db.Model, UserMixin, TimestampMixin):
 
     watchlists = db.relationship("Watchlist", cascade="all, delete", back_populates="owner")
     user_stocks = db.relationship("UserStock", back_populates="owner", cascade="all, delete")
+    transactions = db.relationship("Transaction", back_populates="owner", cascade="all, delete")
 
 
     @property

@@ -27,6 +27,7 @@ const Watchlists = () => {
   const allUserStocks = useSelector(
     (state) => state.transactions.allUserStocks
   );
+  const user = useSelector((state) => state.session.user);
   const allStockPrices = useSelector((state) => state.stocks.liveStocksPrices);
   const watchlists = useSelector((state) => state.lists.watchlists);
   const [hoveredList, setHoveredList] = useState(null);
@@ -43,7 +44,7 @@ const Watchlists = () => {
   useEffect(() => {
       dispatch(clearHistoricalData())
       dispatch(fetchAllWatchlists());
-      dispatch(fetchAllUserStocks());
+      dispatch(fetchAllUserStocks(user.id));
 
 
   }, []);
@@ -266,9 +267,9 @@ const Watchlists = () => {
                 <div className="user-stock-left">
                   <div className="user-stock-name">{stock.stockSymbol}</div>
                   <div className="user-stock-shares">
-                    {`${stock.stockShares}`.length > 1
-                      ? stock.stockShares.toFixed(2)
-                      : stock.stockShares}{" "}
+                    {`${stock.totalShares}`.length > 1
+                      ? stock.totalShares.toFixed(2)
+                      : stock.totalShares}{" "}
                     Shares
                   </div>
                 </div>

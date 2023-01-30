@@ -16,23 +16,25 @@ stocks_routes = Blueprint('stocks', __name__)
 
 @stocks_routes.route('/<stock_symbol>')
 @login_required
-def get_stock(stock_symbol):
+def get_stock_info(stock_symbol):
     """
     Query for all user watchlists with user_id and returns all watchlsits in a dictionary
     """
 
-    symbol = stock_symbol
+    symbol = stock_symbol.upper()
     session = requests.Session()
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36'}
 
+    stock= Stock.query.filter(Stock.stock_symbol == symbol).first()
+    print(stock, "PRINTTTTTTTTTTTTTTTTTTTTEDDDDDDDDDDDDDDDDDDDDDD")
     x = threading.Thread(target=keyStatistics, args=(symbol, session))
     x.start()
     # y = threading.Thread(target=funcTwo, args=(symbol, session, headers))
     # y.start()
     company_info_dict = companyInfo(symbol, session, headers)
 
-    print(company_info_dict, "PRINTTTTTTTTTTTTTTTTTTTTEDDDDDDDDDDDDDDDDDDDDDD")
     formatted_res = {
+        'id': stock.id,
         'stockDescription': company_info_dict["stockDescription"] if company_info_dict["stockDescription"] != None else '_',
         'employees': company_info_dict["employees"] if company_info_dict["employees"] != None else '_',
         'headquarters': company_info_dict["headquarters"] if company_info_dict["headquarters"] != None else '_',
@@ -227,66 +229,3 @@ def find_stocks():
     if len(list(stocks)) > 0:
         return {'stocks': [stock.to_dict() for stock in stocks]}, 200
     else: return {"errors": "could not find stocks"}
-
-
-
-# ##Create Watchlist
-
-# @watchlists_routes.route('/', methods=["POST"])
-# @login_required
-# def create_watchlist():
-#     """
-#     Query for a user by id and returns that user in a dictionary
-#     """
-#     user = current_user
-#     form = WatchlistForm()
-#     form['csrf_token'].data = request.cookies['csrf_token']
-#     if form.validate_on_submit():
-#         watchlist = Watchlist(
-#             owner_id = user.id,
-#             name = form.data['name']
-#         )
-
-#         db.session.add(watchlist)
-#         db.session.commit()
-
-#         return {'watchlist': watchlist.to_dict()}, 200
-#     return {"errors": ["Validation Error: Could not create Watchlist"]}
-
-
-# ##UPDATE a Watchlist
-
-# @watchlists_routes.route('/<int:watchlist_id>', methods=["PUT"])
-# @login_required
-# def update_watchlist(watchlist_id):
-#     """
-#     Update one watchlist and return that watchlist
-#     """
-#     user = current_user.to_dict()
-#     form = WatchlistForm()
-#     form['csrf_token'].data = request.cookies['csrf_token']
-
-#     if form.validate_on_submit():
-#         watchlist = Watchlist.query.get(watchlist_id)
-#         watchlist.name = form.data['name']
-
-#         db.session.add(watchlist)
-#         db.session.commit()
-
-#         return {'watchlist': watchlist.to_dict()}, 200
-#     return {"errors": ["Validation Error: Could not create Watchlist"]}
-
-
-# #DELETE Watchlist
-
-# @watchlists_routes.route("/<int:watchlist_id>", methods=["DELETE"])
-# @login_required
-# def delete_watchlist(watchlist_id):
-#     user = current_user.to_dict()
-#     watchlist = Watchlist.query.get(watchlist_id)
-#     if user['id'] == watchlist.owner_id:
-
-#         db.session.delete(watchlist)
-#         db.session.commit()
-#         return {"message": "Successfully Deleted"}, 200
-#     return 'BAD REQUEST', 404

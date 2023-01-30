@@ -22,6 +22,7 @@ import StockChart from "./StockChart";
 
 const StockPage = () => {
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.session.user);
   const stockInfo = useSelector((state) => state.stocks.stockInfo);
   const watchlists = useSelector((state) => state.lists.watchlists);
   const { stockSymbol } = useParams();
@@ -29,7 +30,6 @@ const StockPage = () => {
     (state) => state.transactions.allUserStocks
   );
   const liveStockPrice = useSelector((state) => state.stocks.liveStockPrice);
-  const user = useSelector((state) => state.session.user);
   const [clickedBuyIn, setClickedBuyIn] = useState("shares");
   const [clickedDropdown, setClickedDropDown] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -58,7 +58,7 @@ const StockPage = () => {
       stock_symbol: stockSymbol,
       price_per_share_sold: livePrice,
     };
-    dispatch(fetchSellAllStocks(sellTransaction)).then((data) => {
+    dispatch(fetchSellAllStocks(user.id, sellTransaction)).then((data) => {
       setSellAll(false);
       setIsBuy(true);
       setSuccess(["All shares sold successfully"]);
@@ -97,7 +97,8 @@ const StockPage = () => {
       };
 
       if (isBuy) {
-        const data = await dispatch(fetchUpdateStocks(updateBuyStock));
+        let userStockId = Object.values(allUserStocks).find((stock) => {stock.stock_symbol = stockSymbol})
+        const data = await dispatch(fetchUpdateStocks(user.id, userStockId ,updateBuyStock));
         if (data.error) {
           setErrors([data.error]);
         }
@@ -112,7 +113,8 @@ const StockPage = () => {
         ) {
           return setErrors(["You do not have enough shares"]);
         }
-        const data = await dispatch(fetchUpdateStocks(updateSellStock));
+        let userStockId = Object.values(allUserStocks).find((stock) => {stock.stock_symbol = stockSymbol})
+        const data = await dispatch(fetchUpdateStocks(user.id, userStockId, updateSellStock));
         if (data.error) {
           setErrors([data.error]);
         }
@@ -124,7 +126,8 @@ const StockPage = () => {
         }
       }
     } else {
-      const data = await dispatch(fetchBuyNewStocks(buyNewStock));
+      const userId = user.id
+      const data = await dispatch(fetchBuyNewStocks(userId, stockSymbol, buyNewStock));
       if (data.error) {
         setErrors([data.error]);
       }
@@ -152,7 +155,7 @@ const StockPage = () => {
 
   useEffect(() => {
     dispatch(fetchUser());
-    dispatch(fetchAllUserStocks());
+    dispatch(fetchAllUserStocks(user.id));
   }, [click]);
 
   useEffect(() => {
