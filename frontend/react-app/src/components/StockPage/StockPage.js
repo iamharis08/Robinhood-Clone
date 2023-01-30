@@ -58,7 +58,8 @@ const StockPage = () => {
       stock_symbol: stockSymbol,
       price_per_share_sold: livePrice,
     };
-    dispatch(fetchSellAllStocks(user.id, sellTransaction)).then((data) => {
+    let userStockId = allUserStocks[stockSymbol].id
+    dispatch(fetchSellAllStocks(user.id, userStockId, sellTransaction)).then((data) => {
       setSellAll(false);
       setIsBuy(true);
       setSuccess(["All shares sold successfully"]);
@@ -97,7 +98,7 @@ const StockPage = () => {
       };
 
       if (isBuy) {
-        let userStockId = Object.values(allUserStocks).find((stock) => {stock.stock_symbol = stockSymbol})
+        let userStockId = allUserStocks[stockSymbol].id
         const data = await dispatch(fetchUpdateStocks(user.id, userStockId ,updateBuyStock));
         if (data.error) {
           setErrors([data.error]);
@@ -108,12 +109,13 @@ const StockPage = () => {
         }
       } else {
         if (
-          sharesInput > allUserStocks[stockSymbol].stockShares ||
-          sharesInput > allUserStocks[stockSymbol].stockShares
+          sharesInput > allUserStocks[stockSymbol].totalShares ||
+          sharesInput > allUserStocks[stockSymbol].totalShares
         ) {
           return setErrors(["You do not have enough shares"]);
         }
-        let userStockId = Object.values(allUserStocks).find((stock) => {stock.stock_symbol = stockSymbol})
+        let userStockId = allUserStocks[stockSymbol].id
+        console.log(userStockId, "USERSTOCKIDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
         const data = await dispatch(fetchUpdateStocks(user.id, userStockId, updateSellStock));
         if (data.error) {
           setErrors([data.error]);
@@ -476,11 +478,11 @@ const StockPage = () => {
                       <>
                         <div className="investment-power">
                           About{" "}
-                          {allUserStocks[stockSymbol]?.stockShares.length > 1
-                            ? allUserStocks[stockSymbol]?.stockShares?.toFixed(
+                          {allUserStocks[stockSymbol]?.totalShares.length > 1
+                            ? allUserStocks[stockSymbol]?.totalShares?.toFixed(
                                 4
                               )
-                            : allUserStocks[stockSymbol]?.stockShares}{" "}
+                            : allUserStocks[stockSymbol]?.totalShares}{" "}
                           Shares Avaialable
                         </div>
                         <div
@@ -495,7 +497,7 @@ const StockPage = () => {
                         <div className="investment-power">
                           About $
                           {(
-                            allUserStocks[stockSymbol]?.stockShares * livePrice
+                            allUserStocks[stockSymbol]?.totalShares * livePrice
                           )?.toFixed(4)}{" "}
                           Avaialable
                         </div>

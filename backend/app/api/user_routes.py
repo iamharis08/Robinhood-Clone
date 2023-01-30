@@ -121,7 +121,7 @@ def buy_user_stocks(user_id, symbol):
 
 @user_routes.route('/<int:user_id>/stocks/<int:stock_id>', methods=['PUT'])
 @login_required
-def update_user_stocks(stock_id):
+def update_user_stocks(user_id, stock_id):
     """
     Query for a user to buy or sell already existing stocks in portfolio
     """
@@ -136,7 +136,7 @@ def update_user_stocks(stock_id):
         return {'error': "stock not found"}, 404
 
     # user_stock = UserStock.query.filter(and_(UserStock.owner_id == user.id, UserStock.stock_symbol == stock_symbol)).first()
-    user_stock = UserStock.query.get(UserStock.id == stock_id)
+    user_stock = UserStock.query.filter(UserStock.id == stock_id).first()
 
     if form.validate_on_submit():
 
@@ -191,12 +191,20 @@ def update_user_stocks(stock_id):
             if subtracted_total_shares <= 0:
                 subtracted_total_shares = user_stock.total_shares
                 db.session.delete(user_stock)
-                user_stock = None
-            else: user_stock.total_shares = subtracted_total_shares
 
-            if user_stock.total_shares <= 0:
-                db.session.delete(user_stock)
-                user_stock = None
+                new_transaction = Transaction(
+                owner_id = user.id,
+                stock_symbol = stock_symbol,
+                is_buy = False,
+                shares = subtracted_total_shares,
+                price_per_share = price_per_share
+                )
+
+                db.session.add(new_transaction)
+                db.session.commit()
+                return {'message': "All shares sold successfully",
+                        'stockSymbol': stock_symbol}, 200
+            else: user_stock.total_shares = subtracted_total_shares
 
             #change average price per share
             total_invested = (user_stock.total_invested - (price_per_share * stock_shares_sold))
@@ -219,14 +227,11 @@ def update_user_stocks(stock_id):
             db.session.add(new_transaction)
             db.session.commit()
 
-            if user_stock == None:
-                return {'message': "All shares sold successfully",
-                        'stockSymbol': stock_symbol}, 200
-            else:
-                return {
-                    'message': "Shares sold successfully",
-                    'userStock': user_stock.to_dict()
-                    }, 200
+
+            return {
+                'message': "Shares sold successfully",
+                'userStock': user_stock.to_dict()
+                }, 200
 
     return {'error': "transaction failed please enter valid inputs"}, 400
 
@@ -237,7 +242,7 @@ def update_user_stocks(stock_id):
 
 @user_routes.route('/<int:user_id>/stocks/<int:stock_id>', methods=['DELETE'])
 @login_required
-def sell_user_stocks(stock_id):
+def sell_user_stocks(user_id, stock_id):
     """
     Query for selling all stock shares
     """
@@ -252,7 +257,7 @@ def sell_user_stocks(stock_id):
     if isStock == None:
         return {'error': "stock not found"}, 404
 
-    user_stock = UserStock.query.get(UserStock.id == stock_id)
+    user_stock = UserStock.query.filter(UserStock.id == stock_id).first()
 
     if user_stock == None:
         return {'error': "stock is not owned"}, 404
