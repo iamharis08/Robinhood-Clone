@@ -40,7 +40,7 @@ const Watchlists = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [listId, setListId] = useState("");
   const [errors, setErrors] = useState([]);
-  console.log(allUserStocks, "ALLUSERSTOCKSSSS");
+ 
   useEffect(() => {
       dispatch(clearHistoricalData())
       dispatch(fetchAllWatchlists());

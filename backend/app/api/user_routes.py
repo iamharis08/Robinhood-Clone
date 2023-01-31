@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from app.models import db, User, UserStock, Stock, Transaction
 from app.forms import BuyStockForm, SellStockForm, UpdateStockForm
 from sqlalchemy import and_
+
 user_routes = Blueprint('users', __name__)
 
 
@@ -151,7 +152,7 @@ def update_user_stocks(user_id, stock_id):
             return {'error': "Shares or amount must be greater than 0"}, 400
 
 
-        #add the stock shares bought to shares and update user buying power
+        #add the stock shares bought to total shares and update user buying power
         if stock_shares_bought:
             subtract_buying_power = stock_shares_bought * price_per_share
             if subtract_buying_power > user.buying_power:
@@ -283,3 +284,5 @@ def sell_user_stocks(user_id, stock_id):
 
         return {'message': "All shares sold successfully", 'soldStock': user_stock.to_dict()}, 200
     return {"error": "transaction failed please enter valid inputs"}
+
+

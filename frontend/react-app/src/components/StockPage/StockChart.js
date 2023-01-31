@@ -77,10 +77,6 @@ const StockChart = ({ setToolTipPrice, setRegularMarketPrice, setPriceChange, se
 
   useEffect(() => {
     setIsLoaded(false);
-    console.log(
-      { stock_symbols: [stockSymbol] },
-      "STOCKINFOOOOOOOOOOOOOOOOOOOOO"
-    );
     dispatch(
       fetchHistoricalData({ stock_symbols: [[stockSymbol, timeInterval, period]] })
     ).then((data) => {
@@ -89,7 +85,7 @@ const StockChart = ({ setToolTipPrice, setRegularMarketPrice, setPriceChange, se
         let priceArray = Object.values(dataArray[0])
         let priceChange = priceArray[priceArray.length - 1] - priceArray[0]
         let percentChange = (priceChange/priceArray.length) *100
-        console.log(priceArray, "INSIDETHENNNNNNNNNNNNNNNNNNNNNNNNNNN")
+
       setPercentChange(percentChange.toFixed(2))
       setPriceChange(priceChange.toFixed(2))
       //   const historicalDataTimestamps = Object.keys(data[stockSymbol]);

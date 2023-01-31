@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, json
 from flask_login import login_required, current_user
-from app.models import db, User, Watchlist, Stock
+from app.models import db, User, Watchlist, Stock, Transaction
 from app.forms import WatchlistForm, StocksSearchForm, TickerPricesForm, HistoricalDataForm
 from app.utils import companyInfo, keyStatistics
 from sqlalchemy import or_
@@ -9,6 +9,8 @@ from yahoo_fin import stock_info as si
 from bs4 import BeautifulSoup, SoupStrainer
 import threading
 import requests
+from datetime import datetime, timedelta
+
 stocks_routes = Blueprint('stocks', __name__)
 
 
@@ -114,7 +116,7 @@ def get_stocks_historical_data():
     #     return {'messsage': "idk failed"}
 
     # ticker = yf.Ticker('AAPL')
-    from datetime import datetime, timedelta
+    # from datetime import datetime, timedelta
 
     now = datetime.now()
     one_week_ago = now - timedelta(days=1)
@@ -229,3 +231,52 @@ def find_stocks():
     if len(list(stocks)) > 0:
         return {'stocks': [stock.to_dict() for stock in stocks]}, 200
     else: return {"errors": "could not find stocks"}
+
+
+@stocks_routes.route('/portfolio-chart-data/current-user')
+@login_required
+def user_portfolio_historical_data(id):
+    """
+    Query for all user portfolio chart data
+    """
+    user = current_user
+    date_now = datetime.now()
+    date_points_array = [user.created_at]
+    total_investment_data_array = []
+    current_total = user.total_investment
+    transactions = Transaction.query.filter(Transaction.owner_id == user.id)
+    symbols = []
+    current_date = date_points_array[0]
+    transactions_array_index = 0
+
+    symbolSet = {}
+
+    for transaction in len(list(transactions)):
+        stock_symbol = transaction.stock_symbol
+        if not symbolSet.has(stock_symbol):
+            symbolSet.add(stock_symbol)
+
+    historical_data = yf.download(tickers=symbols, start=user.created_at, end = date_now, interval='1h')
+    historical_close_prices = historical_data['Close']
+
+
+    while current_date <= date_now:
+        transactions_array_element = transactions[transactions_array_index]
+        # next_transaction_array_element = transactions[transactions_array_index + 1]
+        if current_date >= transactions_array_element.created_at:
+            # if transactions_array_element.is_buy == True:
+                # tickers.append(transactions_array_element.stock_symbol)
+            current_total = current_total + ()
+
+            current_total += transactions_array_element
+            total_investment_data_array.append(current_total)
+
+            date_points_array.extend(list(historical_data))
+            date_points_array.append(transactions_array_element.created_at)
+            transactions_array_index += 1
+        else:
+            current_date = current_date + timedelta(hours=1)
+            total_investment_data_array.append(current_total)
+            date_points_array.append(current_date)
+
+    return {'userStocks': [stock.to_dict() for stock in user.user_stocks]}, 200
