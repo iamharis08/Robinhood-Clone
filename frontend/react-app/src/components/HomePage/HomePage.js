@@ -17,6 +17,18 @@ const HomePage = () => {
   const allUserStocks = useSelector(
     (state) => state.transactions.allUserStocks
   );
+  useEffect(() => {
+    (async function() {
+      try {
+        const response = await fetch(`/api/stocks/portfolio-chart-data/current-user`)
+        const data = await response.json();
+        console.log(data, "DATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEARRRAYYYYYYYYYYYYYYYYY");
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, []);
+
   return (
     <div className="home-container">
       <div className="nav-bar-home">

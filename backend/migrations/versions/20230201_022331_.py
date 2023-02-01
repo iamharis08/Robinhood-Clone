@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: a7a013ed78b6
+Revision ID: 94ff193ab283
 Revises:
-Create Date: 2023-01-29 16:24:52.182799
+Create Date: 2023-02-01 02:23:31.672610
 
 """
 from alembic import op
@@ -13,7 +13,7 @@ environment = os.getenv("FLASK_ENV")
 SCHEMA = os.environ.get("SCHEMA")
 
 # revision identifiers, used by Alembic.
-revision = 'a7a013ed78b6'
+revision = '94ff193ab283'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -49,6 +49,8 @@ def upgrade():
     sa.Column('stock_symbol', sa.String(length=255), nullable=False),
     sa.Column('is_buy', sa.Boolean(), nullable=False),
     sa.Column('shares', sa.Float(), nullable=False),
+    sa.Column('current_total_stock_shares', sa.Float(), nullable=False),
+    sa.Column('current_total_stock_investment', sa.Float(), nullable=False),
     sa.Column('price_per_share', sa.Float(), nullable=False),
     sa.ForeignKeyConstraint(['owner_id'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
@@ -81,12 +83,14 @@ def upgrade():
     sa.UniqueConstraint('watchlist_id', 'stocks_id', name='unique_watchlist_stock')
     )
     # ### end Alembic commands ###
-
     if environment == "production":
         op.execute(f"ALTER TABLE stocks SET SCHEMA {SCHEMA};")
 
     if environment == "production":
         op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
+
+    if environment == "production":
+        op.execute(f"ALTER TABLE transactions SET SCHEMA {SCHEMA};")
 
     if environment == "production":
         op.execute(f"ALTER TABLE user_stocks SET SCHEMA {SCHEMA};")
