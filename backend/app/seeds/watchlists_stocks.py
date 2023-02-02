@@ -27,13 +27,13 @@ def seed_watchlists_stocks():
     watchlist1.stocks.append(stock1)
     watchlist1.stocks.append(stock2)
     watchlist1.stocks.append(stock3)
-    watchlist1.stocks.append(stock4)
+    # watchlist1.stocks.append(stock4)
     watchlist1.stocks.append(stock5)
 
     watchlist2.stocks.append(stock6)
     watchlist2.stocks.append(stock7)
-    watchlist2.stocks.append(stock8)
-    watchlist2.stocks.append(stock9)
+    # watchlist2.stocks.append(stock8)
+    # watchlist2.stocks.append(stock9)
     watchlist2.stocks.append(stock10)
 
     watchlist3.stocks.append(stock1)
