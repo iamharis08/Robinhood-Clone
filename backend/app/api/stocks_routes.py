@@ -244,10 +244,10 @@ def user_portfolio_historical_data():
     datetime_object = datetime.strptime(user_created_date, '%Y-%m-%d %H:%M:%S.%f')
     user_created_date_formatted = datetime_object.strftime("%Y-%m-%d")
     date_now = datetime.now()
-    date_string = "2023-01-20"
+    date_string = "2023-01-26"
     date_format = "%Y-%m-%d"
-    date = datetime.strptime(date_string, date_format)
-    date_points_array = [date]
+    dateee = datetime.strptime(date_string, date_format)
+    date_points_array = [dateee]
     total_investment_data_array = []
     current_total = user.total_investment
     transactions_query = Transaction.query.filter(Transaction.owner_id == user.id)
@@ -258,7 +258,6 @@ def user_portfolio_historical_data():
     transactions_array_index = 0
 
     symbolSet = set({})
-    print(transactions, "TRANSACTIONNNNNNNNNNNNNNNNNNNNNNSSSSSSSSSSSSSSSSSS")
     for transaction in transactions:
         stock_symbol = transaction["stock_symbol"]
         if stock_symbol not in symbolSet:
@@ -267,68 +266,107 @@ def user_portfolio_historical_data():
 
 
 
-    historical_data = yf.download(tickers=symbols, start="2023-01-20", end = date_now, interval='1h')
+    historical_data = yf.download(tickers=symbols, start="2023-01-", end = date_now, interval='1m')
     historical_close_prices = historical_data['Close'].to_json()
     historical_prices_dict = json.loads(historical_close_prices)
     print(historical_prices_dict, "DICTTTTTTTTHISTORICALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL")
+    print(len(transactions), "TRANSACTIONNNNNNNNNNNNNNNNNNNNNNSSSSSSSSSSSSSSSSSS")
     current_user_stocks = {}
-    end = False
-    while current_date <= date_now or end == False:
-        transactions_array_element = transactions[transactions_array_index]
-        print(transactions_array_index, "INDEXXXXXXXXXXXXXXXXX")
-        if transactions_array_index <= len(list(transactions))-2:
-            next_transaction_array_element = transactions[transactions_array_index + 1]
+
+    while current_date <= date_now:
+
+        if len(transactions) > 1:
+            transactions_array_element = transactions[transactions_array_index]
+            print(transactions_array_index, "INDEXXXXXXXXXXXXXXXXX")
+            if transactions_array_index <= len(transactions)-2:
+                next_transaction_array_element = transactions[transactions_array_index + 1]
+            else:
+                if current_user_stocks:
+                    start_time = transactions_array_element["created_at"]
+                # if transactions_array_index < len(list(transactions)):
+                    end_time = date_now
+                    start_timestamp = int(start_time.timestamp() * 1000)
+                    end_timestamp = int(end_time.timestamp() * 1000)
+                    net_stock_investment = []
+                    for symbol in current_user_stocks.keys():
+                        if symbol in historical_prices_dict:
+                            stock_prices = historical_prices_dict[symbol]
+                            i = 0
+                            for timestamp, price in stock_prices.items():
+                                if start_timestamp <= int(timestamp) <= end_timestamp:
+                                    date = datetime.fromtimestamp(float(timestamp) / 1000.0)
+                                    date_points_array.append(date)
+                                    initial_total_stock_purchase = current_user_stocks[symbol][0]
+                                    current_price_stock_value = current_user_stocks[symbol][1] * price
+                                    if net_stock_investment[i]:
+                                        net_stock_investment[i] += (initial_total_stock_purchase - current_price_stock_value)
+                                        if len(net_stock_investment) + 1 > i:
+                                            i += 1
+
+                                    else:
+                                        net_stock_investment[i].append(initial_total_stock_purchase - current_price_stock_value)
+                                        i += 1
+
+                    total_investment_data_array.extend(net_stock_investment)
+                else:
+                    current_date = current_date + timedelta(minutes=1)
+                    total_investment_data_array.append(current_total)
+                    date_points_array.append(current_date)
+                # next_transaction_array_element = {
+                # "owner_id": user.id,
+                # "stock_symbol": stock_symbol,
+                # "is_buy": False,
+                # "shares": 0,
+                # "current_total_stock_shares": 0,
+                # "current_total_stock_investment": 0,
+                # "price_per_share": 0,
+                # "created_at": datetime.now(),
+                # "end": 1
+                # }
+
+            if transactions_array_element["created_at"]<= current_date <= next_transaction_array_element["created_at"]:
+                # if transactions_array_element.is_buy == True:
+                    # tickers.append(transactions_array_element.stock_symbol)
+                if transactions_array_element["current_total_stock_shares"] >= 0:
+                    current_user_stocks[transactions_array_element["stock_symbol"]] = [transactions_array_element["current_total_stock_investment"], transactions_array_element["current_total_stock_shares"]]
+                else: del current_user_stocks[transactions_array_element["stock_symbol"]]
+
+                start_time = transactions_array_element["created_at"]
+                # if transactions_array_index < len(list(transactions)):
+                end_time = next_transaction_array_element["created_at"]
+                start_timestamp = int(start_time.timestamp() * 1000)
+                end_timestamp = int(end_time.timestamp() * 1000)
+                net_stock_investment = []
+                for symbol in current_user_stocks.keys():
+                    if symbol in historical_prices_dict:
+                        stock_prices = historical_prices_dict[symbol]
+                        i = 0
+                        for timestamp, price in stock_prices.items():
+                            if start_timestamp <= int(timestamp) <= end_timestamp:
+                                date = datetime.fromtimestamp(float(timestamp) / 1000.0)
+                                date_points_array.append(date)
+                                initial_total_stock_purchase = current_user_stocks[symbol][0]
+                                current_price_stock_value = current_user_stocks[symbol][1] * price
+                                if net_stock_investment[i]:
+                                    net_stock_investment[i] += (initial_total_stock_purchase - current_price_stock_value)
+                                    if len(net_stock_investment) + 1 > i:
+                                        i += 1
+
+                                else:
+                                    net_stock_investment[i].append(initial_total_stock_purchase - current_price_stock_value)
+                                    i += 1
+
+                total_investment_data_array.extend(net_stock_investment)
+
+                # date_points_array.extend(list(historical_data))
+                # date_points_array.append(transactions_array_element.created_at)
+                transactions_array_index += 1
+            else:
+                current_date = current_date + timedelta(minutes=1)
+                total_investment_data_array.append(current_total)
+                date_points_array.append(current_date)
         else:
-            end = True
-            next_transaction_array_element = {
-            "owner_id": user.id,
-            "stock_symbol": stock_symbol,
-            "is_buy": False,
-            "shares": 0,
-            "current_total_stock_shares": 0,
-            "current_total_stock_investment": 0,
-            "price_per_share": 0,
-            "created_at": datetime.now(),
-            "end": 1
-            }
-
-        if current_date >= transactions_array_element["created_at"]:
-            # if transactions_array_element.is_buy == True:
-                # tickers.append(transactions_array_element.stock_symbol)
-            if transactions_array_element["current_total_stock_shares"] >= 0:
-                current_user_stocks[transactions_array_element["stock_symbol"]] = [transactions_array_element["current_total_stock_investment"], transactions_array_element["current_total_stock_shares"]]
-            else: del current_user_stocks[transactions_array_element["stock_symbol"]]
-
-            start_time = transactions_array_element["created_at"]
-            # if transactions_array_index < len(list(transactions)):
-            end_time = next_transaction_array_element["created_at"]
-            start_timestamp = int(start_time.timestamp() * 1000)
-            end_timestamp = int(end_time.timestamp() * 1000)
-            net_stock_investment = []
-            for symbol in current_user_stocks.keys():
-                if symbol in historical_prices_dict:
-                    stock_prices = historical_prices_dict[symbol]
-                    i = 0
-                    for timestamp, price in stock_prices.items():
-                        if start_timestamp <= int(timestamp) <= end_timestamp:
-                            date = datetime.datetime.fromtimestamp(timestamp / 1000.0)
-                            date_points_array.append(date)
-                            initial_total_stock_purchase = current_user_stocks[symbol][0]
-                            current_price_stock_value = current_user_stocks[symbol][1] * price
-                            if net_stock_investment[i]:
-                                net_stock_investment[i] += (initial_total_stock_purchase - current_price_stock_value)
-                                i += 1
-                            else:
-                                net_stock_investment[i].append(initial_total_stock_purchase - current_price_stock_value)
-                                i += 1
-
-            total_investment_data_array.extend(net_stock_investment)
-
-            # date_points_array.extend(list(historical_data))
-            # date_points_array.append(transactions_array_element.created_at)
-            transactions_array_index += 1
-        else:
-            current_date = current_date + timedelta(hours=1)
+            current_date = current_date + timedelta(minutes=1)
             total_investment_data_array.append(current_total)
             date_points_array.append(current_date)
     print(total_investment_data_array, "TOTALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLARRRAYYYYYYYYYYYYYYYYY")

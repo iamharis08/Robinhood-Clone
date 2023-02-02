@@ -29,6 +29,16 @@ const HomePage = () => {
     })();
   }, []);
 
+  const marketNewsComponents = Object.values(marketNews)?.map(
+    (watchlist, index) => {
+      return (
+        <div className="market-news-article">
+          <div className="market-news-source">
+            CBNC
+          </div>
+        </div>
+      )})
+
   return (
     <div className="home-container">
       <div className="nav-bar-home">
@@ -46,48 +56,18 @@ const HomePage = () => {
             <div className="buying-power">
               Buying Power <span>${user.buying_power}</span>
             </div>
+            <div className="market-news-container">
+              <div className="market-news-title">
+                News
+              </div>
+              <div className="market-news">
+                  {marketNewsComponents}
+              </div>
+            </div>
 
-            {/* <div className="buying-power">
-             Trending List
-            </div>
-            <div className="buying-power">
-              News
-            </div>
-            <div className="buying-power">
-              News
-            </div>
-            <div className="buying-power">
-              News
-            </div>
-            <div className="buying-power">
-              News
-            </div>
-            <div className="buying-power">
-              News
-            </div>
-            <div className="buying-power">
-              News
-            </div>
-            <div className="buying-power">
-              News
-            </div>
-            <div className="buying-power">
-              News
-            </div>
-            <div className="buying-power">
-              News
-            </div>
-            <div className="buying-power">
-              News
-            </div> */}
+
           </div>
           <Watchlists />
-          {/* <div className="lists-container">
-            <div className="stocks-list">
-              <div className="stocks-title">Stock</div>
-
-            </div>
-          </div> */}
         </div>
     </div>
 
