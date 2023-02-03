@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import HomeNavBar from "../HomePage/HomeNavBar";
 import "../../css/StockPage.css";
+import "../../css/companyNews.css";
 import addImg from "../../css/images/add.svg";
 import {
   fetchStockInfo,
@@ -38,6 +39,7 @@ const StockPage = () => {
   const [sharesInput, setSharesInput] = useState(0);
   const [dollarsInput, setDollarsInput] = useState(0);
   const [errors, setErrors] = useState([]);
+  const [companyNews, setCompanyNews] = useState([]);
   const [success, setSuccess] = useState([]);
   const [click, setClick] = useState(false);
   const [priceLive, setPriceLive] = useState(liveStockPrice?.liveStockPrice?.toFixed(2));
@@ -49,6 +51,29 @@ const StockPage = () => {
   const livePrice = liveStockPrice?.liveStockPrice?.toFixed(2);
   // console.log(errors, "ERRRRRRRRRRRRRORSSS");
   //   console.log(allUserStocks, "ALLUSER STOCKSSS")
+
+
+
+  function getTimeAgo(timestamp) {
+    const currentTime = Date.now();
+    const articlePublished = new Date(timestamp * 1000);
+    const difference = currentTime - articlePublished;
+    const oneDay = 24 * 60 * 60 * 1000;
+    const oneHour = 60 * 60 * 1000;
+    const oneMinute = 60 * 1000;
+
+    if (difference >= oneDay) {
+      const daysAgo = Math.floor(difference / oneDay);
+      return daysAgo + (daysAgo === 1 ? " day ago" : " days ago");
+    } else if (difference >= oneHour) {
+      const hoursAgo = Math.floor(difference / oneHour);
+      return hoursAgo + (hoursAgo === 1 ? " hour ago" : " hours ago");
+    } else {
+      const minutesAgo = Math.floor(difference / oneMinute);
+      return minutesAgo + (minutesAgo === 1 ? " minute ago" : " minutes ago");
+    }
+  }
+
   const handleSelect = (e) => {
     return setClickedBuyIn(e.target.value);
   };
@@ -175,6 +200,54 @@ const StockPage = () => {
     return () => clearInterval(interval);
   }, [dispatch, stockSymbol, livePrice]);
 
+  useEffect(() => {
+    const finnhub = require("finnhub");
+    const api_key = finnhub.ApiClient.instance.authentications["api_key"];
+    api_key.apiKey = process.env.REACT_APP_FINNHUB_API_KEY_FIRST;
+    const finnhubClient = new finnhub.DefaultApi();
+    const today = new Date()
+    const todayFormatted = today.toISOString().split("T")[0];
+    const midnight = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0);
+    const midnightFormatted = midnight.toISOString().split("T")[0];
+    finnhubClient.companyNews(stockSymbol, midnightFormatted, todayFormatted, (error, data, response) => {
+      setCompanyNews(data)
+      console.log(data)
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log(companyNews, "INITIALLLL MARKETTTT NEWSSSSSSSSSSSSSS USEEFECTT");
+  }, [companyNews]);
+
+
+
+  const companyNewsComponents = companyNews?.map((article, index) => {
+    return (
+      <a href={`${article.url}`}>
+        <div className="company-news-article">
+          <div className="company-news-header">
+            <div className="company-news-source">{article.source}</div>
+            <div className="company-news-date">
+              {getTimeAgo(article.datetime)}
+            </div>
+          </div>
+          <div className="company-news-middle-content">
+            <div className="company-news-content">
+              <div className="company-news-description">
+                <div className="company-news-headline">{article.headline}</div>
+                <div className="company-news-summary">{article.summary}</div>
+              </div>
+            </div>
+            <div className="company-news-image">
+              <img src={article.image} alt="companyet news image" />
+            </div>
+          </div>
+        </div>
+      </a>
+    );
+  });
+
+
 
 
   return (
@@ -292,6 +365,9 @@ const StockPage = () => {
                   </div>
                 </div>
               </div>
+            </div>
+            <div className="company-news-container">
+              {companyNewsComponents}
             </div>
           </div>
         </div>
