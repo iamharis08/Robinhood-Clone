@@ -250,7 +250,7 @@ def user_portfolio_historical_data():
 
     total_investment_data_array = []
     current_total = user.total_investment
-    transactions_query = Transaction.query.filter(Transaction.owner_id == user.id)
+    transactions_query = Transaction.query.filter(Transaction.owner_id == user.id).order_by(Transaction.created_at)
     transactions = [transaction.to_dict() for transaction in transactions_query]
     # transactions = Transaction.query.filter(Transaction.owner_id == user.id)
     symbols = []
@@ -270,14 +270,14 @@ def user_portfolio_historical_data():
     historical_close_prices = historical_data['Close'].to_json()
     historical_prices_dict = json.loads(historical_close_prices)
     print(historical_prices_dict, "DICTTTTTTTTHISTORICALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL")
-    # print(len(transactions), "TRANSACTIONNNNNNNNNNNNNNNNNNNNNNSSSSSSSSSSSSSSSSSS")
+    print(transactions, "TRANSACTIONNNNNNNNNNNNNNNNNNNNNNSSSSSSSSSSSSSSSSSS")
     currently_owned_stocks = {}
     first_key = next(iter(historical_prices_dict))
     date_points_array = list(historical_prices_dict[first_key].keys())
     current_user_stocks = {}
-    for timestamp, price in historical_prices_dict[first_key].items():
-        timestamp = int(timestamp) / 1000
-        timestamp_to_datetime = datetime.fromtimestamp(timestamp)
+    for timestamp, data in historical_prices_dict[first_key].items():
+        timestampInt = int(timestamp) / 1000
+        timestamp_to_datetime = datetime.fromtimestamp(timestampInt)
         start = 0
         for i,transaction in enumerate(transactions[start:]):
             current_total_stock_shares = transaction["current_total_stock_shares"]
@@ -299,6 +299,7 @@ def user_portfolio_historical_data():
             for symbol, transaction in currently_owned_stocks.items():
                 current_total_stock_shares = transaction["current_total_stock_shares"]
                 current_total_stock_investment = transaction["current_total_stock_investment"]
+                price = historical_prices_dict[symbol][timestamp]
                 total_profit_data_point += ((current_total_stock_shares * price) - current_total_stock_investment)
         else:
             total_investment_data_array.append(user.total_investment)
