@@ -89,15 +89,15 @@ def buy_user_stocks(user_id, symbol):
         if subtract_buying_power > user.buying_power:
             return {'error': "Not enough buying power"}, 403
 
-        total_shares = price_per_share * shares_bought
+        total_invested = price_per_share * shares_bought
 
         new_transaction = Transaction(
             owner_id = user.id,
             stock_symbol = stock_symbol,
             is_buy = True,
             shares = shares_bought,
-            current_total_stock_shares = total_shares,
-            current_total_stock_investment = shares_bought * price_per_share,
+            current_total_stock_shares = shares_bought,
+            current_total_stock_investment = total_invested,
             price_per_share = price_per_share
         )
         new_user_stock = UserStock(
@@ -105,7 +105,7 @@ def buy_user_stocks(user_id, symbol):
             stock_symbol = stock_symbol,
             total_shares = shares_bought,
             average_price_per_share = price_per_share,
-            total_invested = total_shares
+            total_invested = total_invested
         )
 
         new_buying_power = user.buying_power - subtract_buying_power
