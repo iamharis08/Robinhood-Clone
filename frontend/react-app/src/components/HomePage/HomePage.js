@@ -92,7 +92,7 @@ const HomePage = () => {
 
   const marketNewsComponents = marketNews?.map((article, index) => {
     return (
-      <a href={`${article.url}`}>
+      <a key={index} href={`${article.url}`}>
         <div className="market-news-article">
           <div className="market-news-header">
             <div className="market-news-source">{article.source}</div>
@@ -128,15 +128,10 @@ const HomePage = () => {
               <div className="investment">
                 {" "}
                 $
-                {Object.values(allUserStocks).length
-                  ? (
-                      (price ? price : 0) -
-                      (Object.values(allUserStocks)[0]["total_invested"]
-                        ? Object.values(allUserStocks)[0]["total_invested"]
-                        : 0) +
-                      user?.total_investment
-                    ).toFixed(2)
-                  : user.total_investment}
+                {regularMarketPrice
+                  ?
+                  user.total_investment
+                  : Number(tooltipPrice).toFixed(2)}
               </div>
             </div>
             <UserInvestmentChart

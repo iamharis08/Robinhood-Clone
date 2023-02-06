@@ -15,6 +15,8 @@ const UserInvestmentChart = ({setPrice, setRegularMarketPrice, setToolTipPrice }
   //   const { stockSymbol } = useParams();
   const historicalData = useSelector((state) => state.stocks.historicalData);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [y, setY] = useState([]);
+  const [x, setX] = useState([]);
   const [wait, setWait] = useState(false);
 
   setTimeout(() => {
@@ -123,32 +125,15 @@ useEffect(() => {
     //   const historicalDataTimestamps = Object.keys(data[stockSymbol]);
     //   const historicalDataPrices = Object.values(data[stockSymbol]);
     // console.log(historicalData, "PRICEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-    if (Object.keys(historicalData).length && Object.values(historicalData).length ){
-        let stockSymbol = Object.keys(allUserStocks) ? Object.keys(allUserStocks)[0] : [0]
-        let series = null
-        let nullArray = []
 
-        if(Object.values(allUserStocks).length > 0){
-
-            const userStock = Object.values(allUserStocks)[0]
-            const symbolPrices = Object.values(historicalData[userStock.stockSymbol] ? historicalData[userStock.stockSymbol] : [])
-            series = symbolPrices.map((price) => {
-                return (price * userStock["stockShares"])
-            })
-
-        }
-        setIsLoaded(true)
+    console.log(x , y, "DATAXAANDYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY")
         setData({
             options: {
               chart: {
                 id: "basic-bar",
                 type: "line",
                 events: {
-                  mouseLeave: () => {
-                    // setPrice(series[series.length - 1])
-                    // setRegularMarketPrice(true)
-
-                },
+                  mouseLeave: () => setRegularMarketPrice(true),
                 },
                 toolbar: {
                   show: false,
@@ -169,7 +154,7 @@ useEffect(() => {
               colors: ["#00C805"],
               xaxis: {
                 position: "top",
-                categories: Object.keys(historicalData[stockSymbol] ? historicalData[stockSymbol] : []).length ? Object.keys(historicalData[stockSymbol] ? historicalData[stockSymbol] : []) :  [1,2,3,4,5,6,7,8,9,10],
+                categories: isLoaded ? x :  [1,2,3,4,5,6,7,8,9,10],
                 labels: {
                   format: "MMM/d/h/mm",
                   formatter: function (value, timestamp) {
@@ -195,9 +180,9 @@ useEffect(() => {
                   y: 8800,
                   borderColor: "#00E396",
                   labels: {
-                    // formatter: function (value, timestamp) {
-                    //   return `$${value.toFixed(2)}`;
-                    // },
+                    formatter: function (value, timestamp) {
+                      return `$${value.toFixed(2)}`;
+                    },
                     show: false,
                   },
                   axisBorder: {
@@ -221,13 +206,11 @@ useEffect(() => {
               }],
               annotations: {
                 yaxis: [
-                  {
-                    y: Object.values(historicalData[stockSymbol] ? historicalData[stockSymbol] : [])[0],
-                  },
+
                 ],
               },
               tooltip: {
-                enabled: false,
+                enabled: true,
                 items: {
                   display: "none",
                 },
@@ -239,13 +222,13 @@ useEffect(() => {
                   show: false,
                 },
                 y: {
-                //   title: {
-                //     formatter: (seriesName) => (seriesName = "price"),
-                //   },
-                //   formatter: (value) => {
-                //     setRegularMarketPrice(false);
-                //     setToolTipPrice(value);
-                //   },
+                  title: {
+                    formatter: (seriesName) => (seriesName = "price"),
+                  },
+                  formatter: (value) => {
+                    setRegularMarketPrice(false);
+                    setToolTipPrice(value);
+                  },
                 },
               },
               noData: {
@@ -261,17 +244,34 @@ useEffect(() => {
             series: [
               {
                 name: "price",
-                data: series ? series : [1, 1, 1, 1, 1, 1, 1, 1, 1],
+                data: isLoaded ? y : [1, 1, 1, 1, 1, 1, 1, 1, 1],
               },
             ],
           });
 
 
-        }
+        }, [historicalData, allUserStocks, isLoaded]);
 
-  }, [historicalData, allUserStocks]);
-
-
+  useEffect(() => {
+    (async function () {
+      try {
+        const response = await fetch(
+          `/api/stocks/portfolio-chart-data/current-user`
+        );
+        const data = await response.json();
+          setIsLoaded(true)
+          setY(data.prices)
+          setX(data.dates)
+          console.log(data, "DATAAAAPINT")
+        console.log(
+          data,
+          "DATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEARRRAYYYYYYYYYYYYYYYYY"
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, []);
 
   return (
     <div className="user-investment-chart-container">
