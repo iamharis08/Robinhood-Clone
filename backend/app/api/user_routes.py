@@ -70,7 +70,7 @@ def buy_user_stocks(user_id, symbol):
     user = current_user
     # user_stocks = [stock.to_dict() for stock in user.user_stocks]
     user_stock = UserStock.query.filter(
-        UserStock.stock_symbol == stock_symbol).first()
+        and_(UserStock.owner_id == user.id, UserStock.stock_symbol == stock_symbol)).first()
 
     if user_stock:
         return {'error': "user already has stock"}, 400
@@ -139,7 +139,8 @@ def update_user_stocks(user_id, stock_id):
         return {'error': "stock not found"}, 404
 
     # user_stock = UserStock.query.filter(and_(UserStock.owner_id == user.id, UserStock.stock_symbol == stock_symbol)).first()
-    user_stock = UserStock.query.filter(UserStock.id == stock_id).first()
+    user_stock = UserStock.query.filter(
+        and_(UserStock.owner_id == user.id, UserStock.stock_symbol == stock_symbol)).first()
 
     if form.validate_on_submit():
 
@@ -267,7 +268,8 @@ def sell_user_stocks(user_id, stock_id):
     if isStock == None:
         return {'error': "stock not found"}, 404
 
-    user_stock = UserStock.query.filter(UserStock.id == stock_id).first()
+    user_stock = UserStock.query.filter(
+        and_(UserStock.owner_id == user.id, UserStock.stock_symbol == stock_symbol)).first()
 
     if user_stock == None:
         return {'error': "stock is not owned"}, 404

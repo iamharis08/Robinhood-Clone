@@ -154,7 +154,7 @@ useEffect(() => {
               colors: ["#00C805"],
               xaxis: {
                 position: "top",
-                categories: isLoaded ? x :  [1,2,3,4,5,6,7,8,9,10],
+                categories: x.length ? x :  [1,2,3,4,5,6,7,8,9,10],
                 labels: {
                   format: "MMM/d/h/mm",
                   formatter: function (value, timestamp) {
@@ -244,7 +244,7 @@ useEffect(() => {
             series: [
               {
                 name: "price",
-                data: isLoaded ? y : [1, 1, 1, 1, 1, 1, 1, 1, 1],
+                data: y.length ? y : [1, 1, 1, 1, 1, 1, 1, 1, 1],
               },
             ],
           });
@@ -259,7 +259,7 @@ useEffect(() => {
           `/api/stocks/portfolio-chart-data/current-user`
         );
         const data = await response.json();
-          setIsLoaded(true)
+          setIsLoaded(!isLoaded)
           setY(data.prices)
           setX(data.dates)
           console.log(data, "DATAAAAPINT")

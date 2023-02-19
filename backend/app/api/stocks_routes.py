@@ -246,7 +246,7 @@ def user_portfolio_historical_data():
     date_now = datetime.now()
     date_string = "2023-01-26"
     date_format = "%Y-%m-%d"
-    dateee = datetime.strptime(date_string, date_format)
+    # dateee = datetime.strptime(date_string, date_format)
 
     total_investment_data_array = []
     current_total = user.total_investment
@@ -264,12 +264,12 @@ def user_portfolio_historical_data():
             symbolSet.add(stock_symbol)
             symbols.append(stock_symbol)
 
+    #"2023-01-30"
 
-
-    historical_data = yf.download(tickers=symbols, start="2023-01-30", end = date_now, interval='1h')
+    historical_data = yf.download(tickers=symbols, start=user_created_date_formatted, end = date_now, interval='1h', threads = True,)
     historical_close_prices = historical_data['Close'].to_json()
     historical_prices_dict = json.loads(historical_close_prices)
-    print(historical_prices_dict, "DICTTTTTTTTHISTORICALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL")
+    print(historical_prices_dict, "DICTTTTTTTTHISTORICALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLPORTFOLIOOOOO")
     print(transactions, "TRANSACTIONNNNNNNNNNNNNNNNNNNNNNSSSSSSSSSSSSSSSSSS")
     currently_owned_stocks = {}
     first_key = next(iter(historical_prices_dict))
@@ -300,7 +300,8 @@ def user_portfolio_historical_data():
                 current_total_stock_shares = transaction["current_total_stock_shares"]
                 current_total_stock_investment = transaction["current_total_stock_investment"]
                 price = historical_prices_dict[symbol][timestamp]
-                total_profit_data_point += ((current_total_stock_shares * price) - current_total_stock_investment)
+                if price != None:
+                    total_profit_data_point += ((current_total_stock_shares * price) - current_total_stock_investment)
         else:
             total_investment_data_array.append(user.total_investment)
 
