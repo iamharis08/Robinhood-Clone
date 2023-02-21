@@ -237,7 +237,7 @@ def find_stocks():
 @login_required
 def user_portfolio_historical_data():
     """
-    Query for all user portfolio chart data
+    Query for all user portfolio proffit and loss chart data
     """
     user = current_user
     user_created_date = f'{user.created_at}'
@@ -269,8 +269,8 @@ def user_portfolio_historical_data():
     historical_data = yf.download(tickers=symbols, start=user_created_date_formatted, end = date_now, interval='1h', threads = True,)
     historical_close_prices = historical_data['Close'].to_json()
     historical_prices_dict = json.loads(historical_close_prices)
-    print(historical_prices_dict, "DICTTTTTTTTHISTORICALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLPORTFOLIOOOOO")
-    print(transactions, "TRANSACTIONNNNNNNNNNNNNNNNNNNNNNSSSSSSSSSSSSSSSSSS")
+    # print(historical_prices_dict, "DICTTTTTTTTHISTORICALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLPORTFOLIOOOOO")
+    # print(transactions, "TRANSACTIONNNNNNNNNNNNNNNNNNNNNNSSSSSSSSSSSSSSSSSS")
     currently_owned_stocks = {}
     first_key = next(iter(historical_prices_dict))
     date_points_array = list(historical_prices_dict[first_key].keys())
@@ -307,8 +307,8 @@ def user_portfolio_historical_data():
 
         total_investment_data_array.append(total_profit_data_point + user.total_investment)
 
-    print(total_investment_data_array, "TOTALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLARRRAYYYYYYYYYYYYYYYYY")
-    print(date_points_array, "DATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEARRRAYYYYYYYYYYYYYYYYY")
+    # print(total_investment_data_array, "TOTALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLARRRAYYYYYYYYYYYYYYYYY")
+    # print(date_points_array, "DATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEARRRAYYYYYYYYYYYYYYYYY")
     return {'prices': total_investment_data_array,
             'dates': date_points_array
             }, 200
