@@ -275,18 +275,22 @@ def user_portfolio_historical_data():
     first_key = next(iter(historical_prices_dict))
     date_points_array = list(historical_prices_dict[first_key].keys())
     current_user_stocks = {}
+    print(historical_prices_dict[first_key].items(), "timestampppppp")
     for timestamp, data in historical_prices_dict[first_key].items():
         timestampInt = int(timestamp) / 1000
         timestamp_to_datetime = datetime.fromtimestamp(timestampInt)
         start = 0
+        print(timestamp_to_datetime, "in for loop")
         for i,transaction in enumerate(transactions[start:]):
             current_total_stock_shares = transaction["current_total_stock_shares"]
             transaction_stock_symbol = transaction["stock_symbol"]
             transaction_created_at = transaction["created_at"]
+            print(transaction_created_at, "in for loop SYMBO L TRANSACTION", transaction_created_at <= timestamp_to_datetime and current_total_stock_shares > 0)
             transaction_type_is_buy = transaction["is_buy"]
             if transaction_created_at <= timestamp_to_datetime and current_total_stock_shares > 0:
                 currently_owned_stocks[transaction_stock_symbol] = transaction
                 start+=1
+                print("YESSSSSSSSSSSSSSSSSSSSSSSSSSSSS")
             else: break
 
             if transaction_type_is_buy == False and current_total_stock_shares == 0:
@@ -294,12 +298,13 @@ def user_portfolio_historical_data():
                 start+=1
 
         total_profit_data_point = 0
-
+        print(currently_owned_stocks, "PRICEEEEEEOFEACHSTOCKATDICTTT")
         if len(currently_owned_stocks.keys()) > 0:
             for symbol, transaction in currently_owned_stocks.items():
                 current_total_stock_shares = transaction["current_total_stock_shares"]
                 current_total_stock_investment = transaction["current_total_stock_investment"]
                 price = historical_prices_dict[symbol][timestamp]
+                # print(price, "PRICEEEEEEOFEACHSTOCKATDICTTT")
                 if price != None:
                     total_profit_data_point += ((current_total_stock_shares * price) - current_total_stock_investment)
         else:
