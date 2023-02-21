@@ -266,7 +266,7 @@ def user_portfolio_historical_data():
 
     #"2023-01-30"
 
-    historical_data = yf.download(tickers=symbols, start=user_created_date_formatted, end = date_now, interval='1h', threads = True,)
+    historical_data = yf.download(tickers=symbols, start=user_created_date_formatted, end = date_now, interval='1h')
     historical_close_prices = historical_data['Close'].to_json()
     historical_prices_dict = json.loads(historical_close_prices)
     print(historical_prices_dict, "DICTTTTTTTTHISTORICALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLPORTFOLIOOOOO")
@@ -285,8 +285,9 @@ def user_portfolio_historical_data():
             current_total_stock_shares = transaction["current_total_stock_shares"]
             transaction_stock_symbol = transaction["stock_symbol"]
             transaction_created_at = transaction["created_at"]
-            print(transaction_created_at, "in for loop SYMBO L TRANSACTION", transaction_created_at <= timestamp_to_datetime and current_total_stock_shares > 0)
+            print(transaction_created_at, "in for loop SYMBO L TRANSACTION", transaction_created_at <= timestamp_to_datetime and current_total_stock_shares > 0, start)
             transaction_type_is_buy = transaction["is_buy"]
+
             if transaction_created_at <= timestamp_to_datetime and current_total_stock_shares > 0:
                 currently_owned_stocks[transaction_stock_symbol] = transaction
                 start+=1
@@ -307,13 +308,14 @@ def user_portfolio_historical_data():
                 # print(price, "PRICEEEEEEOFEACHSTOCKATDICTTT")
                 if price != None:
                     total_profit_data_point += ((current_total_stock_shares * price) - current_total_stock_investment)
+            total_investment_data_array.append(total_profit_data_point + user.total_investment)
         else:
             total_investment_data_array.append(user.total_investment)
 
-        total_investment_data_array.append(total_profit_data_point + user.total_investment)
 
-    print(total_investment_data_array, "TOTALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLARRRAYYYYYYYYYYYYYYYYY")
-    print(date_points_array, "DATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEARRRAYYYYYYYYYYYYYYYYY")
+
+    print(total_investment_data_array, len(total_investment_data_array),"TOTALLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLARRRAYYYYYYYYYYYYYYYYY")
+    print(date_points_array,len(date_points_array), "DATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEARRRAYYYYYYYYYYYYYYYYY")
     return {'prices': total_investment_data_array,
             'dates': date_points_array
             }, 200
