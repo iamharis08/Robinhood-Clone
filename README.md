@@ -30,7 +30,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/jacoblauxman/aa-capstone">
+  <a href="https://github.com/iamharis08/Robinhood-Clone/wiki">
     <!-- <img src="images/logo.png" alt="Logo" width="80" height="80"> -->
   </a>
 
@@ -41,14 +41,14 @@
     <br />
     Project Link: (https://risinghood.onrender.com/)
     <br />
-    <a href="https://github.com/jacoblauxman/aa-capstone/wiki"><strong>Checkout the Docs »</strong></a>
+    <a href="https://github.com/iamharis08/Robinhood-Clone/wiki"><strong>Checkout the Docs »</strong></a>
     <br />
     <br />
     <a href="https://risinghood.onrender.com">View Demo Site</a>
     ·
-    <a href="https://github.com/jacoblauxman/aa-capstone/issues">Report Bug</a>
+    <a href="https://github.com/iamharis08/Robinhood-Clone/issues">Report Bug</a>
     ·
-    <!-- <a href="https://github.com/jacoblauxman/aa-capstone/issues">Request Feature</a> -->
+    <!-- <a href="https://github.com/iamharis08/Robinhood-Clone/issues">Request Feature</a> -->
   </p>
 </div>
 
@@ -177,7 +177,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 ## Contact
 Haris Ahmed - iamharis08@gmail.com - [LinkedIn](www.linkedin.com/in/harisahmed12) - [Portfolio Site](https://iamharis08.github.io/)
 
-Project Link: [https://github.com/jacoblauxman/aa-capstone](https://github.com/jacoblauxman/aa-capstone)
+Project Link: [https://github.com/iamharis08/Robinhood-Clone](https://github.com/iamharis08/Robinhood-Clone)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
