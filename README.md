@@ -39,7 +39,7 @@
   <p align="center">
     Risinghood -- a Robinhood inspired website
     <br />
-    Project Link: [https://github.com/jacoblauxman/aa-capstone](https://github.com/jacoblauxman/aa-capstone)
+    Project Link: (https://risinghood.onrender.com/)
     <br />
     <a href="https://github.com/jacoblauxman/aa-capstone/wiki"><strong>Checkout the Docs »</strong></a>
     <br />
