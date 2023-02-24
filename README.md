@@ -78,6 +78,15 @@
     <!-- <li><a href="#acknowledgments">Acknowledgments</a></li> -->
   </ol>
 </details>
+<!-- ABOUT THE PROJECT -->
+## About The Project
+
+<!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
+
+Risinghood is a Robinhood clone that lets users simulate the experience of investing their money in the stock market. The user is able to buy and sell any stocks listed in the NASDAQ and the New York Stock Exchange. The site also shows company financial data and historical data charts. The site utilizes web scraping with beautifulSoup and multithreading in python to acquire data for each stock.
+
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- PREVIEW IMAGES -->
 ## Preview Images
@@ -88,17 +97,6 @@
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
-<!-- ABOUT THE PROJECT -->
-## About The Project
-
-<!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
-
-Risinghood is a Robinhood clone that lets users simulate the experience of investing their money in the stock market. The user is able to buy and sell any stocks listed in the NASDAQ and the New York Stock Exchange. The site also shows company financial data and historical data charts. The site utilizes web scraping with beautifulSoup and multithreading in python to acquire data for each stock.
-
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- Optimization -->
 ## Optimizations
