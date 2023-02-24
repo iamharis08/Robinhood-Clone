@@ -124,6 +124,12 @@ Used BeautifulSoup as a web scraper library
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+<!-- Coming Soon -->
+## Updates Coming Soon
+
+The website styling is to be further enhanced. Better UI/UX is needed. The User Portfolio Chart needs updating of date values. The search bar backend queries need to be optimized for better data return speeds. Website needs to be responsive, which will be implemented. Thank you for your patience, we are working hard to make these changes.
+
+
 ### Built With
 
 * React: https://reactjs.org/
