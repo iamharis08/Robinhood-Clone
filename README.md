@@ -34,15 +34,17 @@
     <!-- <img src="images/logo.png" alt="Logo" width="80" height="80"> -->
   </a>
 
-<h1 align="center">GameBaux</h1>
+<h1 align="center">Risinghood</h1>
 
   <p align="center">
-    GameBaux -- a GameStop clone
+    Risinghood -- a Robinhood inspired website
+    <br />
+    Project Link: [https://github.com/jacoblauxman/aa-capstone](https://github.com/jacoblauxman/aa-capstone)
     <br />
     <a href="https://github.com/jacoblauxman/aa-capstone/wiki"><strong>Checkout the Docs »</strong></a>
     <br />
     <br />
-    <a href="https://gamebaux.onrender.com">View Demo Site</a>
+    <a href="https://risinghood.onrender.com">View Demo Site</a>
     ·
     <a href="https://github.com/jacoblauxman/aa-capstone/issues">Report Bug</a>
     ·
@@ -85,7 +87,7 @@
 
 <!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
 
-This is a fullstack e-commerce site inspired and based off 'GameStop', with an emphasis on core app features needed for a complete user experience
+Risinghood is a Robinhood clone that lets users simulate the experience of investing their money in the stock market. The user is able to buy and sell any stocks listed in the NASDAQ and the New York Stock Exchange. The site also shows company financial data and historical data charts. The site utilizes web scraping with beautifulSoup and multithreading in python to acquire data for each stock.
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -136,12 +138,12 @@ DATABASE_URL=sqlite:///dev.db
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-The GameBaux project is an e-commerce web app inspired by 'GameStop', with core site feature functionality in line with the target site's MVP's:
- * Cart functionality to interact with shop items
- * Order functionality with required user shipping information (payment requirements coming soon)
- * Review functionality with all items in the shop
- * Wishlist functionality akin to GameStop's "Save For Later" lists for user
- * Search functionality with both categorical/platform-based searches as well as search via string/user input
+The Risinghood project is a free investing simulation website that is inspired by Robinhood, with core site feature functionality in line with the target site's MVP's:
+ * Watchlist functionality to keep track of favorite stock prices
+ * Make stock transactions
+ * Veiw details and charts of every company stock in the NASDAQ and NYSE
+ * User portfolio with profit and loss chart
+ * View market and company News
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -151,7 +153,7 @@ The GameBaux project is an e-commerce web app inspired by 'GameStop', with core 
 <!-- PREVIEW IMAGES -->
 ## Preview Images
 
-![Screenshot 2023-02-22 at 9 55 27 AM](https://user-images.githubusercontent.com/105457720/220700779-0d4b14bd-0da7-4ce7-bd89-1ac362b08885.png)
+![image](https://user-images.githubusercontent.com/76670635/221087515-fd084207-c1d8-41db-b135-7b1705c1cfd9.png)
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -173,9 +175,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <!-- CONTACT -->
 ## Contact
-Jacob Lauxman - jlauxman@gmail.com - [LinkedIn](https://www.linkedin.com/in/jacob-lauxman-a3170b261/) - [Portfolio Site](https://jacoblauxman.com/)
-
-<!-- Jacob Lauxman - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com - [LinkedIn](https://www.linkedin.com/in/jacob-lauxman-a3170b261/) - [Portfolio Site](https://jacoblauxman.com/) -->
+Haris Ahmed - iamharis08@gmail.com - [LinkedIn](www.linkedin.com/in/harisahmed12) - [Portfolio Site](https://iamharis08.github.io/)
 
 Project Link: [https://github.com/jacoblauxman/aa-capstone](https://github.com/jacoblauxman/aa-capstone)
 
