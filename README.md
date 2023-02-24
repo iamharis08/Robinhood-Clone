@@ -175,7 +175,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <!-- CONTACT -->
 ## Contact
-Haris Ahmed - iamharis08@gmail.com - [LinkedIn](www.linkedin.com/in/harisahmed12/) - [Portfolio Site](https://iamharis08.github.io/)
+Haris Ahmed - iamharis08@gmail.com - [LinkedIn](https://www.linkedin.com/in/harisahmed12/) - [Portfolio Site](https://iamharis08.github.io/)
 
 Project Link: [https://github.com/iamharis08/Robinhood-Clone](https://github.com/iamharis08/Robinhood-Clone)
 
