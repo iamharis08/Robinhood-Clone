@@ -79,6 +79,14 @@
   </ol>
 </details>
 
+<!-- PREVIEW IMAGES -->
+## Preview Images
+![image](https://user-images.githubusercontent.com/76670635/221090017-221e9635-55ec-4d5c-b60b-cb34478c764b.png)
+
+![image](https://user-images.githubusercontent.com/76670635/221087515-fd084207-c1d8-41db-b135-7b1705c1cfd9.png)
+
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
@@ -170,23 +178,6 @@ The Risinghood project is a free investing simulation website that is inspired b
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- PREVIEW IMAGES -->
-## Preview Images
-![image](https://user-images.githubusercontent.com/76670635/221090017-221e9635-55ec-4d5c-b60b-cb34478c764b.png)
-
-![image](https://user-images.githubusercontent.com/76670635/221087515-fd084207-c1d8-41db-b135-7b1705c1cfd9.png)
-
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-
-
-
 
 <!-- LICENSE -->
 <!-- ## License
