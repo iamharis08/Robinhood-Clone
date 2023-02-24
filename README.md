@@ -184,10 +184,24 @@ Project Link: [https://github.com/iamharis08/Robinhood-Clone](https://github.com
 
 
 
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
+<!-- Optimization -->
+## Optimizations
+Used BeautifulSoup as a web scraper library
 
-Thankful for all the instructional and peer support in all areas of this project
+***TO INCREASE*** the speed of the web scraper, first, we used a different parser. We used **`lxml`** parser which has a more optimized performance than a html.parser which is pythons default parser. **`lxml`** uses a C-based parser which is generally faster than a python-based parser html.parser. The C-based parser is able to handle a larger number of elements in a document and can better handle malformed HTML.
+
+***REQUEST SPEED INCREASED*** by using sessions because if you are consistently making the same requests to the same url then by using sessions, the TCP connection is remembered.
+
+******Increased speed of web scraper by incorporating multithreading****** 
+
+**************************************************Without Multithreading -** web scraper average timing scraping info for stocks page company info was on **average** **2.901 seconds** from testing **10 full scraped data returns** with the highest being **8.19 seconds** and the lowest being **1.4 seconds**
+
+**************************************************With Multithreading -** web scraper average timing scraping info for stocks page company info was on **average** **1.433 seconds** from testing **10 full scraped data returns** with the highest being **3.8 seconds** and the lowest being **1.03 seconds**
+
+<!-- Issues -->
+******ISSUE #1******  yahoo finance was blocking the requests depending on the user agent meaning it only allowed requests from a browser. Therefore I was not able to make requests using python.
+
+******FIX #1 :******  I changed the User-Agent by including it in the headers in the requests and specified Mozilla, Chrome, and Safari.
 <!-- * []()
 * []()
 * []() -->
