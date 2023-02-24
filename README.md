@@ -103,7 +103,7 @@ Risinghood is a Robinhood clone that lets users simulate the experience of inves
 ## Optimizations
 Used BeautifulSoup as a web scraper library
 
-***TO INCREASE*** the speed of the web scraper, first, we used a different parser. We used **`lxml`** parser which has a more optimized performance than a html.parser which is pythons default parser. **`lxml`** uses a C-based parser which is generally faster than a python-based parser html.parser. The C-based parser is able to handle a larger number of elements in a document and can better handle malformed HTML.
+***TO INCREASE THE SPEED*** of the web scraper, first, we used a different parser. We used **`lxml`** parser which has a more optimized performance than a html.parser which is pythons default parser. **`lxml`** uses a C-based parser which is generally faster than a python-based parser html.parser. The C-based parser is able to handle a larger number of elements in a document and can better handle malformed HTML.
 
 ***REQUEST SPEED INCREASED*** by using sessions because if you are consistently making the same requests to the same url then by using sessions, the TCP connection is remembered.
 
