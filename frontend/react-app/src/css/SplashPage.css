@@ -6,7 +6,8 @@
 .splash-video-container{
     display: flex;
     justify-content: center;
-    height: 100%;
+    flex-direction: column;
+    height: fit-content;
     max-width: 100%;
     background-color: #012616;
 }
@@ -14,4 +15,24 @@
 .splash-video{
     width: 80vw;
     height: 100%;
+}
+
+.repo-container{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    height: 406px;
+    width: 100%;
+    background-color: #012616;
+}
+
+.repo-text{
+    width: 700px;
+    color: #C3F53D;
+    font-size: 72px;
+    font-weight: 700;
+}
+
+.repo-button{
+    width: 200px;
 }
