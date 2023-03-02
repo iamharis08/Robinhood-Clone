@@ -284,6 +284,7 @@ def user_portfolio_historical_data():
         for i,transaction in enumerate(transactions[start:]):
             current_total_stock_shares = transaction["current_total_stock_shares"]
             transaction_stock_symbol = transaction["stock_symbol"]
+            print(transaction_stock_symbol, "STOCKTRANSACTIONSYMBOL")
             transaction_created_at = transaction["created_at"]
             print(transaction_created_at, "in for loop SYMBO L TRANSACTION", transaction_created_at <= timestamp_to_datetime and current_total_stock_shares > 0, start)
             transaction_type_is_buy = transaction["is_buy"]
