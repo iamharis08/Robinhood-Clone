@@ -1,19 +1,21 @@
 .splash-page{
     width: 100vw;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 }
 
 
 .splash-video-container{
     display: flex;
     justify-content: center;
-    flex-direction: column;
     height: fit-content;
     max-width: 100%;
     background-color: #012616;
 }
 
 .splash-video{
-    width: 80vw;
+    width: 80%;
     height: 100%;
 }
 
@@ -21,15 +23,17 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
+    align-items: center;
     height: 406px;
     width: 100%;
     background-color: #012616;
 }
 
 .repo-text{
-    width: 700px;
+    text-align: center;
+    width: 100%;
     color: #C3F53D;
-    font-size: 72px;
+    font-size: 52px;
     font-weight: 700;
 }
 
