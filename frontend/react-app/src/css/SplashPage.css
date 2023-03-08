@@ -35,8 +35,12 @@
     color: #C3F53D;
     font-size: 52px;
     font-weight: 700;
+
 }
 
+.bottom-text{
+    margin-bottom: 50px;
+}
 .repo-button{
     width: 200px;
     height: 50px;
