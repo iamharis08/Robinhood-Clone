@@ -19,7 +19,9 @@ const SplashPage = () => {
           <div className="repo-text">
             information about Risinghood
           </div>
-          <button className="repo-button">Learn more</button>
+          <a className="repo-link" href="https://github.com/iamharis08/Robinhood-Clone">
+          <button className="repo-button">Learn More</button>
+          </a>
         </div>
     </div>
   );
