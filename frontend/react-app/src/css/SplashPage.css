@@ -50,9 +50,9 @@
     cursor: pointer;
 }
 
-.repo-link{
+/* .repo-link{
     cursor: pointer;
-}
+} */
 .repo-button:hover{
     background-color: #a3cc33;
 }
