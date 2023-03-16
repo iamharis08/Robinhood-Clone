@@ -1,5 +1,4 @@
 .splash-page{
-    /* width: 100vw; */
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -50,9 +49,6 @@
     cursor: pointer;
 }
 
-/* .repo-link{
-    cursor: pointer;
-} */
 .repo-button:hover{
     background-color: #a3cc33;
 }
